@@ -1,0 +1,6 @@
+isim,yas,sehir
+Riad,19,Antep
+Yusuf,22,Istanbul
+Ahmet,42,Kahramanmaras
+Ali,14,Maxico
+Osman,36,UAE
