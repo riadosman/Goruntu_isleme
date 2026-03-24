@@ -7,6 +7,7 @@ while True:
     ret, frame = cap.read()
     if not ret:
         break
+    
     (h,w,d) = frame.shape
 
     cv2.rectangle(frame, (50,50), (150,150), (0,255,0), 2)
