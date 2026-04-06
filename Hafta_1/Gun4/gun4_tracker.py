@@ -9,9 +9,6 @@ def mesafe_hesapla(p1,p2):
     mesafe = math.sqrt((p2[0]-p1[0])**2 + (p2[1]-p1[1])**2)
     return mesafe
 
-def select_id(data, key_func):
-    return min(data, key=lambda k: key_func(data[k]))
-
 def id_to_color(id_):
     return (
         (id_ * 37) % 255,
