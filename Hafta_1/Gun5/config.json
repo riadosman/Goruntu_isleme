@@ -24,5 +24,8 @@
   "redcolor_multiplier": 3,
   "greencolor_multiplier": 67,
   "bluecolor_multiplier": 97,
-  "initial_id": 0
+  "initial_id": 0,
+  "roi_padding": 10,
+  "uyku_limit_sn": 5.0,
+  "uyku_onay_sn": 2.0
 }
