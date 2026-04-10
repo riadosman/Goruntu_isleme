@@ -1,0 +1,2631 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GuardWatch AI — Ödev 2: İleri Seviye</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-card: #1a1a2e;
+            --bg-card-hover: #1f1f35;
+            --bg-code: #0d0d15;
+            --border: #2a2a40;
+            --border-light: #3a3a55;
+            --text-primary: #e8e8f0;
+            --text-secondary: #9090a8;
+            --text-muted: #606078;
+            --accent-blue: #4f8fff;
+            --accent-blue-dim: #2a4f8f;
+            --accent-purple: #8b5cf6;
+            --accent-purple-dim: #4c2d8f;
+            --accent-green: #22c55e;
+            --accent-green-dim: #15503a;
+            --accent-yellow: #eab308;
+            --accent-yellow-dim: #5c4a0a;
+            --accent-red: #ef4444;
+            --accent-red-dim: #5c1a1a;
+            --accent-orange: #f97316;
+            --accent-cyan: #06b6d4;
+            --gradient-1: linear-gradient(135deg, #4f8fff 0%, #8b5cf6 100%);
+            --gradient-2: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
+            --gradient-3: linear-gradient(135deg, #22c55e 0%, #06b6d4 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg-primary); }
+        ::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--accent-blue); }
+
+        /* Hero */
+        .hero {
+            position: relative;
+            padding: 80px 40px 60px;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(ellipse at 50% 0%, rgba(79, 143, 255, 0.08) 0%, transparent 60%),
+                        radial-gradient(ellipse at 80% 50%, rgba(139, 92, 246, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 16px;
+            background: rgba(79, 143, 255, 0.1);
+            border: 1px solid rgba(79, 143, 255, 0.2);
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--accent-blue);
+            margin-bottom: 24px;
+            letter-spacing: 0.5px;
+        }
+
+        .hero h1 {
+            font-size: clamp(32px, 5vw, 56px);
+            font-weight: 900;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 16px;
+            letter-spacing: -1px;
+        }
+
+        .hero-subtitle {
+            font-size: 18px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto 32px;
+            font-weight: 400;
+        }
+
+        .hero-meta {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            flex-wrap: wrap;
+        }
+
+        .hero-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .hero-meta-item span {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        /* Container */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Golden Rules */
+        .rules-section {
+            margin: 0 auto 60px;
+            max-width: 900px;
+            padding: 0 24px;
+        }
+
+        .rules-card {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.05) 0%, rgba(234, 179, 8, 0.05) 100%);
+            border: 1px solid rgba(239, 68, 68, 0.15);
+            border-radius: 16px;
+            padding: 36px;
+        }
+
+        .rules-title {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--accent-red);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .rule-item {
+            display: flex;
+            gap: 14px;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(239, 68, 68, 0.08);
+            align-items: flex-start;
+        }
+
+        .rule-item:last-child { border-bottom: none; }
+
+        .rule-number {
+            flex-shrink: 0;
+            width: 28px;
+            height: 28px;
+            background: rgba(239, 68, 68, 0.15);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--accent-red);
+        }
+
+        .rule-text {
+            font-size: 15px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .rule-text strong {
+            color: var(--text-primary);
+        }
+
+        /* Day Navigation */
+        .day-nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(10, 10, 15, 0.85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            padding: 12px 24px;
+            margin-bottom: 48px;
+        }
+
+        .day-nav-inner {
+            max-width: 900px;
+            margin: 0 auto;
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding: 4px 0;
+        }
+
+        .day-nav-btn {
+            flex-shrink: 0;
+            padding: 8px 20px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--text-secondary);
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+
+        .day-nav-btn:hover {
+            background: var(--bg-card);
+            color: var(--text-primary);
+            border-color: var(--border-light);
+        }
+
+        .day-nav-btn.active,
+        .day-nav-btn:focus {
+            background: var(--accent-blue);
+            color: white;
+            border-color: var(--accent-blue);
+        }
+
+        /* Day Section */
+        .day-section {
+            margin-bottom: 80px;
+            scroll-margin-top: 80px;
+        }
+
+        .day-header {
+            margin-bottom: 36px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .day-label {
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+        }
+
+        .day-0 .day-label { color: var(--accent-red); }
+        .day-1 .day-label { color: var(--accent-blue); }
+        .day-2 .day-label { color: var(--accent-purple); }
+        .day-3 .day-label { color: var(--accent-green); }
+        .day-4 .day-label { color: var(--accent-orange); }
+        .day-5 .day-label { color: var(--accent-cyan); }
+
+        .day-header h2 {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .day-header p {
+            font-size: 16px;
+            color: var(--text-secondary);
+        }
+
+        /* Time Blocks */
+        .time-block {
+            margin-bottom: 40px;
+        }
+
+        .time-block-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .time-badge {
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .time-badge.morning {
+            background: rgba(234, 179, 8, 0.12);
+            color: var(--accent-yellow);
+        }
+
+        .time-badge.afternoon {
+            background: rgba(139, 92, 246, 0.12);
+            color: var(--accent-purple);
+        }
+
+        .time-block-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        /* Task Cards */
+        .task-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 28px;
+            margin-bottom: 16px;
+            transition: all 0.2s;
+        }
+
+        .task-card:hover {
+            border-color: var(--border-light);
+            background: var(--bg-card-hover);
+        }
+
+        .task-card-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .task-id {
+            flex-shrink: 0;
+            padding: 3px 10px;
+            border-radius: 6px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .day-0 .task-id { background: rgba(239, 68, 68, 0.12); color: var(--accent-red); }
+        .day-1 .task-id { background: rgba(79, 143, 255, 0.12); color: var(--accent-blue); }
+        .day-2 .task-id { background: rgba(139, 92, 246, 0.12); color: var(--accent-purple); }
+        .day-3 .task-id { background: rgba(34, 197, 94, 0.12); color: var(--accent-green); }
+        .day-4 .task-id { background: rgba(249, 115, 22, 0.12); color: var(--accent-orange); }
+        .day-5 .task-id { background: rgba(6, 182, 212, 0.12); color: var(--accent-cyan); }
+
+        .task-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .task-duration {
+            margin-left: auto;
+            flex-shrink: 0;
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .task-body {
+            color: var(--text-secondary);
+            font-size: 15px;
+        }
+
+        .task-body p {
+            margin-bottom: 12px;
+        }
+
+        .task-body ul, .task-body ol {
+            padding-left: 20px;
+            margin-bottom: 12px;
+        }
+
+        .task-body li {
+            margin-bottom: 6px;
+        }
+
+        .task-body strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        /* Code Blocks */
+        pre {
+            background: var(--bg-code);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 20px;
+            overflow-x: auto;
+            margin: 16px 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            line-height: 1.8;
+            color: #c8c8d8;
+        }
+
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+        }
+
+        :not(pre) > code {
+            background: rgba(79, 143, 255, 0.1);
+            color: var(--accent-blue);
+            padding: 2px 7px;
+            border-radius: 5px;
+            font-size: 13px;
+        }
+
+        .code-comment { color: #5a6a7a; }
+        .code-keyword { color: #c678dd; }
+        .code-string { color: #98c379; }
+        .code-function { color: #61afef; }
+        .code-number { color: #d19a66; }
+
+        /* Checkpoint */
+        .checkpoint {
+            background: linear-gradient(135deg, rgba(234, 179, 8, 0.06) 0%, rgba(249, 115, 22, 0.06) 100%);
+            border: 1px solid rgba(234, 179, 8, 0.15);
+            border-left: 3px solid var(--accent-yellow);
+            border-radius: 0 12px 12px 0;
+            padding: 24px 28px;
+            margin: 24px 0;
+        }
+
+        .checkpoint-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--accent-yellow);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .checkpoint ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .checkpoint li {
+            padding: 8px 0;
+            padding-left: 24px;
+            position: relative;
+            color: var(--text-secondary);
+            font-size: 14px;
+            border-bottom: 1px solid rgba(234, 179, 8, 0.06);
+        }
+
+        .checkpoint li:last-child { border-bottom: none; }
+
+        .checkpoint li::before {
+            content: '?';
+            position: absolute;
+            left: 0;
+            width: 18px;
+            height: 18px;
+            background: rgba(234, 179, 8, 0.12);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--accent-yellow);
+            top: 9px;
+        }
+
+        /* Deliverables */
+        .deliverables {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.06) 0%, rgba(6, 182, 212, 0.06) 100%);
+            border: 1px solid rgba(34, 197, 94, 0.15);
+            border-radius: 14px;
+            padding: 28px;
+            margin: 32px 0;
+        }
+
+        .deliverables-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--accent-green);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .deliverable-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 0;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .deliverable-item::before {
+            content: '';
+            width: 18px;
+            height: 18px;
+            border: 2px solid var(--border-light);
+            border-radius: 5px;
+            flex-shrink: 0;
+        }
+
+        .deliverable-file {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--accent-green);
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        /* EAR Diagram */
+        .ear-diagram {
+            background: var(--bg-code);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 28px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .ear-diagram pre {
+            border: none;
+            padding: 0;
+            margin: 0;
+            background: transparent;
+            display: inline-block;
+            text-align: left;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        .ear-formula {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(79, 143, 255, 0.1) 100%);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            margin: 16px 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 16px;
+            color: var(--accent-purple);
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        /* Test Table */
+        .test-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin: 16px 0;
+            font-size: 14px;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+
+        .test-table th {
+            background: var(--bg-code);
+            padding: 12px 16px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .test-table td {
+            padding: 12px 16px;
+            border-top: 1px solid var(--border);
+            color: var(--text-secondary);
+        }
+
+        .test-table tr:hover td {
+            background: rgba(79, 143, 255, 0.03);
+        }
+
+        .test-table .empty-cell {
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        /* Notes Section */
+        .notes-section {
+            margin: 80px auto;
+            max-width: 900px;
+            padding: 0 24px;
+        }
+
+        .notes-title {
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 32px;
+            color: var(--text-primary);
+        }
+
+        .note-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 28px;
+            margin-bottom: 16px;
+        }
+
+        .note-card h4 {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .note-field {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 12px;
+            align-items: flex-start;
+        }
+
+        .note-field-label {
+            flex-shrink: 0;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+            min-width: 200px;
+            padding-top: 8px;
+        }
+
+        .note-field-input {
+            flex: 1;
+            min-height: 40px;
+            background: var(--bg-code);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 8px 14px;
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            resize: vertical;
+        }
+
+        .note-field-input:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+        }
+
+        /* Bonus */
+        .bonus-section {
+            margin: 0 auto 80px;
+            max-width: 900px;
+            padding: 0 24px;
+        }
+
+        .bonus-card {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.05) 0%, rgba(236, 72, 153, 0.05) 100%);
+            border: 1px solid rgba(139, 92, 246, 0.15);
+            border-radius: 16px;
+            padding: 36px;
+        }
+
+        .bonus-title {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--accent-purple);
+            margin-bottom: 20px;
+        }
+
+        .bonus-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 0;
+            color: var(--text-secondary);
+            font-size: 15px;
+        }
+
+        .bonus-check {
+            width: 22px;
+            height: 22px;
+            border: 2px solid var(--accent-purple-dim);
+            border-radius: 6px;
+            flex-shrink: 0;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .bonus-check:hover {
+            border-color: var(--accent-purple);
+        }
+
+        /* Footer Quote */
+        .footer-quote {
+            text-align: center;
+            padding: 60px 24px 80px;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .footer-quote p {
+            font-size: 17px;
+            font-style: italic;
+            color: var(--text-muted);
+            line-height: 1.8;
+        }
+
+        .footer-quote p strong {
+            color: var(--text-secondary);
+        }
+
+        /* Overview Table */
+        .overview-section {
+            margin: 0 auto 60px;
+            max-width: 900px;
+            padding: 0 24px;
+        }
+
+        .overview-title {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+        }
+
+        .overview-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .overview-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px 16px;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .overview-item:hover {
+            border-color: var(--border-light);
+            transform: translateY(-2px);
+        }
+
+        .overview-day {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 8px;
+        }
+
+        .overview-item:nth-child(1) .overview-day { color: var(--accent-red); }
+        .overview-item:nth-child(2) .overview-day { color: var(--accent-blue); }
+        .overview-item:nth-child(3) .overview-day { color: var(--accent-purple); }
+        .overview-item:nth-child(4) .overview-day { color: var(--accent-green); }
+        .overview-item:nth-child(5) .overview-day { color: var(--accent-orange); }
+        .overview-item:nth-child(6) .overview-day { color: var(--accent-cyan); }
+
+        .overview-topic {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+        }
+
+        .overview-desc {
+            font-size: 12px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        /* Warning callout */
+        .warning-callout {
+            background: rgba(239, 68, 68, 0.06);
+            border: 1px solid rgba(239, 68, 68, 0.15);
+            border-left: 3px solid var(--accent-red);
+            border-radius: 0 10px 10px 0;
+            padding: 16px 20px;
+            margin: 16px 0;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .warning-callout strong {
+            color: var(--accent-red);
+        }
+
+        /* Info callout */
+        .info-callout {
+            background: rgba(79, 143, 255, 0.06);
+            border: 1px solid rgba(79, 143, 255, 0.15);
+            border-left: 3px solid var(--accent-blue);
+            border-radius: 0 10px 10px 0;
+            padding: 16px 20px;
+            margin: 16px 0;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .info-callout strong {
+            color: var(--accent-blue);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .overview-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .hero { padding: 48px 20px 40px; }
+            .hero-meta { gap: 16px; }
+            .note-field { flex-direction: column; }
+            .note-field-label { min-width: auto; }
+        }
+
+        @media (max-width: 480px) {
+            .overview-grid {
+                grid-template-columns: 1fr;
+            }
+            .task-card-header { flex-direction: column; }
+            .task-duration { margin-left: 0; }
+        }
+
+        /* Print */
+        @media print {
+            .day-nav { display: none; }
+            body { background: white; color: black; }
+            .task-card, .note-card { break-inside: avoid; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+    <div class="hero-badge">STAJ PROGRAMI 2026 &mdash; ÖDEV 2</div>
+    <h1>GuardWatch AI &mdash; Ödev 2: İleri Seviye</h1>
+    <p class="hero-subtitle">Projeyi profesyonelleştir &mdash; argparse, hata yönetimi, CSV, threading, Flask</p>
+    <div class="hero-meta">
+        <div class="hero-meta-item">Stajyer: <span>Taha</span></div>
+        <div class="hero-meta-item">Süre: <span>6 Gün (Gün 1-6)</span></div>
+        <div class="hero-meta-item">Günlük: <span>Min. 7 Saat</span></div>
+        <div class="hero-meta-item">Toplam: <span>~42 Saat</span></div>
+    </div>
+</div>
+
+<!-- RULES -->
+<div class="rules-section">
+    <div class="rules-card">
+        <div class="rules-title">&#9888; Altın Kurallar</div>
+        <div class="rule-item">
+            <div class="rule-number">1</div>
+            <div class="rule-text"><strong>AI'a "şu kodu yaz" DEME.</strong> Takılırsan "argparse nasıl çalışır açıkla" diyebilirsin ama "argparse kodunu yaz" diyemezsin.</div>
+        </div>
+        <div class="rule-item">
+            <div class="rule-number">2</div>
+            <div class="rule-text"><strong>Her aşamayı AYRI commit et.</strong> Commit mesajın ne yaptığını açıklasın.</div>
+        </div>
+        <div class="rule-item">
+            <div class="rule-number">3</div>
+            <div class="rule-text"><strong>Her gün sonunda kısa bir yorum yaz.</strong> Ne öğrendin, nerede takıldın?</div>
+        </div>
+        <div class="rule-item">
+            <div class="rule-number">4</div>
+            <div class="rule-text"><strong>Kodu satır satır açıklayabilmelisin.</strong> Hocana açıklayamıyorsan o adım tamamlanmamış demektir.</div>
+        </div>
+        <div class="rule-item">
+            <div class="rule-number">5</div>
+            <div class="rule-text"><strong>Kopyala yapıştır YASAK.</strong> Eski projedeki kodu kopyalama. Sıfırdan yaz.</div>
+        </div>
+    </div>
+</div>
+
+<!-- OVERVIEW -->
+<div class="overview-section">
+    <div class="overview-title">6 Günlük Yol Haritası</div>
+    <div class="overview-grid">
+        <div class="overview-item">
+            <div class="overview-day">Gün 1</div>
+            <div class="overview-topic">Proje Altyapısı</div>
+            <div class="overview-desc">venv, argparse, video dosyası</div>
+        </div>
+        <div class="overview-item">
+            <div class="overview-day">Gün 2</div>
+            <div class="overview-topic">Hata Yönetimi</div>
+            <div class="overview-desc">try/except, graceful handling</div>
+        </div>
+        <div class="overview-item">
+            <div class="overview-day">Gün 3</div>
+            <div class="overview-topic">CSV Veri Kaydetme</div>
+            <div class="overview-desc">csv modülü, ihlal kayıt sistemi</div>
+        </div>
+        <div class="overview-item">
+            <div class="overview-day">Gün 4</div>
+            <div class="overview-topic">Dosya/Klasör Yönetimi</div>
+            <div class="overview-desc">os, pathlib, frame kaydetme</div>
+        </div>
+        <div class="overview-item">
+            <div class="overview-day">Gün 5</div>
+            <div class="overview-topic">Threading + HTTP</div>
+            <div class="overview-desc">threading, requests, API</div>
+        </div>
+        <div class="overview-item">
+            <div class="overview-day">Gün 6</div>
+            <div class="overview-topic">Matplotlib + Flask</div>
+            <div class="overview-desc">grafik, web sunucu, final</div>
+        </div>
+    </div>
+</div>
+
+<!-- DAY NAV -->
+<nav class="day-nav">
+    <div class="day-nav-inner">
+        <a href="#gun1" class="day-nav-btn">Gün 1: Altyapı</a>
+        <a href="#gun2" class="day-nav-btn">Gün 2: Hatalar</a>
+        <a href="#gun3" class="day-nav-btn">Gün 3: CSV</a>
+        <a href="#gun4" class="day-nav-btn">Gün 4: Dosyalar</a>
+        <a href="#gun5" class="day-nav-btn">Gün 5: Threading</a>
+        <a href="#gun6" class="day-nav-btn">Gün 6: Flask</a>
+        <a href="#notlar" class="day-nav-btn">Notlar</a>
+    </div>
+</nav>
+
+<!-- ============================================== -->
+<!-- GUN 1 -->
+<!-- ============================================== -->
+<div class="container">
+<section id="gun1" class="day-section day-0">
+    <div class="day-header">
+        <div class="day-label">Gün 1</div>
+        <h2>Proje Altyapısı &mdash; Virtual Environment + argparse + Video Dosyası</h2>
+        <p>Projeyi profesyonel şekilde kur &mdash; venv, komut satırı argümanları ve video okuma</p>
+    </div>
+
+    <!-- Sabah -->
+    <div class="time-block">
+        <div class="time-block-header">
+            <span class="time-badge morning">Sabah</span>
+            <span class="time-block-title">venv, argparse ve Video Okuma &mdash; 3.5 saat</span>
+        </div>
+
+        <div class="task-card">
+            <div class="task-card-header">
+                <span class="task-id">1.1</span>
+                <span class="task-title">Virtual Environment</span>
+                <span class="task-duration">1.5 saat</span>
+            </div>
+            <div class="task-body">
+                <p><strong>Virtual environment nedir? Neden her projede lazım?</strong></p>
+                <p>Gerçek hayat benzetmesi: "Her proje kendi bavulunu taşır" &mdash; Proje A'nın ihtiyacı numpy 1.24, Proje B'nin ihtiyacı numpy 1.26. İkisi aynı bilgisayarda çakışmasın diye her projeye ayrı bir "kutu" (venv) veriyoruz.</p>
+                <ul>
+                    <li><code>python -m venv .venv</code> ile oluşturma</li>
+                    <li><code>.venv/Scripts/activate</code> (Windows) veya <code>source .venv/bin/activate</code> (Mac/Linux) ile aktifleştirme</li>
+                    <li><code>deactivate</code> ile çıkma</li>
+                    <li><code>pip install ultralytics mediapipe opencv-python</code> ile paket kurulumu</li>
+                    <li><code>pip freeze &gt; requirements.txt</code> ile bağımlılıkları kaydetme</li>
+                    <li>Başka bilgisayarda: <code>pip install -r requirements.txt</code> ile aynı ortamı kurma</li>
+                </ul>
+                <p><strong>Alıştırma:</strong> Yeni bir klasör oluştur, venv kur, 3 paket yükle, requirements.txt oluştur, venv'i sil, tekrar kur ve requirements.txt'den yükle.</p>
+<pre><span class="code-comment"># 1. Klasor olustur ve icine gir</span>
+mkdir guardwatch_v2
+cd guardwatch_v2
+
+<span class="code-comment"># 2. Virtual environment olustur</span>
+python -m venv .venv
+
+<span class="code-comment"># 3. Aktif et</span>
+<span class="code-comment"># Windows:</span>
+.venv\Scripts\activate
+<span class="code-comment"># Mac/Linux:</span>
+source .venv/bin/activate
+
+<span class="code-comment"># 4. Terminal'de (.venv) yazisi gormen lazim!</span>
+<span class="code-comment"># 5. Paket yukle</span>
+pip install ultralytics mediapipe opencv-python
+
+<span class="code-comment"># 6. Bagimliliklari kaydet</span>
+pip freeze &gt; requirements.txt
+
+<span class="code-comment"># 7. Kontrol et</span>
+cat requirements.txt</pre>
+                <div class="info-callout">
+                    <strong>Bilgi:</strong> .venv klasörünü ASLA git'e ekleme! .gitignore dosyasına <code>.venv/</code> satırını ekle.
+                </div>
+            </div>
+        </div>
+
+        <div class="task-card">
+            <div class="task-card-header">
+                <span class="task-id">1.2</span>
+                <span class="task-title">argparse Modülü</span>
+                <span class="task-duration">1.5 saat</span>
+            </div>
+            <div class="task-body">
+                <p><strong>Komut satırı argümanı nedir?</strong> Terminal'den programa bilgi göndermek.</p>
+                <p>Gerçek hayat: <code>python guardwatch.py --kaynak video.mp4 --confidence 0.4</code> &mdash; Kodu değiştirmeden ayar değiştirme!</p>
+                <ul>
+                    <li><code>argparse.ArgumentParser()</code> oluşturma</li>
+                    <li><code>parser.add_argument("--kaynak", default="0", help="...")</code> ile argüman tanımlama</li>
+                    <li><code>parser.add_argument("--confidence", type=float, default=0.5)</code> &mdash; tip belirtme</li>
+                    <li><code>args = parser.parse_args()</code> ile okuma</li>
+                    <li><code>args.kaynak</code>, <code>args.confidence</code> ile kullanma</li>
+                    <li><code>python script.py --help</code> ile yardım menüsü</li>
+                </ul>
+<pre><span class="code-keyword">import</span> argparse
+
+parser = argparse.ArgumentParser(description=<span class="code-string">"GuardWatch AI - Uyku Tespiti"</span>)
+parser.add_argument(<span class="code-string">"--kaynak"</span>, default=<span class="code-string">"0"</span>, help=<span class="code-string">"Video kaynagi: 0=webcam, veya dosya yolu"</span>)
+parser.add_argument(<span class="code-string">"--confidence"</span>, type=<span class="code-function">float</span>, default=<span class="code-number">0.5</span>, help=<span class="code-string">"YOLO confidence esigi"</span>)
+parser.add_argument(<span class="code-string">"--ear-esik"</span>, type=<span class="code-function">float</span>, default=<span class="code-number">0.22</span>, help=<span class="code-string">"EAR esik degeri"</span>)
+parser.add_argument(<span class="code-string">"--kayit"</span>, action=<span class="code-string">"store_true"</span>, help=<span class="code-string">"Ihlalleri CSV'ye kaydet"</span>)
+args = parser.parse_args()
+
+<span class="code-function">print</span>(<span class="code-string">f"Kaynak: {args.kaynak}"</span>)
+<span class="code-function">print</span>(<span class="code-string">f"Confidence: {args.confidence}"</span>)
+<span class="code-function">print</span>(<span class="code-string">f"EAR esik: {args.ear_esik}"</span>)
+<span class="code-function">print</span>(<span class="code-string">f"Kayit: {args.kayit}"</span>)</pre>
+                <p><strong>Alıştırma:</strong> <code>argparse_test.py</code> yaz. <code>--isim</code>, <code>--yas</code> (int), <code>--ogrenci</code> (store_true) argümanları alsın, hepsini yazdırsın.</p>
+            </div>
+        </div>
+
+        <div class="task-card">
+            <div class="task-card-header">
+                <span class="task-id">1.3</span>
+                <span class="task-title">Video Dosyasından Frame Okuma</span>
+                <span class="task-duration">30 dk</span>
+            </div>
+            <div class="task-body">
+                <ul>
+                    <li><code>cv2.VideoCapture("dosya.mp4")</code> vs <code>cv2.VideoCapture(0)</code> farkı</li>
+                    <li>Video bittiğinde <code>ret</code> False döner &rarr; döngüden çık</li>
+                    <li><code>cap.get(cv2.CAP_PROP_FPS)</code> ile video FPS'ini öğrenme</li>
+                    <li>Video FPS'i (kayıt hızı) ile işleme FPS'i (bilgisayarın hızı) farkı</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ogleden Sonra -->
+    <div class="time-block">
+        <div class="time-block-header">
+            <span class="time-badge afternoon">Öğleden Sonra</span>
+            <span class="time-block-title">Entegrasyon ve Mini Proje &mdash; 3.5 saat</span>
+        </div>
+
+        <div class="task-card">
+            <div class="task-card-header">
+                <span class="task-id">1.4</span>
+                <span class="task-title">argparse + Video Entegrasyonu</span>
+                <span class="task-duration">1.5 saat</span>
+            </div>
+            <div class="task-body">
+                <p><code>--kaynak</code> argümanına göre webcam veya video dosyası açma:</p>
+                <p><code>if args.kaynak == "0": cap = cv2.VideoCapture(0) else: cap = cv2.VideoCapture(args.kaynak)</code> mantığı</p>
+                <p>Video işlerken FPS gösterme (Ödev 1'den biliyorsun)</p>
+<pre><span class="code-keyword">import</span> cv2
+<span class="code-keyword">import</span> argparse
+<span class="code-keyword">import</span> time
+
+parser = argparse.ArgumentParser()
+parser.add_argument(<span class="code-string">"--kaynak"</span>, default=<span class="code-string">"0"</span>)
+args = parser.parse_args()
+
+<span class="code-keyword">if</span> args.kaynak == <span class="code-string">"0"</span>:
+    cap = cv2.VideoCapture(<span class="code-number">0</span>)
+<span class="code-keyword">else</span>:
+    cap = cv2.VideoCapture(args.kaynak)
+
+<span class="code-keyword">while</span> <span class="code-keyword">True</span>:
+    ret, frame = cap.read()
+    <span class="code-keyword">if not</span> ret:
+        <span class="code-function">print</span>(<span class="code-string">"Video bitti veya kamera acilamadi!"</span>)
+        <span class="code-keyword">break</span>
+
+    cv2.imshow(<span class="code-string">"GuardWatch"</span>, frame)
+    <span class="code-keyword">if</span> cv2.waitKey(<span class="code-number">1</span>) &amp; <span class="code-number">0xFF</span> == <span class="code-function">ord</span>(<span class="code-string">'q'</span>):
+        <span class="code-keyword">break</span>
+
+cap.release()
+cv2.destroyAllWindows()</pre>
+            </div>
+        </div>
+
+        <div class="task-card">
+            <div class="task-card-header">
+                <span class="task-id">1.5</span>
+                <span class="task-title">TEKRAR &mdash; time.time() ile Video İşleme Süresi</span>
+                <span class="task-duration">1 saat</span>
+            </div>
+            <div class="task-body">
+                <p><strong>Tekrar konusu:</strong> Ödev 1'deki <code>time.time()</code> bilgisini burada kullan</p>
+                <ul>
+                    <li>Video dosyasını baştan sona işle, toplam süreyi ölç</li>
+                    <li>Her frame'in işlenme süresini ölç (ms cinsinden)</li>
+                    <li>"Bu video 847 frame, 45.3 saniyede analiz edildi (18.7 FPS)" gibi özet çıkar</li>
+                </ul>
+<pre>baslangic = time.time()
+frame_sayisi = <span class="code-number">0</span>
+
+<span class="code-keyword">while</span> <span class="code-keyword">True</span>:
+    frame_baslangic = time.time()
+    ret, frame = cap.read()
+    <span class="code-keyword">if not</span> ret:
+        <span class="code-keyword">break</span>
+
+    <span class="code-comment"># ... frame isleme ...</span>
+
+    frame_sure = time.time() - frame_baslangic
+    frame_sayisi += <span class="code-number">1</span>
+
+toplam_sure = time.time() - baslangic
+<span class="code-function">print</span>(<span class="code-string">f"Toplam: {frame_sayisi} frame, {toplam_sure:.1f} saniyede analiz edildi"</span>)
+<span class="code-function">print</span>(<span class="code-string">f"Ortalama: {frame_sayisi/toplam_sure:.1f} FPS"</span>)</pre>
+            </div>
+        </div>
+
+        <div class="task-card">
+            <div class="task-card-header">
+                <span class="task-id">1.6</span>
+                <span class="task-title">Günün Mini Projesi</span>
+                <span class="task-duration">1 saat</span>
+            </div>
+            <div class="task-body">
+                <p>Dosya: <code>gun1_video_analiz.py</code></p>
+                <ul>
+                    <li>argparse ile <code>--kaynak</code> ve <code>--confidence</code> argümanları al</li>
+                    <li>Belirtilen kaynaktan video oku</li>
+                    <li>Her frame'in işlenme süresini ölç</li>
+                    <li>Video bittiğinde özet yazdır: toplam frame, toplam süre, ortalama FPS</li>
+                    <li>Tüm çıktıyı güzel formatlı yazdır</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="checkpoint">
+        <div class="checkpoint-title">&#9898; Kontrol Noktası &mdash; Gün 1</div>
+        <ul>
+            <li>Virtual environment neden lazım? <code>requirements.txt</code> ne işe yarar?</li>
+            <li><code>argparse</code> ile komut satırından nasıl parametre alınır?</li>
+            <li><code>cv2.VideoCapture()</code> webcam ve video dosyası için nasıl farklı kullanılır?</li>
+            <li>Video bittiğini nasıl anlarsın? (<code>ret</code> değişkeni ne döner?)</li>
+            <li>Bir videonun toplam işlenme süresini nasıl ölçersin?</li>
+        </ul>
+    </div>
+
+    <div class="deliverables">
+        <div class="deliverables-title">&#9745; Gün 1 Teslim Listesi</div>
+        <div class="deliverable-item"><span class="deliverable-file">argparse_test.py</span> &mdash; argparse alıştırması</div>
+        <div class="deliverable-item"><span class="deliverable-file">gun1_video_analiz.py</span> &mdash; Video + argparse + süre ölçümü</div>
+        <div class="deliverable-item"><span class="deliverable-file">requirements.txt</span> &mdash; pip freeze çıktısı</div>
+        <div class="deliverable-item">Git commit: <code>"Gün 1: venv + argparse + video okuma"</code></div>
+    </div>
+</section>
+
+<!-- ============================================== -->
+<!-- GUN 2 -->
+<!-- ============================================== -->
+<section id="gun2" class="day-section day-1">
+    <div class="day-header">
+        <div class="day-label">Gün 2</div>
+        <h2>Hata Yönetimi &mdash; "Kod Çökmesin!"</h2>
+        <p>try/except ile sağlam kod yazma &mdash; graceful error handling</p>
+    </div>
+
+    <!-- Sabah -->
+    <div class="time-block">
+        <div class="time-block-header">
+            <span class="time-badge morning">Sabah</span>
+            <span class="time-block-title">try/except Temelleri &mdash; 3.5 saat</span>
+        </div>
+
+        <div class="task-card">
+            <div class="task-card-header">
+                <span class="task-id">2.1</span>
+                <span class="task-title">try/except Temelleri</span>
+                <span class="task-duration">1.5 saat</span>
+            </div>
+            <div class="task-body">
+                <p><strong>Hata (Exception) nedir?</strong> Program çalışırken beklenmeyen bir şey olduğunda Python "hata fırlatır".</p>
+                <p>Gerçek hayat: Mutfakta yemek yapıyorsun, tuz bitti. 2 seçenek: (A) Mutfağı yak (programın çökmesi), (B) "Tuz yok, tuzsuz devam edeyim" de (try/except)</p>
+<pre><span class="code-keyword">try</span>:
+    <span class="code-comment"># Hata olabilecek kod</span>
+    sonuc = <span class="code-number">10</span> / <span class="code-number">0</span>
+<span class="code-keyword">except</span> ZeroDivisionError:
+    <span class="code-comment"># Hata olursa burasi calisir</span>
+    <span class="code-function">print</span>(<span class="code-string">"Sifira bolme hatasi!"</span>)</pre>
+                <p><strong>Farklı hata türleri:</strong></p>
+                <ul>
+                    <li><code>FileNotFoundError</code> &rarr; Dosya bulunamadı</li>
+                    <li><code>ValueError</code> &rarr; Yanlış değer ("abc"yi int'e çevirme)</li>
+                    <li><code>KeyError</code> &rarr; Dictionary'de olmayan anahtar</li>
+                    <li><code>TypeError</code> &rarr; Yanlış tip ("5" + 5)</li>
+                    <li><code>IndexError</code> &rarr; Listede olmayan index</li>
+                    <li><code>Exception</code> &rarr; Tüm hataları yakalar (son çare)</li>
+                </ul>
+                <p><strong>Alıştırmalar</strong> (her biri ayrı try/except):</p>
+                <ol>
+                    <li>Kullanıcıdan sayı al, 100'e böl. Sayı girmezse hata yakala.</li>
+                    <li>Bir dosya oku. Dosya yoksa "Dosya bulunamadı" yaz.</li>
+                    <li>Bir listeden index ile eleman al. Index yoksa hata yakala.</li>
+                    <li>Bir dictionary'den key ile değer al. Key yoksa hata yakala.</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="task-card">
+            <div class="task-card-header">
+                <span class="task-id">2.2</span>
+                <span class="task-title">try/except/else/finally</span>
+                <span class="task-duration">1 saat</span>
+            </div>
+            <div class="task-body">
+                <ul>
+                    <li><code>else</code> &rarr; Hata olMAZSA çalışır</li>
+                    <li><code>finally</code> &rarr; Hata olsa da olmasa da MUTLAKA çalışır</li>
+                    <li><code>finally</code> ne işe yarar? Dosya kapatma, bağlantı kapatma gibi "temizlik" işleri</li>
+                </ul>
+<pre><span class="code-keyword">try</span>:
+    dosya = <span class="code-function">open</span>(<span class="code-string">"veri.txt"</span>, <span class="code-string">"r"</span>)
+    icerik = dosya.read()
+<span class="code-keyword">except</span> FileNotFoundError:
+    <span class="code-function">print</span>(<span class="code-string">"Dosya bulunamadi!"</span>)
+<span class="code-keyword">else</span>:
+    <span class="code-function">print</span>(<span class="code-string">f"Dosya basariyla okundu: {len(icerik)} karakter"</span>)
+<span class="code-keyword">finally</span>:
+    <span class="code-function">print</span>(<span class="code-string">"Bu satir HER DURUMDA calisir"</span>)</pre>
+                <p><strong>Alıştırma:</strong> Kullanıcıdan dosya adı iste, dosyayı oku, satır sayısını yazdır. Her aşamada hata yönetimi olsun.</p>
+            </div>
+        </div>
+
+        <div class="task-card">
+            <div class="task-card-header">
+                <span class="task-id">2.3</span>
+                <span class="task-title">Birden Fazla except ve Hata Mesajları</span>
+                <span class="task-duration">1 saat</span>
+            </div>
+            <div class="task-body">
+                <ul>
+                    <li>Bir try bloğunda birden fazla except olabilir</li>
+                    <li><code>except Exception as e:</code> ile hata mesajını yakalama</li>
+                    <li><code>str(e)</code> ile hata mesajını string'e çevirme</li>
+                    <li>Kendi hata mesajları yazma: kullanıcıya anlamlı mesaj göster</li>
+                </ul>
+<pre><span class="code-keyword">try</span>:
+    deger = <span class="code-function">input</span>(<span class="code-string">"Sayi gir: "</span>)
+    sayi = <span class="code-function">int</span>(deger)
+    sonuc = <span class="code-number">100</span> / sayi
+<span class="code-keyword">except</span> ValueError:
+    <span class="code-function">print</span>(<span class="code-string">f"'{deger}' bir sayi degil!"</span>)
+<span class="code-keyword">except</span> ZeroDivisionError:
+    <span class="code-function">print</span>(<span class="code-string">"Sifira bolemezsin!"</span>)
+<span class="code-keyword">except</span> Exception <span class="code-keyword">as</span> e:
+    <span class="code-function">print</span>(<span class="code-string">f"Beklenmeyen hata: {e}"</span>)
+<span class="code-keyword">else</span>:
+    <span class="code-function">print</span>(<span class="code-string">f"Sonuc: {sonuc:.2f}"</span>)</pre>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ogleden Sonra -->
+    <div class="time-block">
+        <div class="time-block-header">
+            <span class="time-badge afternoon">Öğleden Sonra</span>
+            <span class="time-block-title">Pratikte Hata Yönetimi &mdash; 3.5 saat</span>
+        </div>
+
+        <div class="task-card">
+            <div class="task-card-header">
+                <span class="task-id">2.4</span>
+                <span class="task-title">guardwatch.py'ye Hata Yönetimi Ekleme</span>
+                <span class="task-duration">2 saat</span>
+            </div>
+            <div class="task-body">
+                <p>Bu görevde <code>guardwatch.py</code>'nin kopyasını al ve hata yönetimi ekle. <strong>4 kritik nokta:</strong></p>
+
+                <p><strong>1. Kamera/video açılmazsa:</strong></p>
+<pre>cap = cv2.VideoCapture(kaynak)
+<span class="code-keyword">if not</span> cap.isOpened():
+    <span class="code-function">print</span>(<span class="code-string">f"HATA: '{kaynak}' acilamadi!"</span>)
+    <span class="code-function">print</span>(<span class="code-string">"Webcam icin 0, video icin dosya yolunu kontrol et."</span>)
+    sys.exit(<span class="code-number">1</span>)</pre>
+
+                <p><strong>2. Model dosyası yoksa:</strong></p>
+<pre><span class="code-keyword">try</span>:
+    model = YOLO(<span class="code-string">"yolov8n.pt"</span>)
+<span class="code-keyword">except</span> Exception <span class="code-keyword">as</span> e:
+    <span class="code-function">print</span>(<span class="code-string">f"HATA: YOLO modeli yuklenemedi: {e}"</span>)
+    <span class="code-function">print</span>(<span class="code-string">"'yolov8n.pt' dosyasinin var oldugundan emin ol."</span>)
+    sys.exit(<span class="code-number">1</span>)</pre>
+
+                <p><strong>3. Config dosyası bozuksa:</strong></p>
+<pre><span class="code-keyword">try</span>:
+    <span class="code-keyword">with</span> <span class="code-function">open</span>(<span class="code-string">"config.json"</span>, <span class="code-string">"r"</span>) <span class="code-keyword">as</span> f:
+        config = json.load(f)
+<span class="code-keyword">except</span> FileNotFoundError:
+    <span class="code-function">print</span>(<span class="code-string">"UYARI: config.json bulunamadi, varsayilan degerler kullaniliyor"</span>)
+    config = {<span class="code-string">"ear_esik"</span>: <span class="code-number">0.22</span>, <span class="code-string">"sure_esik"</span>: <span class="code-number">2.0</span>}
+<span class="code-keyword">except</span> json.JSONDecodeError:
+    <span class="code-function">print</span>(<span class="code-string">"UYARI: config.json bozuk, varsayilan degerler kullaniliyor"</span>)
+    config = {<span class="code-string">"ear_esik"</span>: <span class="code-number">0.22</span>, <span class="code-string">"sure_esik"</span>: <span class="code-number">2.0</span>}</pre>
+
+                <p><strong>4. Video dosyası bulunamazsa</strong> (argparse ile alınan dosya yolu):</p>
+<pre><span class="code-keyword">import</span> os
+<span class="code-keyword">if</span> kaynak != <span class="code-string">"0"</span> <span class="code-keyword">and not</span> os.path.exists(kaynak):
+    <span class="code-function">print</span>(<span class="code-string">f"HATA: Video dosyasi bulunamadi: '{kaynak}'"</span>)
+    sys.exit(<span class="code-number">1</span>)</pre>
+            </div>
+        </div>
+
+        <div class="task-card">
+            <div class="task-card-header">
+                <span class="task-id">2.5</span>
+                <span class="task-title">TEKRAR &mdash; MediaPipe Graceful Handling</span>
+                <span class="task-duration">1 saat</span>
+            </div>
+            <div class="task-body">
+                <p><strong>Tekrar konusu:</strong> Ödev 1'den MediaPipe + EAR bilgisi</p>
+                <ul>
+                    <li>Yüz bulunamazsa ne olur? <code>face_mesh.process()</code> sonucu boş olabilir</li>
+                    <li>EAR hesaplanamayan frame'leri "atla" mantığı</li>
+                    <li>None kontrolü ile güvenli kod yazma</li>
+                </ul>
+<pre><span class="code-comment"># YANLIS - cokebilir:</span>
+results = face_mesh.process(frame_rgb)
+landmarks = results.multi_face_landmarks[<span class="code-number">0</span>]  <span class="code-comment"># Yuz yoksa HATA!</span>
+
+<span class="code-comment"># DOGRU - guvenli:</span>
+results = face_mesh.process(frame_rgb)
+<span class="code-keyword">if</span> results.multi_face_landmarks:
+    landmarks = results.multi_face_landmarks[<span class="code-number">0</span>]
+    ear = ear_hesapla(landmarks)
+<span class="code-keyword">else</span>:
+    <span class="code-comment"># Yuz bulunamadi, bu frame'i atla</span>
+    ear = <span class="code-keyword">None</span></pre>
+                <div class="warning-callout">
+                    <strong>Dikkat:</strong> Gerçek dünyada kamera her zaman yüz görmez. Birisi eğilir, döner, elini yüzüne koyar. Kodun bu durumlarda ÇÖKMEMELI.
+                </div>
+            </div>
+        </div>
+
+        <div class="task-card">
+            <div class="task-card-header">
+                <span class="task-id">2.6</span>
+                <span class="task-title">Hata Yönetimi Test Senaryoları</span>
+                <span class="task-duration">30 dk</span>
+            </div>
+            <div class="task-body">
+                <p>Test tablosu ile tüm hata senaryolarını dene:</p>
+                <table class="test-table">
+                    <thead>
+                        <tr>
+                            <th>Senaryo</th>
+                            <th>Beklenen Davranış</th>
+                            <th>Sonuç</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Webcam takılı değilken çalıştır</td>
+                            <td>"Kamera açılamadı" mesajı</td>
+                            <td class="empty-cell">Doldur</td>
+                        </tr>
+                        <tr>
+                            <td>Olmayan video dosyası ver</td>
+                            <td>"Dosya bulunamadı" mesajı</td>
+                            <td class="empty-cell">Doldur</td>
+                        </tr>
+                        <tr>
+                            <td>config.json'ı sil ve çalıştır</td>
+                            <td>Varsayılan değerlerle devam</td>
+                            <td class="empty-cell">Doldur</td>
+                        </tr>
+                        <tr>
+                            <td>config.json'a bozuk JSON yaz</td>
+                            <td>Varsayılan değerlerle devam</td>
+                            <td class="empty-cell">Doldur</td>
+                        </tr>
+                        <tr>
+                            <td>Yüzünü kameradan gizle</td>
+                            <td>Program çökmeden devam</td>
+                            <td class="empty-cell">Doldur</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="checkpoint">
+        <div class="checkpoint-title">&#9898; Kontrol Noktası &mdash; Gün 2</div>
+        <ul>
+            <li>try/except neden kullanılır? Ne zaman kullanılır?</li>
+            <li><code>except Exception as e:</code> ifadesinde <code>e</code> ne?</li>
+            <li><code>finally</code> bloğu ne zaman çalışır?</li>
+            <li>Kamera açılmazsa programın çökmemesi için ne yaparsın?</li>
+            <li><code>if results.multi_face_landmarks:</code> kontrolü neden şart?</li>
+        </ul>
+    </div>
+
+    <div class="deliverables">
+        <div class="deliverables-title">&#9745; Gün 2 Teslim Listesi</div>
+        <div class="deliverable-item"><span class="deliverable-file">gun2_hata_alishtirma.py</span> &mdash; try/except alıştırmaları</div>
+        <div class="deliverable-item"><span class="deliverable-file">guardwatch_v2.py</span> &mdash; Hata yönetimi eklenmiş versiyon</div>
+        <div class="deliverable-item">Hata test tablosu (yukarıdaki tabloyu doldur)</div>
+        <div class="deliverable-item">Git commit: <code>"Gün 2: Hata yönetimi eklendi"</code></div>
+    </div>
+</section>
+</div>
+
+<!-- ============================================== -->
+<!-- GUN 3 -->
+<!-- ============================================== -->
+<div class="container">
+<section id="gun3" class="day-section day-2">
+    <div class="day-header">
+        <div class="day-label">Gün 3</div>
+        <h2>Veri Kaydetme &mdash; CSV</h2>
+        <p>CSV dosyaları ile veri yazma/okuma &mdash; ihlal kayıt sistemi &mdash; EN DETAYLI GÜN</p>
+    </div>
+
+    <!-- Sabah -->
+    <div class="time-block">
+        <div class="time-block-header">
+            <span class="time-badge morning">Sabah</span>
+            <span class="time-block-title">CSV Temelleri &mdash; 3.5 saat</span>
+        </div>
+
+        <div class="task-card">
+            <div class="task-card-header">
+                <span class="task-id">3.1</span>
+                <span class="task-title">CSV Nedir?</span>
+                <span class="task-duration">1 saat</span>
+            </div>
+            <div class="task-body">
+                <p><strong>"Comma Separated Values"</strong> &mdash; virgülle ayrılmış değerler.</p>
+                <p>Excel'de açılabilen basit metin dosyası.</p>
+                <p><strong>Gerçek hayat örneği:</strong> banka hesap özeti, öğrenci listesi, market fişi.</p>
+                <ul>
+                    <li>Bir CSV dosyasını Not Defteri'nde aç &rarr; her satır bir kayıt, virgüller sütunları ayırır</li>
+                    <li><strong>Neden CSV?</strong> Basit, her dilde okunabilir, Excel'de açılabilir, veritabanına aktarılabilir</li>
+                </ul>
+                <p><strong>Örnek CSV formatı:</strong></p>
+<pre>isim,yas,sehir
+Taha,23,Ankara
+Ali,25,Istanbul
+Ayse,22,Izmir</pre>
+                <p><strong>Alıştırma:</strong> Bir <code>.txt</code> dosyası oluştur, yukarıdaki CSV formatında 5 kişilik veri yaz. Not Defteri'nde aç, sonra Excel'de aç. Farkı gör.</p>
+            </div>
+        </div>
+
+        <div class="task-card">
+            <div class="task-card-header">
+                <span class="task-id">3.2</span>
+                <span class="task-title">Python csv Modülü &mdash; Yazma</span>
+                <span class="task-duration">1.5 saat</span>
+            </div>
+            <div class="task-body">
+                <ul>
+                    <li><code>import csv</code></li>
+                    <li><code>csv.writer</code> ile satır satır yazma</li>
+                    <li>Dosya açma modları: <code>"w"</code> (yeni yaz &mdash; eski veriyi siler!), <code>"a"</code> (append &mdash; sonuna ekler)</li>
+                    <li><code>with open(...) as f:</code> yapısı (context manager) &mdash; dosyayı güvenli aç/kapa. with bloğu bitince dosya otomatik kapanır.</li>
+                    <li><code>newline=""</code> parametresi neden lazım? (Windows'ta boş satır problemi)</li>
+                </ul>
+<pre><span class="code-keyword">import</span> csv
+
+<span class="code-comment"># Yeni CSV dosyasi olustur</span>
+<span class="code-keyword">with</span> <span class="code-function">open</span>(<span class="code-string">"ogrenciler.csv"</span>, <span class="code-string">"w"</span>, newline=<span class="code-string">""</span>) <span class="code-keyword">as</span> dosya:
+    yazici = csv.writer(dosya)
+    yazici.writerow([<span class="code-string">"isim"</span>, <span class="code-string">"yas"</span>, <span class="code-string">"not"</span>])  <span class="code-comment"># Baslik satiri</span>
+    yazici.writerow([<span class="code-string">"Taha"</span>, <span class="code-number">23</span>, <span class="code-number">85</span>])
+    yazici.writerow([<span class="code-string">"Ali"</span>, <span class="code-number">25</span>, <span class="code-number">72</span>])
+    yazici.writerow([<span class="code-string">"Ayse"</span>, <span class="code-number">22</span>, <span class="code-number">95</span>])
+
+<span class="code-function">print</span>(<span class="code-string">"CSV dosyasi olusturuldu!"</span>)</pre>
+                <p><strong><code>csv.DictWriter</code> ile sütun başlıklı yazma</strong> (daha okunabilir):</p>
+<pre><span class="code-keyword">import</span> csv
+
+basliklar = [<span class="code-string">"isim"</span>, <span class="code-string">"yas"</span>, <span class="code-string">"not"</span>]
+
+<span class="code-keyword">with</span> <span class="code-function">open</span>(<span class="code-string">"ogrenciler2.csv"</span>, <span class="code-string">"w"</span>, newline=<span class="code-string">""</span>) <span class="code-keyword">as</span> dosya:
+    yazici = csv.DictWriter(dosya, fieldnames=basliklar)
+    yazici.writeheader()
+    yazici.writerow({<span class="code-string">"isim"</span>: <span class="code-string">"Taha"</span>, <span class="code-string">"yas"</span>: <span class="code-number">23</span>, <span class="code-string">"not"</span>: <span class="code-number">85</span>})
+    yazici.writerow({<span class="code-string">"isim"</span>: <span class="code-string">"Ali"</span>, <span class="code-string">"yas"</span>: <span class="code-number">25</span>, <span class="code-string">"not"</span>: <span class="code-number">72</span>})</pre>
+                <div class="warning-callout">
+                    <strong>Dikkat:</strong> <code>"w"</code> modu dosyanın tüm içeriğini siler! Var olan verinin üstüne yazmak istemiyorsan <code>"a"</code> kullan.
+                </div>
+            </div>
+        </div>
+
+        <div class="task-card">
+            <div class="task-card-header">
+                <span class="task-id">3.3</span>
+                <span class="task-title">Python csv Modülü &mdash; Okuma</span>
+                <span class="task-duration">1 saat</span>
+            </div>
+            <div class="task-body">
+                <ul>
+                    <li><code>csv.reader</code> ile satır satır okuma</li>
+                    <li><code>csv.DictReader</code> ile sütun başlıklı okuma (her satır bir dictionary)</li>
+                </ul>
+<pre><span class="code-keyword">import</span> csv
+
+<span class="code-comment"># csv.reader ile okuma</span>
+<span class="code-keyword">with</span> <span class="code-function">open</span>(<span class="code-string">"ogrenciler.csv"</span>, <span class="code-string">"r"</span>) <span class="code-keyword">as</span> dosya:
+    okuyucu = csv.reader(dosya)
+    basliklar = <span class="code-function">next</span>(okuyucu)  <span class="code-comment"># Ilk satir baslik</span>
+    <span class="code-keyword">for</span> satir <span class="code-keyword">in</span> okuyucu:
+        <span class="code-function">print</span>(<span class="code-string">f"Isim: {satir[0]}, Yas: {satir[1]}, Not: {satir[2]}"</span>)
+
+<span class="code-comment"># csv.DictReader ile okuma (daha okunakli)</span>
+<span class="code-keyword">with</span> <span class="code-function">open</span>(<span class="code-string">"ogrenciler.csv"</span>, <span class="code-string">"r"</span>) <span class="code-keyword">as</span> dosya:
+    okuyucu = csv.DictReader(dosya)
+    <span class="code-keyword">for</span> satir <span class="code-keyword">in</span> okuyucu:
+        <span class="code-function">print</span>(<span class="code-string">f"Isim: {satir['isim']}, Not: {satir['not']}"</span>)</pre>
+                <p><strong>Alıştırma:</strong> 10 öğrencili bir CSV oluştur, oku, ortalamanın üstündekileri yazdır.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ogleden Sonra -->
+    <div class="time-block">
+        <div class="time-block-header">
+            <span class="time-badge afternoon">Öğleden Sonra</span>
+            <span class="time-block-title">İhlal Kayıt Sistemi + Mini Proje &mdash; 3.5 saat</span>
+        </div>
+
+        <div class="task-card">
+            <div class="task-card-header">
+                <span class="task-id">3.4</span>
+                <span class="task-title">İhlal Kayıt Sistemi Tasarımı</span>
+                <span class="task-duration">1.5 saat</span>
+            </div>
+            <div class="task-body">
+                <p>GuardWatch'a CSV kayıt sistemi ekle. Her ihlal olduğunda bir satır ekle.</p>
+                <p><strong>CSV formatı:</strong> <code>zaman, kisi_id, ihlal_turu, sure_sn, ear_degeri</code></p>
+<pre><span class="code-keyword">import</span> csv
+<span class="code-keyword">from</span> datetime <span class="code-keyword">import</span> datetime
+
+<span class="code-keyword">def</span> <span class="code-function">ihlal_kaydet</span>(kisi_id, ihlal_turu, sure, ear):
+    <span class="code-string">"""Ihlali CSV dosyasina kaydet"""</span>
+    <span class="code-keyword">with</span> <span class="code-function">open</span>(<span class="code-string">"ihlaller.csv"</span>, <span class="code-string">"a"</span>, newline=<span class="code-string">""</span>) <span class="code-keyword">as</span> dosya:
+        yazici = csv.writer(dosya)
+        zaman = datetime.now().strftime(<span class="code-string">"%Y-%m-%d %H:%M:%S"</span>)
+        yazici.writerow([zaman, kisi_id, ihlal_turu, sure, <span class="code-string">f"{ear:.3f}"</span>])
+
+<span class="code-comment"># Kullanim:</span>
+ihlal_kaydet(<span class="code-string">"KID_1"</span>, <span class="code-string">"goz_kapali"</span>, <span class="code-number">3.5</span>, <span class="code-number">0.18</span>)
+ihlal_kaydet(<span class="code-string">"KID_2"</span>, <span class="code-string">"hareketsiz"</span>, <span class="code-number">12.0</span>, <span class="code-number">0.25</span>)</pre>
+                <p><strong>CSV başlık satırını program başında bir kez yaz</strong> (eğer dosya yoksa):</p>
+<pre><span class="code-keyword">import</span> os
+
+csv_dosya = <span class="code-string">"ihlaller.csv"</span>
+<span class="code-keyword">if not</span> os.path.exists(csv_dosya):
+    <span class="code-keyword">with</span> <span class="code-function">open</span>(csv_dosya, <span class="code-string">"w"</span>, newline=<span class="code-string">""</span>) <span class="code-keyword">as</span> dosya:
+        yazici = csv.writer(dosya)
+        yazici.writerow([<span class="code-string">"zaman"</span>, <span class="code-string">"kisi_id"</span>, <span class="code-string">"ihlal_turu"</span>, <span class="code-string">"sure_sn"</span>, <span class="code-string">"ear_degeri"</span>])</pre>
+            </div>
+        </div>
+
+        <div class="task-card">
+            <div class="task-card-header">
+                <span class="task-id">3.5</span>
+                <span class="task-title">TEKRAR &mdash; time.time() ile CSV Timestamp</span>
+                <span class="task-duration">1 saat</span>
+            </div>
+            <div class="task-body">
+                <p><strong>Tekrar konusu:</strong> <code>time.time()</code> ve <code>datetime</code> birlikte kullanımı.</p>
+                <ul>
+                    <li>Unix timestamp'ı okunabilir zamana çevirme: <code>datetime.fromtimestamp()</code></li>
+                    <li>CSV'ye yazılacak zaman formatı: <code>%Y-%m-%d %H:%M:%S</code></li>
+                </ul>
+<pre><span class="code-keyword">import</span> time
+<span class="code-keyword">from</span> datetime <span class="code-keyword">import</span> datetime
+
+<span class="code-comment"># Unix timestamp</span>
+ts = time.time()
+<span class="code-function">print</span>(<span class="code-string">f"Unix timestamp: {ts}"</span>)  <span class="code-comment"># 1741089600.123</span>
+
+<span class="code-comment"># Okunabilir format</span>
+okunabilir = datetime.fromtimestamp(ts)
+<span class="code-function">print</span>(<span class="code-string">f"Okunabilir: {okunabilir}"</span>)  <span class="code-comment"># 2026-03-04 14:30:00.123</span>
+
+<span class="code-comment"># Formatli string</span>
+formatli = okunabilir.strftime(<span class="code-string">"%Y-%m-%d %H:%M:%S"</span>)
+<span class="code-function">print</span>(<span class="code-string">f"Formatli: {formatli}"</span>)  <span class="code-comment"># 2026-03-04 14:30:00</span></pre>
+                <p><strong>Alıştırma:</strong> Bir döngüde 10 saniye boyunca her saniye bir "ihlal" simüle et, CSV'ye kaydet. Sonra CSV'yi oku ve "toplam X ihlal, ilk ihlal: ..., son ihlal: ..." yazdır.</p>
+            </div>
+        </div>
+
+        <div class="task-card">
+            <div class="task-card-header">
+                <span class="task-id">3.6</span>
+                <span class="task-title">Günün Mini Projesi &mdash; CSV Özet Raporu</span>
+                <span class="task-duration">1 saat</span>
+            </div>
+            <div class="task-body">
+                <p><strong>Dosya:</strong> <code>gun3_csv_rapor.py</code></p>
+                <ul>
+                    <li>Sahte ihlal verisi oluştur (20 satır, rastgele kisi_id, ihlal_turu, sure, ear)</li>
+                    <li>CSV'ye kaydet</li>
+                    <li>CSV'yi oku ve özet çıkar:</li>
+                </ul>
+                <ol>
+                    <li>Toplam ihlal sayısı</li>
+                    <li>Kişi başına ihlal sayısı</li>
+                    <li>En uzun ihlal süresi</li>
+                    <li>Ortalama EAR değeri</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <div class="checkpoint">
+        <div class="checkpoint-title">&#9898; Kontrol Noktası &mdash; Gün 3</div>
+        <ul>
+            <li>CSV dosyası ne demek? Neden kullanışlı?</li>
+            <li><code>csv.writer</code> ve <code>csv.DictWriter</code> arasındaki fark nedir?</li>
+            <li><code>"w"</code> ve <code>"a"</code> dosya açma modları arasındaki fark nedir?</li>
+            <li><code>with open(...) as f:</code> yapısı ne işe yarar? Neden düz <code>open()</code> yerine bunu kullanıyoruz?</li>
+            <li><code>datetime.now().strftime()</code> ile ne yapıyoruz?</li>
+        </ul>
+    </div>
+
+    <div class="deliverables">
+        <div class="deliverables-title">&#9745; Gün 3 Teslim Listesi</div>
+        <div class="deliverable-item"><span class="deliverable-file">gun3_csv_yazma.py</span> &mdash; CSV yazma alıştırmaları</div>
+        <div class="deliverable-item"><span class="deliverable-file">gun3_csv_okuma.py</span> &mdash; CSV okuma alıştırmaları</div>
+        <div class="deliverable-item"><span class="deliverable-file">gun3_csv_rapor.py</span> &mdash; Sahte veri + özet rapor</div>
+        <div class="deliverable-item"><span class="deliverable-file">ihlaller.csv</span> &mdash; Örnek ihlal kaydı</div>
+        <div class="deliverable-item">Git commit: <code>"Gün 3: CSV kayıt sistemi"</code></div>
+    </div>
+</section>
+
+<!-- ============================================== -->
+<!-- GUN 4 -->
+<!-- ============================================== -->
+<section id="gun4" class="day-section day-3">
+    <div class="day-header">
+        <div class="day-label">Gün 4</div>
+        <h2>Dosya/Klasör Yönetimi + İhlal Frame Kaydetme</h2>
+        <p>os ve pathlib ile dosya yönetimi &mdash; cv2.imwrite() ile frame kaydetme</p>
+    </div>
+
+    <!-- Sabah -->
+    <div class="time-block">
+        <div class="time-block-header">
+            <span class="time-badge morning">Sabah</span>
+            <span class="time-block-title">os, pathlib ve Frame Kaydetme &mdash; 3.5 saat</span>
+        </div>
+
+        <div class="task-card">
+            <div class="task-card-header">
+                <span class="task-id">4.1</span>
+                <span class="task-title">os Modülü Temel İşlemler</span>
+                <span class="task-duration">1.5 saat</span>
+            </div>
+            <div class="task-body">
+                <p><strong><code>import os</code></strong> &mdash; dosya ve klasör işlemleri için temel modül.</p>
+                <ul>
+                    <li><code>os.makedirs("klasor/alt_klasor", exist_ok=True)</code> &mdash; klasör oluştur (varsa hata verme)</li>
+                    <li><code>os.path.exists("dosya.txt")</code> &mdash; dosya/klasör var mı kontrol et</li>
+                    <li><code>os.listdir("klasor")</code> &mdash; klasördeki dosyaları listele</li>
+                    <li><code>os.path.join("klasor", "alt", "dosya.txt")</code> &mdash; platform bağımsız yol birleştir</li>
+                    <li><strong>Neden önemli?</strong> Windows: <code>klasor\dosya.txt</code>, Mac/Linux: <code>klasor/dosya.txt</code>. <code>os.path.join</code> doğru olanı seçer.</li>
+                    <li><code>os.remove("dosya.txt")</code> &mdash; dosya silme</li>
+                    <li><code>os.path.getsize("dosya.txt")</code> &mdash; dosya boyutu (byte)</li>
+                </ul>
+<pre><span class="code-keyword">import</span> os
+
+<span class="code-comment"># Klasor olustur</span>
+os.makedirs(<span class="code-string">"kayitlar/2026-03-05"</span>, exist_ok=<span class="code-keyword">True</span>)
+
+<span class="code-comment"># Var mi kontrol et</span>
+<span class="code-keyword">if</span> os.path.exists(<span class="code-string">"kayitlar"</span>):
+    <span class="code-function">print</span>(<span class="code-string">"kayitlar klasoru mevcut!"</span>)
+
+<span class="code-comment"># Dosya listele</span>
+dosyalar = os.listdir(<span class="code-string">"kayitlar"</span>)
+<span class="code-function">print</span>(<span class="code-string">f"Dosyalar: {dosyalar}"</span>)
+
+<span class="code-comment"># Yol birlestir</span>
+tam_yol = os.path.join(<span class="code-string">"kayitlar"</span>, <span class="code-string">"2026-03-05"</span>, <span class="code-string">"ihlal_001.jpg"</span>)
+<span class="code-function">print</span>(<span class="code-string">f"Tam yol: {tam_yol}"</span>)</pre>
+                <p><strong>Alıştırma:</strong> Bir klasör yapısı oluştur: <code>proje/veriler/</code>, <code>proje/ciktilar/</code>, <code>proje/loglar/</code>. Her birinin içine boş bir <code>.gitkeep</code> dosyası oluştur.</p>
+            </div>
+        </div>
+
+        <div class="task-card">
+            <div class="task-card-header">
+                <span class="task-id">4.2</span>
+                <span class="task-title">pathlib Modülü &mdash; Modern Alternatif</span>
+                <span class="task-duration">1 saat</span>
+            </div>
+            <div class="task-body">
+                <p><strong><code>from pathlib import Path</code></strong> &mdash; dosya yollarını nesne gibi kullanma.</p>
+                <ul>
+                    <li><code>p = Path("klasor/dosya.txt")</code></li>
+                    <li><code>p.exists()</code>, <code>p.mkdir(parents=True, exist_ok=True)</code>, <code>p.name</code>, <code>p.suffix</code>, <code>p.stem</code></li>
+                    <li><code>/</code> operatörü ile yol birleştirme: <code>Path("klasor") / "alt" / "dosya.txt"</code></li>
+                </ul>
+<pre><span class="code-keyword">from</span> pathlib <span class="code-keyword">import</span> Path
+
+<span class="code-comment"># Klasor olustur</span>
+kayit_yolu = Path(<span class="code-string">"kayitlar"</span>) / <span class="code-string">"2026-03-05"</span>
+kayit_yolu.mkdir(parents=<span class="code-keyword">True</span>, exist_ok=<span class="code-keyword">True</span>)
+
+<span class="code-comment"># Dosya bilgileri</span>
+dosya = Path(<span class="code-string">"ihlaller.csv"</span>)
+<span class="code-function">print</span>(<span class="code-string">f"Isim: {dosya.name}"</span>)       <span class="code-comment"># ihlaller.csv</span>
+<span class="code-function">print</span>(<span class="code-string">f"Uzanti: {dosya.suffix}"</span>)   <span class="code-comment"># .csv</span>
+<span class="code-function">print</span>(<span class="code-string">f"Govde: {dosya.stem}"</span>)      <span class="code-comment"># ihlaller</span>
+<span class="code-function">print</span>(<span class="code-string">f"Var mi: {dosya.exists()}"</span>)
+
+<span class="code-comment"># Klasordeki CSV dosyalari</span>
+<span class="code-keyword">for</span> csv_dosya <span class="code-keyword">in</span> Path(<span class="code-string">"kayitlar"</span>).glob(<span class="code-string">"*.csv"</span>):
+    <span class="code-function">print</span>(<span class="code-string">f"Bulundu: {csv_dosya}"</span>)</pre>
+                <div class="info-callout">
+                    <strong>Bilgi:</strong> <code>pathlib</code>, <code>os.path</code>'in modern versiyonu. Yeni projelerde <code>pathlib</code> tercih et, ama <code>os</code> modülünü de bil çünkü eski kodlarda çok göreceksin.
+                </div>
+            </div>
+        </div>
+
+        <div class="task-card">
+            <div class="task-card-header">
+                <span class="task-id">4.3</span>
+                <span class="task-title">cv2.imwrite() ile Frame Kaydetme</span>
+                <span class="task-duration">1 saat</span>
+            </div>
+            <div class="task-body">
+                <ul>
+                    <li><code>cv2.imwrite("dosya.jpg", frame)</code> &mdash; frame'i resim olarak kaydet</li>
+                    <li>Dosya formatı uzantıya göre belirlenir: <code>.jpg</code>, <code>.png</code></li>
+                    <li><strong>JPG:</strong> küçük dosya, kayıplı sıkıştırma. <strong>PNG:</strong> büyük dosya, kayıpsız.</li>
+                    <li>İhlal frame'ine bilgi yazma: <code>cv2.putText()</code> ile EAR değeri, kişi ID'si vs.</li>
+                </ul>
+<pre><span class="code-keyword">import</span> cv2
+<span class="code-keyword">from</span> datetime <span class="code-keyword">import</span> datetime
+
+<span class="code-keyword">def</span> <span class="code-function">ihlal_frame_kaydet</span>(frame, kisi_id, ear_degeri):
+    <span class="code-string">"""Ihlal anindaki frame'i kaydet"""</span>
+    <span class="code-comment"># Tarih bazli klasor</span>
+    tarih = datetime.now().strftime(<span class="code-string">"%Y-%m-%d"</span>)
+    klasor = <span class="code-string">f"kayitlar/{tarih}"</span>
+    os.makedirs(klasor, exist_ok=<span class="code-keyword">True</span>)
+
+    <span class="code-comment"># Dosya adi: ihlal_KID3_2026-03-05_14-30-05.jpg</span>
+    zaman = datetime.now().strftime(<span class="code-string">"%Y-%m-%d_%H-%M-%S"</span>)
+    dosya_adi = <span class="code-string">f"ihlal_{kisi_id}_{zaman}.jpg"</span>
+    tam_yol = os.path.join(klasor, dosya_adi)
+
+    <span class="code-comment"># Frame'e bilgi yaz</span>
+    bilgi = <span class="code-string">f"EAR: {ear_degeri:.3f} | {kisi_id} | {zaman}"</span>
+    cv2.putText(frame, bilgi, (<span class="code-number">10</span>, <span class="code-number">30</span>), cv2.FONT_HERSHEY_SIMPLEX, <span class="code-number">0.7</span>, (<span class="code-number">0</span>, <span class="code-number">0</span>, <span class="code-number">255</span>), <span class="code-number">2</span>)
+
+    <span class="code-comment"># Kaydet</span>
+    cv2.imwrite(tam_yol, frame)
+    <span class="code-keyword">return</span> tam_yol</pre>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ogleden Sonra -->
+    <div class="time-block">
+        <div class="time-block-header">
+            <span class="time-badge afternoon">Öğleden Sonra</span>
+            <span class="time-block-title">Entegrasyon + Temizlik + Mini Proje &mdash; 3.5 saat</span>
+        </div>
+
+        <div class="task-card">
+            <div class="task-card-header">
+                <span class="task-id">4.4</span>
+                <span class="task-title">İhlal Klasör Yapısı + CSV Entegrasyonu</span>
+                <span class="task-duration">1.5 saat</span>
+            </div>
+            <div class="task-body">
+                <p>CSV'ye kaydedilen her ihlale frame dosya yolunu da ekle.</p>
+                <p><strong>Güncellenen CSV formatı:</strong> <code>zaman, kisi_id, ihlal_turu, sure_sn, ear_degeri, frame_yolu</code></p>
+                <p><strong>Klasör yapısı:</strong> <code>kayitlar/2026-03-05/ihlal_KID3_...jpg</code></p>
+<pre><span class="code-keyword">def</span> <span class="code-function">ihlal_kaydet</span>(kisi_id, ihlal_turu, sure, ear, frame=<span class="code-keyword">None</span>):
+    <span class="code-string">"""Ihlali CSV'ye kaydet ve frame'i dosyaya kaydet"""</span>
+    zaman = datetime.now().strftime(<span class="code-string">"%Y-%m-%d %H:%M:%S"</span>)
+    frame_yolu = <span class="code-string">""</span>
+
+    <span class="code-keyword">if</span> frame <span class="code-keyword">is not None</span>:
+        frame_yolu = ihlal_frame_kaydet(frame, kisi_id, ear)
+
+    <span class="code-keyword">with</span> <span class="code-function">open</span>(<span class="code-string">"ihlaller.csv"</span>, <span class="code-string">"a"</span>, newline=<span class="code-string">""</span>) <span class="code-keyword">as</span> dosya:
+        yazici = csv.writer(dosya)
+        yazici.writerow([zaman, kisi_id, ihlal_turu, <span class="code-string">f"{sure:.1f}"</span>, <span class="code-string">f"{ear:.3f}"</span>, frame_yolu])</pre>
+            </div>
+        </div>
+
+        <div class="task-card">
+            <div class="task-card-header">
+                <span class="task-id">4.5</span>
+                <span class="task-title">Eski Kayıtları Temizleme</span>
+                <span class="task-duration">1 saat</span>
+            </div>
+            <div class="task-body">
+                <p>X günden eski dosyaları otomatik silme.</p>
+                <ul>
+                    <li><code>os.path.getmtime()</code> ile dosyanın son değiştirilme zamanı</li>
+                    <li><code>time.time() - mtime &gt; X_GUN * 86400</code> kontrolü</li>
+                </ul>
+<pre><span class="code-keyword">import</span> os
+<span class="code-keyword">import</span> time
+
+<span class="code-keyword">def</span> <span class="code-function">eski_kayitlari_temizle</span>(klasor, gun_limiti=<span class="code-number">7</span>):
+    <span class="code-string">"""Belirtilen gun sayisindan eski dosyalari sil"""</span>
+    simdi = time.time()
+    silinen = <span class="code-number">0</span>
+
+    <span class="code-keyword">for</span> dosya_adi <span class="code-keyword">in</span> os.listdir(klasor):
+        dosya_yolu = os.path.join(klasor, dosya_adi)
+        <span class="code-keyword">if</span> os.path.isfile(dosya_yolu):
+            dosya_yasi_gun = (simdi - os.path.getmtime(dosya_yolu)) / <span class="code-number">86400</span>
+            <span class="code-keyword">if</span> dosya_yasi_gun &gt; gun_limiti:
+                os.remove(dosya_yolu)
+                silinen += <span class="code-number">1</span>
+                <span class="code-function">print</span>(<span class="code-string">f"Silindi: {dosya_adi} ({dosya_yasi_gun:.1f} gun eski)"</span>)
+
+    <span class="code-function">print</span>(<span class="code-string">f"Toplam {silinen} eski dosya silindi."</span>)</pre>
+                <div class="warning-callout">
+                    <strong>Dikkat:</strong> Dosya silme geri alınamaz! Test ederken önce <code>print()</code> ile hangi dosyaların silineceğini göster, emin olduktan sonra <code>os.remove()</code> satırını aç.
+                </div>
+            </div>
+        </div>
+
+        <div class="task-card">
+            <div class="task-card-header">
+                <span class="task-id">4.6</span>
+                <span class="task-title">Günün Mini Projesi &mdash; Tam Entegrasyon</span>
+                <span class="task-duration">1 saat</span>
+            </div>
+            <div class="task-body">
+                <p><strong>Dosya:</strong> <code>gun4_dosya_yonetimi.py</code></p>
+                <p>Programı çalıştırınca:</p>
+                <ol>
+                    <li><code>kayitlar/</code> klasörünü oluştur</li>
+                    <li>5 adet sahte ihlal oluştur (her biri CSV + frame simülasyonu)</li>
+                    <li>CSV'yi oku ve özet yazdır</li>
+                    <li><code>kayitlar/</code> klasöründeki dosyaları listele</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <div class="checkpoint">
+        <div class="checkpoint-title">&#9898; Kontrol Noktası &mdash; Gün 4</div>
+        <ul>
+            <li><code>os.makedirs()</code> ile <code>os.mkdir()</code> arasındaki fark nedir?</li>
+            <li><code>os.path.join()</code> neden önemli? Doğrudan string birleştirmek neden yanlış?</li>
+            <li><code>pathlib.Path</code> ile <code>os.path</code> arasındaki fark nedir?</li>
+            <li><code>cv2.imwrite()</code> hangi formatta kaydettiğini nereden bilir?</li>
+            <li>Frame kaydetmek neden sadece ihlal anında yapılmalı? (Sürekli kaydetse ne olur?)</li>
+        </ul>
+    </div>
+
+    <div class="deliverables">
+        <div class="deliverables-title">&#9745; Gün 4 Teslim Listesi</div>
+        <div class="deliverable-item"><span class="deliverable-file">gun4_os_alishtirma.py</span> &mdash; os modülü alıştırmaları</div>
+        <div class="deliverable-item"><span class="deliverable-file">gun4_pathlib_alishtirma.py</span> &mdash; pathlib alıştırmaları</div>
+        <div class="deliverable-item"><span class="deliverable-file">gun4_dosya_yonetimi.py</span> &mdash; Frame kaydetme + klasör yönetimi</div>
+        <div class="deliverable-item"><span class="deliverable-file">kayitlar/</span> &mdash; klasör yapısı örneği</div>
+        <div class="deliverable-item">Git commit: <code>"Gün 4: Dosya yönetimi + frame kaydetme"</code></div>
+    </div>
+</section>
+</div>
+
+<!-- ============================================== -->
+<!-- GUN 5 -->
+<!-- ============================================== -->
+<div class="container">
+<section id="gun5" class="day-section day-4">
+    <div class="day-header">
+        <div class="day-label">Gün 5</div>
+        <h2>Threading + HTTP İstekleri</h2>
+        <p>Eş zamanlı çalışma ve web iletişimi &mdash; threading ile performans, requests ile API kullanımı</p>
+    </div>
+
+    <!-- Sabah -->
+    <div class="time-block">
+        <div class="time-block-header">
+            <span class="time-badge morning">Sabah</span>
+            <span class="time-block-title">Threading + Tekrar &mdash; 3.5 saat</span>
+        </div>
+
+        <div class="task-card">
+            <div class="task-card-header">
+                <span class="task-id">5.1</span>
+                <span class="task-title">Threading Nedir?</span>
+                <span class="task-duration">1.5 saat</span>
+            </div>
+            <div class="task-body">
+                <p><strong>Ana program + yan iş aynı anda çalışma</strong></p>
+                <p>Gerçek hayat: Yemek pişirirken çamaşır makinesini çalıştırma. İkisi aynı anda ilerliyor!</p>
+                <p>Normalde Python kodu satır satır sırayla çalışır. Threading ile iki iş &ldquo;aynı anda&rdquo; yapılabilir.</p>
+                <ul>
+                    <li><code>threading.Thread(target=fonksiyon)</code> ile basit thread</li>
+                    <li><code>.start()</code> ile başlat, <code>.join()</code> ile bekle</li>
+                    <li>Daemon thread: Ana program bitince otomatik kapanan thread</li>
+                </ul>
+<pre><span class="code-keyword">import</span> threading
+<span class="code-keyword">import</span> time
+
+<span class="code-keyword">def</span> <span class="code-function">uzun_is</span>():
+    <span class="code-function">print</span>(<span class="code-string">"Uzun is basladi..."</span>)
+    time.sleep(<span class="code-number">3</span>)
+    <span class="code-function">print</span>(<span class="code-string">"Uzun is bitti!"</span>)
+
+<span class="code-keyword">def</span> <span class="code-function">kisa_is</span>():
+    <span class="code-function">print</span>(<span class="code-string">"Kisa is basladi..."</span>)
+    time.sleep(<span class="code-number">1</span>)
+    <span class="code-function">print</span>(<span class="code-string">"Kisa is bitti!"</span>)
+
+<span class="code-comment"># SIRAYLA (toplam ~4 saniye):</span>
+uzun_is()
+kisa_is()
+
+<span class="code-comment"># THREAD ILE (toplam ~3 saniye):</span>
+t1 = threading.Thread(target=uzun_is)
+t2 = threading.Thread(target=kisa_is)
+t1.start()
+t2.start()
+t1.join()
+t2.join()
+<span class="code-function">print</span>(<span class="code-string">"Her iki is de bitti!"</span>)</pre>
+                <p><strong>Alıştırma:</strong> 3 farklı &ldquo;iş&rdquo; fonksiyonu yaz (her biri farklı süre beklesin). Önce sırayla, sonra thread ile çalıştır. Süre farkını ölç.</p>
+            </div>
+        </div>
+
+        <div class="task-card">
+            <div class="task-card-header">
+                <span class="task-id">5.2</span>
+                <span class="task-title">Pratik Threading &mdash; Alarm ve Kaydetme</span>
+                <span class="task-duration">1 saat</span>
+            </div>
+            <div class="task-body">
+                <p><strong>Problem:</strong> guardwatch.py'de alarm çalınırken ana döngü duruyor!</p>
+                <p><strong>Çözüm:</strong> Alarm sesini ayrı thread'de çal</p>
+<pre><span class="code-keyword">import</span> threading
+
+alarm_caliniyor = <span class="code-keyword">False</span>
+
+<span class="code-keyword">def</span> <span class="code-function">alarm_cal</span>():
+    <span class="code-keyword">global</span> alarm_caliniyor
+    <span class="code-keyword">if</span> alarm_caliniyor:
+        <span class="code-keyword">return</span>  <span class="code-comment"># Zaten caliniyor, tekrar baslatma</span>
+    alarm_caliniyor = <span class="code-keyword">True</span>
+    <span class="code-comment"># ... ses cal ...</span>
+    <span class="code-keyword">import</span> winsound  <span class="code-comment"># veya platform'a gore</span>
+    winsound.Beep(<span class="code-number">1000</span>, <span class="code-number">2000</span>)  <span class="code-comment"># 1000Hz, 2 saniye</span>
+    alarm_caliniyor = <span class="code-keyword">False</span>
+
+<span class="code-comment"># Ana dongude:</span>
+<span class="code-keyword">if</span> ihlal_var:
+    t = threading.Thread(target=alarm_cal, daemon=<span class="code-keyword">True</span>)
+    t.start()
+    <span class="code-comment"># Ana dongu DEVAM EDER, alarm arka planda calar!</span></pre>
+                <p>Frame kaydetme de yavaşlatabilir &rarr; ayrı thread:</p>
+<pre><span class="code-keyword">def</span> <span class="code-function">frame_kaydet_thread</span>(frame, dosya_yolu):
+    cv2.imwrite(dosya_yolu, frame)
+
+<span class="code-comment"># Ana dongude:</span>
+t = threading.Thread(target=frame_kaydet_thread, args=(frame.copy(), yol))
+t.start()</pre>
+                <div class="warning-callout">
+                    <strong>Dikkat:</strong> <code>frame.copy()</code> kullanmayı unutma! Thread'e orijinal frame'i verirsen, ana döngü frame'i değiştirdiğinde sorun çıkar.
+                </div>
+            </div>
+        </div>
+
+        <div class="task-card">
+            <div class="task-card-header">
+                <span class="task-id">5.3</span>
+                <span class="task-title">TEKRAR &mdash; max_mesafe ve Çözünürlük Testi</span>
+                <span class="task-duration">1 saat</span>
+            </div>
+            <div class="task-body">
+                <p><strong>Tekrar konusu:</strong> Ödev 1'deki centroid tracker'ın max_mesafe parametresi</p>
+                <p>Farklı çözünürlüklerde aynı max_mesafe çalışır mı?</p>
+                <p>640x480 videoda max_mesafe=50 iyi çalışıyorsa, 1280x720'de?</p>
+                <p>Kişi aynı hızda yürüyor ama piksel cinsinden daha fazla hareket ediyor</p>
+                <p><strong>Çözüm:</strong> max_mesafe'yi çözünürlüğe oranla ayarla</p>
+<pre><span class="code-comment"># Cozunurluge gore max_mesafe ayarla</span>
+genislik = <span class="code-function">int</span>(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+yukseklik = <span class="code-function">int</span>(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+
+<span class="code-comment"># 640x480 icin max_mesafe = 50 referans</span>
+referans_genislik = <span class="code-number">640</span>
+referans_mesafe = <span class="code-number">50</span>
+oran = genislik / referans_genislik
+max_mesafe = <span class="code-function">int</span>(referans_mesafe * oran)
+
+<span class="code-function">print</span>(<span class="code-string">f"Cozunurluk: {genislik}x{yukseklik}, max_mesafe: {max_mesafe}"</span>)</pre>
+                <p><strong>Test tablosu:</strong></p>
+                <table class="test-table">
+                    <thead>
+                        <tr>
+                            <th>Çözünürlük</th>
+                            <th>Oran</th>
+                            <th>max_mesafe</th>
+                            <th>Sonuç</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>640x480</td>
+                            <td>1.0</td>
+                            <td>50</td>
+                            <td class="empty-cell">(Taha doldurur)</td>
+                        </tr>
+                        <tr>
+                            <td>1280x720</td>
+                            <td>2.0</td>
+                            <td>100</td>
+                            <td class="empty-cell"></td>
+                        </tr>
+                        <tr>
+                            <td>1920x1080</td>
+                            <td>3.0</td>
+                            <td>150</td>
+                            <td class="empty-cell"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ogleden Sonra -->
+    <div class="time-block">
+        <div class="time-block-header">
+            <span class="time-badge afternoon">Öğleden Sonra</span>
+            <span class="time-block-title">HTTP İstekleri + Mini Proje &mdash; 3.5 saat</span>
+        </div>
+
+        <div class="task-card">
+            <div class="task-card-header">
+                <span class="task-id">5.4</span>
+                <span class="task-title">HTTP İstekleri &mdash; requests Kütüphanesi</span>
+                <span class="task-duration">1.5 saat</span>
+            </div>
+            <div class="task-body">
+                <p><strong>HTTP nedir?</strong> Web'in iletişim protokolü. Tarayıcın bir siteye girdiğinde HTTP isteği gönderir.</p>
+                <ul>
+                    <li><strong>GET:</strong> Veri al (web sayfası oku, API'den bilgi çek)</li>
+                    <li><strong>POST:</strong> Veri gönder (form doldur, login yap)</li>
+                    <li><code>pip install requests</code></li>
+                    <li><code>requests.get(url)</code> ile GET isteği</li>
+                    <li><code>response.status_code</code>: 200=başarılı, 404=bulunamadı, 500=sunucu hatası</li>
+                    <li><code>response.json()</code> ile JSON yanıtı parse et</li>
+                    <li><code>response.text</code> ile düz metin yanıt</li>
+                </ul>
+<pre><span class="code-keyword">import</span> requests
+
+<span class="code-comment"># Basit GET istegi</span>
+response = requests.get(<span class="code-string">"https://httpbin.org/get"</span>)
+<span class="code-function">print</span>(<span class="code-string">f"Status: {response.status_code}"</span>)  <span class="code-comment"># 200</span>
+<span class="code-function">print</span>(<span class="code-string">f"JSON: {response.json()}"</span>)
+
+<span class="code-comment"># Public API ornegi - IP bilgisi</span>
+response = requests.get(<span class="code-string">"https://api.ipify.org?format=json"</span>)
+veri = response.json()
+<span class="code-function">print</span>(<span class="code-string">f"IP adresin: {veri['ip']}"</span>)</pre>
+                <p><strong>Status kodları:</strong></p>
+                <ul>
+                    <li><strong>200:</strong> OK &mdash; başarılı</li>
+                    <li><strong>404:</strong> Not Found &mdash; sayfa/kaynak bulunamadı</li>
+                    <li><strong>500:</strong> Internal Server Error &mdash; sunucu hatası</li>
+                    <li><strong>403:</strong> Forbidden &mdash; erişim yasak</li>
+                    <li><strong>timeout:</strong> Sunucu yanıt vermedi</li>
+                </ul>
+                <div class="info-callout">
+                    <strong>Bilgi:</strong> Taha, sen İnternet ve Ağ Teknolojileri mezunusun &mdash; HTTP sana yabancı değil! Burada Python ile HTTP isteği yapmayı öğreniyorsun.
+                </div>
+            </div>
+        </div>
+
+        <div class="task-card">
+            <div class="task-card-header">
+                <span class="task-id">5.5</span>
+                <span class="task-title">Hata Yönetimi ile HTTP</span>
+                <span class="task-duration">1 saat</span>
+            </div>
+            <div class="task-body">
+                <p>İnternet bağlantısı yoksa ne olur? Sunucu cevap vermezse ne olur?</p>
+                <ul>
+                    <li><code>timeout</code> parametresi: <code>requests.get(url, timeout=5)</code> &mdash; 5 saniye bekle, cevap gelmezse hata</li>
+                    <li>try/except ile HTTP hata yönetimi</li>
+                </ul>
+<pre><span class="code-keyword">import</span> requests
+
+<span class="code-keyword">def</span> <span class="code-function">guvenli_istek</span>(url, timeout=<span class="code-number">5</span>):
+    <span class="code-string">"""HTTP istegi yap, hata olursa None don"""</span>
+    <span class="code-keyword">try</span>:
+        response = requests.get(url, timeout=timeout)
+        response.raise_for_status()  <span class="code-comment"># 4xx/5xx ise hata firlat</span>
+        <span class="code-keyword">return</span> response.json()
+    <span class="code-keyword">except</span> requests.exceptions.Timeout:
+        <span class="code-function">print</span>(<span class="code-string">f"UYARI: {url} zaman asimi!"</span>)
+        <span class="code-keyword">return</span> <span class="code-keyword">None</span>
+    <span class="code-keyword">except</span> requests.exceptions.ConnectionError:
+        <span class="code-function">print</span>(<span class="code-string">f"UYARI: {url} baglanti hatasi!"</span>)
+        <span class="code-keyword">return</span> <span class="code-keyword">None</span>
+    <span class="code-keyword">except</span> requests.exceptions.HTTPError <span class="code-keyword">as</span> e:
+        <span class="code-function">print</span>(<span class="code-string">f"UYARI: HTTP hatasi: {e}"</span>)
+        <span class="code-keyword">return</span> <span class="code-keyword">None</span>
+
+<span class="code-comment"># Kullanim:</span>
+veri = guvenli_istek(<span class="code-string">"https://api.ipify.org?format=json"</span>)
+<span class="code-keyword">if</span> veri:
+    <span class="code-function">print</span>(<span class="code-string">f"IP: {veri['ip']}"</span>)
+<span class="code-keyword">else</span>:
+    <span class="code-function">print</span>(<span class="code-string">"Veri alinamadi!"</span>)</pre>
+            </div>
+        </div>
+
+        <div class="task-card">
+            <div class="task-card-header">
+                <span class="task-id">5.6</span>
+                <span class="task-title">Günün Mini Projesi</span>
+                <span class="task-duration">1 saat</span>
+            </div>
+            <div class="task-body">
+                <p><strong>Dosya:</strong> <code>gun5_threading_http.py</code></p>
+                <p>Thread ile 3 farklı API'ye aynı anda istek at:</p>
+                <ul>
+                    <li>IP bilgisi: <code>https://api.ipify.org?format=json</code></li>
+                    <li>Rastgele aktivite: <code>https://www.boredapi.com/api/activity</code></li>
+                    <li>Rastgele şaka: <code>https://official-joke-api.appspot.com/random_joke</code></li>
+                </ul>
+                <p>Sıralı vs thread ile süre karşılaştırması yap</p>
+                <p>Her isteğe timeout ve hata yönetimi ekle</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="checkpoint">
+        <div class="checkpoint-title">&#9898; Kontrol Noktası &mdash; Gün 5</div>
+        <ul>
+            <li>Threading nedir? Neden kullanırız?</li>
+            <li><code>daemon=True</code> ne anlama gelir?</li>
+            <li><code>thread.join()</code> ne yapar?</li>
+            <li>HTTP GET ve POST arasındaki fark nedir?</li>
+            <li><code>requests.get()</code> ile hata yönetimi nasıl yapılır?</li>
+        </ul>
+    </div>
+
+    <div class="deliverables">
+        <div class="deliverables-title">&#9745; Gün 5 Teslim Listesi</div>
+        <div class="deliverable-item"><span class="deliverable-file">gun5_threading_temel.py</span> &mdash; Threading alıştırmaları</div>
+        <div class="deliverable-item"><span class="deliverable-file">gun5_http_temel.py</span> &mdash; HTTP istek alıştırmaları</div>
+        <div class="deliverable-item"><span class="deliverable-file">gun5_threading_http.py</span> &mdash; Thread + HTTP mini projesi</div>
+        <div class="deliverable-item">Çözünürlük test tablosu (yukarıdaki tabloyu doldur)</div>
+        <div class="deliverable-item">Git commit: <code>"Gün 5: Threading + HTTP istekleri"</code></div>
+    </div>
+</section>
+</div>
+
+<!-- ============================================== -->
+<!-- GUN 6 -->
+<!-- ============================================== -->
+<div class="container">
+<section id="gun6" class="day-section day-5">
+    <div class="day-header">
+        <div class="day-label">Gün 6</div>
+        <h2>Matplotlib + Flask + Final Entegrasyon</h2>
+        <p>Grafik çizim, web sunucu ve tüm 6 günün birleşimi &mdash; guardwatch_v2 final versiyonu</p>
+    </div>
+
+    <!-- Sabah -->
+    <div class="time-block">
+        <div class="time-block-header">
+            <span class="time-badge morning">Sabah</span>
+            <span class="time-block-title">Matplotlib + Flask Temelleri &mdash; 3.5 saat</span>
+        </div>
+
+        <div class="task-card">
+            <div class="task-card-header">
+                <span class="task-id">6.1</span>
+                <span class="task-title">Matplotlib ile Grafik Çizme</span>
+                <span class="task-duration">1.5 saat</span>
+            </div>
+            <div class="task-body">
+                <ul>
+                    <li><code>pip install matplotlib</code></li>
+                    <li>Basit bar chart: <code>plt.bar(isimler, degerler)</code></li>
+                    <li>Line chart: <code>plt.plot(x, y)</code></li>
+                    <li>Başlık: <code>plt.title()</code>, eksen etiketleri: <code>plt.xlabel()</code>, <code>plt.ylabel()</code></li>
+                    <li>Renk: <code>plt.bar(..., color="steelblue")</code></li>
+                    <li><code>plt.savefig("grafik.png")</code> ile dosyaya kaydet (ekranda göstermeden!)</li>
+                </ul>
+<pre><span class="code-keyword">import</span> matplotlib.pyplot <span class="code-keyword">as</span> plt
+
+<span class="code-comment"># Bar chart: Kisi bazli ihlal sayisi</span>
+kisiler = [<span class="code-string">"KID_1"</span>, <span class="code-string">"KID_2"</span>, <span class="code-string">"KID_3"</span>, <span class="code-string">"KID_4"</span>]
+ihlaller = [<span class="code-number">5</span>, <span class="code-number">12</span>, <span class="code-number">3</span>, <span class="code-number">8</span>]
+
+plt.figure(figsize=(<span class="code-number">8</span>, <span class="code-number">5</span>))
+plt.bar(kisiler, ihlaller, color=<span class="code-string">"steelblue"</span>)
+plt.title(<span class="code-string">"Kisi Bazli Ihlal Sayisi"</span>)
+plt.xlabel(<span class="code-string">"Kisi ID"</span>)
+plt.ylabel(<span class="code-string">"Ihlal Sayisi"</span>)
+plt.savefig(<span class="code-string">"ihlal_grafik.png"</span>, dpi=<span class="code-number">150</span>, bbox_inches=<span class="code-string">"tight"</span>)
+plt.close()
+<span class="code-function">print</span>(<span class="code-string">"Grafik kaydedildi: ihlal_grafik.png"</span>)</pre>
+                <p>Line chart: Saatlik ihlal dağılımı:</p>
+<pre>saatler = <span class="code-function">list</span>(<span class="code-function">range</span>(<span class="code-number">8</span>, <span class="code-number">18</span>))  <span class="code-comment"># 08:00 - 17:00</span>
+ihlal_sayilari = [<span class="code-number">2</span>, <span class="code-number">5</span>, <span class="code-number">3</span>, <span class="code-number">1</span>, <span class="code-number">8</span>, <span class="code-number">12</span>, <span class="code-number">6</span>, <span class="code-number">4</span>, <span class="code-number">9</span>, <span class="code-number">7</span>]
+
+plt.figure(figsize=(<span class="code-number">10</span>, <span class="code-number">5</span>))
+plt.plot(saatler, ihlal_sayilari, marker=<span class="code-string">"o"</span>, color=<span class="code-string">"crimson"</span>, linewidth=<span class="code-number">2</span>)
+plt.title(<span class="code-string">"Saatlik Ihlal Dagilimi"</span>)
+plt.xlabel(<span class="code-string">"Saat"</span>)
+plt.ylabel(<span class="code-string">"Ihlal Sayisi"</span>)
+plt.grid(<span class="code-keyword">True</span>, alpha=<span class="code-number">0.3</span>)
+plt.savefig(<span class="code-string">"saatlik_ihlal.png"</span>, dpi=<span class="code-number">150</span>, bbox_inches=<span class="code-string">"tight"</span>)
+plt.close()</pre>
+                <p><strong>Alıştırma:</strong> Gün 3'te oluşturduğun <code>ihlaller.csv</code> dosyasını oku, kişi bazlı bar chart ve zaman bazlı line chart çiz.</p>
+            </div>
+        </div>
+
+        <div class="task-card">
+            <div class="task-card-header">
+                <span class="task-id">6.2</span>
+                <span class="task-title">CSV'den Grafik Çizme</span>
+                <span class="task-duration">1 saat</span>
+            </div>
+            <div class="task-body">
+                <p>CSV oku &rarr; veriyi grupla &rarr; grafik çiz</p>
+                <p><strong>Dosya:</strong> <code>dashboard.py</code></p>
+<pre><span class="code-keyword">import</span> csv
+<span class="code-keyword">import</span> matplotlib.pyplot <span class="code-keyword">as</span> plt
+<span class="code-keyword">from</span> collections <span class="code-keyword">import</span> Counter
+
+<span class="code-comment"># CSV'den veri oku</span>
+kisi_ihlalleri = Counter()
+<span class="code-keyword">with</span> <span class="code-function">open</span>(<span class="code-string">"ihlaller.csv"</span>, <span class="code-string">"r"</span>) <span class="code-keyword">as</span> dosya:
+    okuyucu = csv.DictReader(dosya)
+    <span class="code-keyword">for</span> satir <span class="code-keyword">in</span> okuyucu:
+        kisi_ihlalleri[satir[<span class="code-string">"kisi_id"</span>]] += <span class="code-number">1</span>
+
+<span class="code-comment"># Bar chart</span>
+kisiler = <span class="code-function">list</span>(kisi_ihlalleri.keys())
+sayilar = <span class="code-function">list</span>(kisi_ihlalleri.values())
+
+plt.figure(figsize=(<span class="code-number">8</span>, <span class="code-number">5</span>))
+plt.bar(kisiler, sayilar, color=<span class="code-string">"steelblue"</span>)
+plt.title(<span class="code-string">"Kisi Bazli Ihlal Sayisi"</span>)
+plt.xlabel(<span class="code-string">"Kisi ID"</span>)
+plt.ylabel(<span class="code-string">"Ihlal Sayisi"</span>)
+plt.savefig(<span class="code-string">"dashboard_kisi.png"</span>, dpi=<span class="code-number">150</span>, bbox_inches=<span class="code-string">"tight"</span>)
+plt.close()
+<span class="code-function">print</span>(<span class="code-string">"Dashboard grafigi kaydedildi!"</span>)</pre>
+            </div>
+        </div>
+
+        <div class="task-card">
+            <div class="task-card-header">
+                <span class="task-id">6.3</span>
+                <span class="task-title">Flask ile Basit Web Sunucu</span>
+                <span class="task-duration">1 saat</span>
+            </div>
+            <div class="task-body">
+                <p><strong>Flask nedir?</strong> Python ile web sunucu yapma kütüphanesi</p>
+                <ul>
+                    <li><code>pip install flask</code></li>
+                    <li>Tek dosyada basit sunucu</li>
+                    <li>Route (endpoint) nedir? URL yolu &rarr; fonksiyon eşlemesi</li>
+                    <li><code>@app.route("/")</code> dekoratörü</li>
+                </ul>
+<pre><span class="code-keyword">from</span> flask <span class="code-keyword">import</span> Flask, jsonify
+
+app = Flask(__name__)
+
+<span class="code-keyword">@app.route</span>(<span class="code-string">"/"</span>)
+<span class="code-keyword">def</span> <span class="code-function">anasayfa</span>():
+    <span class="code-keyword">return</span> <span class="code-string">"&lt;h1&gt;GuardWatch AI Dashboard&lt;/h1&gt;&lt;p&gt;Sistem calisiyor...&lt;/p&gt;"</span>
+
+<span class="code-keyword">@app.route</span>(<span class="code-string">"/durum"</span>)
+<span class="code-keyword">def</span> <span class="code-function">durum</span>():
+    <span class="code-keyword">return</span> jsonify({
+        <span class="code-string">"sistem"</span>: <span class="code-string">"aktif"</span>,
+        <span class="code-string">"toplam_kisi"</span>: <span class="code-number">5</span>,
+        <span class="code-string">"aktif_ihlal"</span>: <span class="code-number">2</span>,
+        <span class="code-string">"son_guncelleme"</span>: <span class="code-string">"2026-03-07 14:30:00"</span>
+    })
+
+<span class="code-keyword">if</span> __name__ == <span class="code-string">"__main__"</span>:
+    app.run(debug=<span class="code-keyword">True</span>, port=<span class="code-number">5000</span>)</pre>
+                <div class="info-callout">
+                    <strong>Bilgi:</strong> <code>http://localhost:5000/durum</code> adresini tarayıcıda aç &mdash; JSON veriyi göreceksin! Bu senin alanın, Ağ Teknolojileri. Web sunucu Python ile bu kadar kolay.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ogleden Sonra -->
+    <div class="time-block">
+        <div class="time-block-header">
+            <span class="time-badge afternoon">Öğleden Sonra</span>
+            <span class="time-block-title">Genişletme + Final Entegrasyon + Dokümantasyon &mdash; 3.5 saat</span>
+        </div>
+
+        <div class="task-card">
+            <div class="task-card-header">
+                <span class="task-id">6.4</span>
+                <span class="task-title">Flask Endpoint'leri Genişletme</span>
+                <span class="task-duration">1 saat</span>
+            </div>
+            <div class="task-body">
+                <p><code>/istatistik</code> endpoint'i: CSV'den okunan özet</p>
+                <p>JSON formatında: toplam ihlal, kişi sayısı, en çok ihlal yapan kişi</p>
+<pre><span class="code-keyword">@app.route</span>(<span class="code-string">"/istatistik"</span>)
+<span class="code-keyword">def</span> <span class="code-function">istatistik</span>():
+    kisi_ihlalleri = Counter()
+    toplam = <span class="code-number">0</span>
+    <span class="code-keyword">with</span> <span class="code-function">open</span>(<span class="code-string">"ihlaller.csv"</span>, <span class="code-string">"r"</span>) <span class="code-keyword">as</span> dosya:
+        okuyucu = csv.DictReader(dosya)
+        <span class="code-keyword">for</span> satir <span class="code-keyword">in</span> okuyucu:
+            kisi_ihlalleri[satir[<span class="code-string">"kisi_id"</span>]] += <span class="code-number">1</span>
+            toplam += <span class="code-number">1</span>
+
+    en_cok = <span class="code-function">max</span>(kisi_ihlalleri, key=kisi_ihlalleri.get) <span class="code-keyword">if</span> kisi_ihlalleri <span class="code-keyword">else</span> <span class="code-string">"Yok"</span>
+
+    <span class="code-keyword">return</span> jsonify({
+        <span class="code-string">"toplam_ihlal"</span>: toplam,
+        <span class="code-string">"kisi_sayisi"</span>: <span class="code-function">len</span>(kisi_ihlalleri),
+        <span class="code-string">"en_cok_ihlal"</span>: en_cok,
+        <span class="code-string">"kisi_detay"</span>: <span class="code-function">dict</span>(kisi_ihlalleri)
+    })</pre>
+            </div>
+        </div>
+
+        <div class="task-card">
+            <div class="task-card-header">
+                <span class="task-id">6.5</span>
+                <span class="task-title">Final Entegrasyon &mdash; guardwatch_v2.py</span>
+                <span class="task-duration">1.5 saat</span>
+            </div>
+            <div class="task-body">
+                <p>Tüm 6 günün öğrendiklerini birleştir:</p>
+                <ul>
+                    <li><code>guardwatch_v2.py</code>: video + argparse + hata yönetimi + CSV + frame kaydetme + threading alarm</li>
+                    <li><code>dashboard.py</code>: CSV'den matplotlib grafikleri</li>
+                    <li><code>server.py</code>: Flask ile durum endpoint'leri</li>
+                </ul>
+                <p><strong>Final test senaryoları:</strong></p>
+                <table class="test-table">
+                    <thead>
+                        <tr>
+                            <th>Senaryo</th>
+                            <th>Komut</th>
+                            <th>Beklenen</th>
+                            <th>Sonuç</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Webcam ile çalıştır</td>
+                            <td><code>python guardwatch_v2.py</code></td>
+                            <td>Webcam açılır</td>
+                            <td class="empty-cell"></td>
+                        </tr>
+                        <tr>
+                            <td>Video ile çalıştır</td>
+                            <td><code>python guardwatch_v2.py --kaynak test.mp4</code></td>
+                            <td>Video işlenir</td>
+                            <td class="empty-cell"></td>
+                        </tr>
+                        <tr>
+                            <td>Yanlış dosya ver</td>
+                            <td><code>python guardwatch_v2.py --kaynak yok.mp4</code></td>
+                            <td>Hata mesajı</td>
+                            <td class="empty-cell"></td>
+                        </tr>
+                        <tr>
+                            <td>CSV kayıt</td>
+                            <td><code>python guardwatch_v2.py --kayit</code></td>
+                            <td>ihlaller.csv oluşur</td>
+                            <td class="empty-cell"></td>
+                        </tr>
+                        <tr>
+                            <td>Dashboard</td>
+                            <td><code>python dashboard.py</code></td>
+                            <td>Grafikler oluşur</td>
+                            <td class="empty-cell"></td>
+                        </tr>
+                        <tr>
+                            <td>Web sunucu</td>
+                            <td><code>python server.py</code></td>
+                            <td>localhost:5000 çalışır</td>
+                            <td class="empty-cell"></td>
+                        </tr>
+                        <tr>
+                            <td>İstatistik</td>
+                            <td>tarayıcıda /istatistik</td>
+                            <td>JSON görünür</td>
+                            <td class="empty-cell"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="task-card">
+            <div class="task-card-header">
+                <span class="task-id">6.6</span>
+                <span class="task-title">Proje Dokümantasyonu</span>
+                <span class="task-duration">1 saat</span>
+            </div>
+            <div class="task-body">
+                <p>README.md yaz: proje açıklaması, kurulum, kullanım</p>
+                <p>Klasör yapısını belirle ve düzenle</p>
+                <p>Son commit ve temizlik</p>
+                <p><strong>Beklenen klasör yapısı:</strong></p>
+<pre>guardwatch_v2/
+├── .venv/
+├── guardwatch_v2.py      <span class="code-comment"># Ana program</span>
+├── dashboard.py           <span class="code-comment"># Matplotlib grafikleri</span>
+├── server.py              <span class="code-comment"># Flask web sunucu</span>
+├── config.json            <span class="code-comment"># Ayarlar</span>
+├── requirements.txt       <span class="code-comment"># Bagimliliklar</span>
+├── ihlaller.csv           <span class="code-comment"># Ihlal kayitlari</span>
+├── kayitlar/              <span class="code-comment"># Frame kayitlari</span>
+│   └── 2026-03-07/
+│       └── ihlal_KID1_...jpg
+├── README.md
+└── .gitignore</pre>
+            </div>
+        </div>
+    </div>
+
+    <div class="checkpoint">
+        <div class="checkpoint-title">&#9898; Kontrol Noktası &mdash; Gün 6</div>
+        <ul>
+            <li><code>plt.bar()</code> ve <code>plt.plot()</code> arasındaki fark nedir?</li>
+            <li><code>plt.savefig()</code> neden <code>plt.show()</code> yerine tercih edilir?</li>
+            <li>Flask'ta <code>@app.route()</code> ne işe yarar?</li>
+            <li><code>jsonify()</code> fonksiyonu ne döndürür?</li>
+            <li>guardwatch_v2.py ile guardwatch.py arasındaki farklar neler?</li>
+        </ul>
+    </div>
+
+    <div class="deliverables">
+        <div class="deliverables-title">&#9745; Gün 6 Teslim Listesi</div>
+        <div class="deliverable-item"><span class="deliverable-file">dashboard.py</span> &mdash; CSV'den matplotlib grafikleri</div>
+        <div class="deliverable-item"><span class="deliverable-file">server.py</span> &mdash; Flask web sunucu</div>
+        <div class="deliverable-item"><span class="deliverable-file">guardwatch_v2.py</span> &mdash; Final entegre program</div>
+        <div class="deliverable-item">Grafik dosyaları (<code>.png</code>)</div>
+        <div class="deliverable-item">Test senaryosu tablosu (doldurulmuş)</div>
+        <div class="deliverable-item">Git commit: <code>"Gün 6: Dashboard + Flask + final entegrasyon"</code></div>
+    </div>
+</section>
+</div>
+
+<!-- ============================================== -->
+<!-- NOTLAR -->
+<!-- ============================================== -->
+<section id="notlar" class="notes-section">
+    <h3 class="notes-title">6 Günlük Notlar (Taha doldurur)</h3>
+
+    <div class="note-card">
+        <h4 style="color: var(--accent-red);">Gün 1 Notu</h4>
+        <div class="note-field">
+            <span class="note-field-label">Bugün ne öğrendim:</span>
+            <textarea class="note-field-input" rows="2"></textarea>
+        </div>
+        <div class="note-field">
+            <span class="note-field-label">Nerede takıldım:</span>
+            <textarea class="note-field-input" rows="2"></textarea>
+        </div>
+        <div class="note-field">
+            <span class="note-field-label">Virtual environment'ı kendi cümlelerimle açıklıyorum:</span>
+            <textarea class="note-field-input" rows="2"></textarea>
+        </div>
+    </div>
+
+    <div class="note-card">
+        <h4 style="color: var(--accent-blue);">Gün 2 Notu</h4>
+        <div class="note-field">
+            <span class="note-field-label">Bugün ne öğrendim:</span>
+            <textarea class="note-field-input" rows="2"></textarea>
+        </div>
+        <div class="note-field">
+            <span class="note-field-label">Nerede takıldım:</span>
+            <textarea class="note-field-input" rows="2"></textarea>
+        </div>
+        <div class="note-field">
+            <span class="note-field-label">try/except neden önemli, kendi cümlelerimle:</span>
+            <textarea class="note-field-input" rows="2"></textarea>
+        </div>
+    </div>
+
+    <div class="note-card">
+        <h4 style="color: var(--accent-purple);">Gün 3 Notu</h4>
+        <div class="note-field">
+            <span class="note-field-label">Bugün ne öğrendim:</span>
+            <textarea class="note-field-input" rows="2"></textarea>
+        </div>
+        <div class="note-field">
+            <span class="note-field-label">Nerede takıldım:</span>
+            <textarea class="note-field-input" rows="2"></textarea>
+        </div>
+        <div class="note-field">
+            <span class="note-field-label">CSV'yi kendi cümlelerimle açıklıyorum:</span>
+            <textarea class="note-field-input" rows="2"></textarea>
+        </div>
+    </div>
+
+    <div class="note-card">
+        <h4 style="color: var(--accent-green);">Gün 4 Notu</h4>
+        <div class="note-field">
+            <span class="note-field-label">Bugün ne öğrendim:</span>
+            <textarea class="note-field-input" rows="2"></textarea>
+        </div>
+        <div class="note-field">
+            <span class="note-field-label">Nerede takıldım:</span>
+            <textarea class="note-field-input" rows="2"></textarea>
+        </div>
+        <div class="note-field">
+            <span class="note-field-label">os vs pathlib &mdash; hangisini tercih ederim ve neden:</span>
+            <textarea class="note-field-input" rows="2"></textarea>
+        </div>
+    </div>
+
+    <div class="note-card">
+        <h4 style="color: var(--accent-orange);">Gün 5 Notu</h4>
+        <div class="note-field">
+            <span class="note-field-label">Bugün ne öğrendim:</span>
+            <textarea class="note-field-input" rows="2"></textarea>
+        </div>
+        <div class="note-field">
+            <span class="note-field-label">Nerede takıldım:</span>
+            <textarea class="note-field-input" rows="2"></textarea>
+        </div>
+        <div class="note-field">
+            <span class="note-field-label">Threading ne zaman gerekli, ne zaman gereksiz:</span>
+            <textarea class="note-field-input" rows="2"></textarea>
+        </div>
+    </div>
+
+    <div class="note-card">
+        <h4 style="color: var(--accent-cyan);">Gün 6 Notu</h4>
+        <div class="note-field">
+            <span class="note-field-label">Bugün ne öğrendim:</span>
+            <textarea class="note-field-input" rows="2"></textarea>
+        </div>
+        <div class="note-field">
+            <span class="note-field-label">6 gün boyunca en zor şey neydi:</span>
+            <textarea class="note-field-input" rows="2"></textarea>
+        </div>
+        <div class="note-field">
+            <span class="note-field-label">guardwatch_v2 ile v1 arasındaki farklar:</span>
+            <textarea class="note-field-input" rows="2"></textarea>
+        </div>
+        <div class="note-field">
+            <span class="note-field-label">Bu projeyi birine anlatabilir miyim:</span>
+            <textarea class="note-field-input" rows="2"></textarea>
+        </div>
+    </div>
+</section>
+
+<!-- BONUS -->
+<div class="bonus-section">
+    <div class="bonus-card">
+        <div class="bonus-title">Bonus Görevler (6 günden önce bitirirsen)</div>
+        <div class="bonus-item"><div class="bonus-check"></div> Telegram botu ile ihlal bildirimi gönder</div>
+        <div class="bonus-item"><div class="bonus-check"></div> Birden fazla kamerayı aynı anda izle (threading ile)</div>
+        <div class="bonus-item"><div class="bonus-check"></div> İhlal verilerini SQLite veritabanına kaydet</div>
+        <div class="bonus-item"><div class="bonus-check"></div> Streamlit ile interaktif dashboard yap</div>
+    </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer-quote">
+    <p>Bu ödevin amacı <strong>&ldquo;proje bitirmek&rdquo;</strong> değil, <strong>&ldquo;profesyonel yazılım geliştirmeyi öğrenmek&rdquo;</strong>tir.
+    6 günün sonunda argparse, hata yönetimi, CSV, dosya yönetimi, threading ve Flask bilen bir geliştirici olacaksın.
+    Bu bilgiler sadece GuardWatch için değil, <strong>HER Python projesi için geçerlidir.</strong></p>
+</div>
+
+<script>
+    // Sticky nav active state
+    const sections = document.querySelectorAll('.day-section, .notes-section');
+    const navBtns = document.querySelectorAll('.day-nav-btn');
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                navBtns.forEach(btn => btn.classList.remove('active'));
+                const id = entry.target.id;
+                const activeBtn = document.querySelector(`.day-nav-btn[href="#${id}"]`);
+                if (activeBtn) activeBtn.classList.add('active');
+            }
+        });
+    }, { rootMargin: '-100px 0px -60% 0px' });
+
+    sections.forEach(s => observer.observe(s));
+
+    // Smooth scroll
+    navBtns.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const target = document.querySelector(btn.getAttribute('href'));
+            if (target) target.scrollIntoView({ behavior: 'smooth' });
+        });
+    });
+</script>
+
+</body>
+</html>

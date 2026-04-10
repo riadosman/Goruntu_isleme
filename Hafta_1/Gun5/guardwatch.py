@@ -1,3 +1,4 @@
+from datetime import datetime
 from ultralytics import YOLO
 import json
 import mediapipe as mp
@@ -6,14 +7,26 @@ from mediapipe.tasks.python import vision
 import cv2
 import time
 import pygame
+import threading
+import os
+import logging
+
 
 CONFIG_FILE_NAME = "config.json"
 
+alarm_caliniyor = False
 takip_listesi = {}
 sonraki_id = 0
 
+
 with open(CONFIG_FILE_NAME, "r") as dosya:
     ayarlar = json.load(dosya)
+
+logging.basicConfig(
+    filename=ayarlar["log_dosyasi"],
+    level=logging.INFO,
+    format="%(asctime)s | %(message)s"
+)
 
 DURUM_ONCELIK = {
     "NORMAL":     0,
@@ -64,8 +77,33 @@ def extract_roi(frame, x1, y1, x2, y2, padding=0):
         return None, (x1p, y1p, x2p, y2p)
     return frame[y1p:y2p, x1p:x2p], (x1p, y1p, x2p, y2p)
 
+def alarm_cal():
+    global alarm_caliniyor
+    if alarm_caliniyor:
+        return  # Zaten caliniyor, tekrar baslatma
+    alarm_caliniyor = True
+    # ... ses cal ...
+    import winsound  # veya platform'a gore
+    winsound.Beep(1000, 2000)  # 1000Hz, 2 saniye
+    alarm_caliniyor = False
+
+def frame_kaydet(frame,id_, state):
+    zaman = datetime.now().strftime(ayarlar["zaman_formati"]) # "%Y-%m-%d"
+    klasor = os.path.join("kayitlar", zaman)
+    os.makedirs(klasor, exist_ok=True)
+    frame_yolu = os.path.join("kayitlar", zaman, f"ihlal_{id_}_{state['durum']}.jpg")
+    result = cv2.imwrite(frame_yolu, frame)
+    if result:
+        print(f"Frame kaydedildi: {frame_yolu}")
+    else:
+        print(f"Frame kaydedilemedi: {frame_yolu}")
+
+
+
 model     = YOLO(ayarlar["Yolo_modeli"])
 cap       = cv2.VideoCapture(ayarlar["kamera_id"])
+genislik = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+yukseklik = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 
 pygame.mixer.init()
 pygame.mixer.music.load(ayarlar["sound_file"])
@@ -78,7 +116,13 @@ landmarker = vision.FaceLandmarker.create_from_options(options)
 
 ROI_PADDING = ayarlar.get("roi_padding", 10)
 
+# HAFTA 2 GUN 5
+if not os.path.exists("kayitlar"):
+    os.mkdir("kayitlar")
+
+logging.info(f"Program basladi. Kayitlar klasoru olusturuldu: {ayarlar['log_dosyasi']}")
 while True:
+    
     ret, frame = cap.read()
     if not ret:
         break
@@ -92,6 +136,8 @@ while True:
         for box in boxes:
             x1, y1, x2, y2 = map(int, box)
             detections.append((x1, y1, x2, y2))
+            
+
 
     new_tracks     = {}
     kullanilan_idler = set()
@@ -107,7 +153,9 @@ while True:
             if id_ in kullanilan_idler:
                 continue
             mesafe = oklid_mesafe(state["merkez"], (cx, cy))
-            if mesafe < min_mesafe and mesafe < ayarlar["tracker_max_mesafe"]:
+            oran = genislik / ayarlar["referans_genislik"]
+            max_mesafe = int(ayarlar["referans_mesafe"] * oran)
+            if mesafe < min_mesafe and mesafe < max_mesafe:
                 min_mesafe = mesafe
                 matched_id = id_
 
@@ -126,13 +174,15 @@ while True:
             "eye_closed_start": prev_state.get("eye_closed_start"),
             "not_moving_start": prev_state.get("not_moving_start"),
             "durum":            "NORMAL",
+            "prev_durum": prev_state.get("durum", "NORMAL"),
             "durum_renk":       DURUM_RENK["NORMAL"],
         }
 
     takip_listesi = new_tracks
-
+    
     for id_, state in takip_listesi.items():
 
+        logging.info(f"Kisi tespit edildi. ID: {id_}, Durum: {state['durum']}")
         x1, y1, x2, y2 = state["kutu"]
 
         roi, (rx1, ry1, rx2, ry2) = extract_roi(frame, x1, y1, x2, y2, padding=ROI_PADDING)
@@ -148,8 +198,12 @@ while True:
                 state["not_moving_start"] = time.time()
             else:
                 elapsed = time.time() - state["not_moving_start"]
-                if elapsed >= ayarlar["hareketsizlik_limit_sn"]:
+                if elapsed >= ayarlar["hareketsizlik_limit_sn"] and state["durum"] != "HAREKETSIZ":
                     set_durum_if_higher(state, "HAREKETSIZ")
+                    # frame_kaydet(roi,id_, state)
+                    t = threading.Thread(target=frame_kaydet, args=(roi.copy(),id_, state))
+                    t.start()
+                    logging.info(f"HAREKETSIZ IHLALI BASLADI ID: {id_}")
         else:
             state["not_moving_start"] = None
 
@@ -181,24 +235,45 @@ while True:
                     else:
                         eye_elapsed = time.time() - state["eye_closed_start"]
 
-                        if eye_elapsed >= ayarlar["goz_kapali_limit_sn"]:
+                        if eye_elapsed >= ayarlar["goz_kapali_limit_sn"] and state["durum"] != "GOZ_KAPALI":
                             set_durum_if_higher(state, "GOZ_KAPALI")
+                            # frame_kaydet(roi,id_, state)
+                            t = threading.Thread(target=frame_kaydet, args=(roi.copy(),id_, state))
+                            t.start()
+                            logging.info(f"GOZ IHLALI BASLADI ID: {id_}")
 
                             if state["not_moving_start"] is not None:
                                 move_elapsed = time.time() - state["not_moving_start"]
                                 if move_elapsed >= ayarlar["hareketsizlik_limit_sn"]:
                                     set_durum_if_higher(state, "UYUYOR")
-                                    if not pygame.mixer.music.get_busy():
-                                        pygame.mixer.music.play()
+                                    # ODEV 2 GUN 5
+                                    t = threading.Thread(target=alarm_cal, daemon=True)
+                                    t.start()
+                                    # frame_kaydet(roi,id_, state)
+                                    t = threading.Thread(target=frame_kaydet, args=(roi.copy(),id_, state))
+                                    t.start()
+                                    logging.info(f"UYKU IHLALI BASLADI ID: {id_}")
+
+                                    # ANA CALISMA
+                                    # if not pygame.mixer.music.get_busy():
+                                    #     pygame.mixer.music.play()
                 else:
                     state["eye_closed_start"] = None
 
+        if state["durum"] != state.get("prev_durum", "NORMAL"):
+            if state["durum"] == "NORMAL":
+                logging.info(f"IHLAL BITTI | ID: {id_}")
+            else:
+                logging.info(f"{state['durum']} IHLALI BASLADI | ID: {id_}")
+
+        state["prev_durum"] = state["durum"]
         renk = id_to_color(id_)
         cv2.rectangle(frame, (x1, y1), (x2, y2), renk, 2)
         cv2.putText(frame, f"ID: {id_}", (x1, y1 - 10),
                     cv2.FONT_HERSHEY_SIMPLEX, ayarlar["fontScale"], renk, 2)
         cv2.putText(frame, state["durum"], (x2 - 120, y1 - 10),
                     cv2.FONT_HERSHEY_SIMPLEX, ayarlar["fontScale"], state["durum_renk"], 2)
+        
 
     cv2.imshow("Guard Watch", frame)
     if cv2.waitKey(1) & 0xFF == ord('q'):

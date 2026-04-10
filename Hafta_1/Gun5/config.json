@@ -27,5 +27,9 @@
   "initial_id": 0,
   "roi_padding": 10,
   "uyku_limit_sn": 5.0,
-  "uyku_onay_sn": 2.0
+  "uyku_onay_sn": 2.0,
+  "zaman_formati": "%Y-%m-%d",
+  "log_dosyasi": "app.log",
+  "referans_genislik": 640,
+  "referans_mesafe": 50
 }

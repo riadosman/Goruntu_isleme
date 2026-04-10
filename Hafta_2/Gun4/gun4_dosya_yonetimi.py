@@ -18,7 +18,7 @@ with open("kayitlar/ihlaller.csv", "a", newline="") as dosya:
     for i in range(5):
         zaman = datetime.now().strftime("%Y-%m-%d")
         kisi_id = random.randint(1000, 9999)
-        ihlal_turu = random.choice(["Yorgun", "Hareketsiz", "Kırmızı Işık"])
+        ihlal_turu = random.choice(["Yorgun", "Hareketsiz", "Kirmizi İsik"])
         sure_sn = random.randint(1, 10)
         ear_degeri = round(random.uniform(0.1, 1.0), 3)
         frame_yolu = os.path.join("kayitlar", zaman, f"ihlal_{kisi_id}_{ihlal_turu}.jpg")

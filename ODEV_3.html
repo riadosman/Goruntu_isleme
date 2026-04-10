@@ -1,0 +1,3009 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GuardWatch AI — Taha Ödev 3</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-card: #1a1a2e;
+            --bg-card-hover: #1f1f35;
+            --bg-code: #0d0d15;
+            --border: #2a2a40;
+            --border-light: #3a3a55;
+            --text-primary: #e8e8f0;
+            --text-secondary: #9090a8;
+            --text-muted: #606078;
+            --accent-blue: #4f8fff;
+            --accent-blue-dim: #2a4f8f;
+            --accent-purple: #8b5cf6;
+            --accent-purple-dim: #4c2d8f;
+            --accent-green: #22c55e;
+            --accent-green-dim: #15503a;
+            --accent-yellow: #eab308;
+            --accent-yellow-dim: #5c4a0a;
+            --accent-red: #ef4444;
+            --accent-red-dim: #5c1a1a;
+            --accent-orange: #f97316;
+            --accent-cyan: #06b6d4;
+            --gradient-1: linear-gradient(135deg, #4f8fff 0%, #8b5cf6 100%);
+            --gradient-2: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
+            --gradient-3: linear-gradient(135deg, #22c55e 0%, #06b6d4 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg-primary); }
+        ::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--accent-blue); }
+
+        /* Hero */
+        .hero {
+            position: relative;
+            padding: 80px 40px 60px;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(ellipse at 50% 0%, rgba(79, 143, 255, 0.08) 0%, transparent 60%),
+                        radial-gradient(ellipse at 80% 50%, rgba(139, 92, 246, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 16px;
+            background: rgba(79, 143, 255, 0.1);
+            border: 1px solid rgba(79, 143, 255, 0.2);
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--accent-blue);
+            margin-bottom: 24px;
+            letter-spacing: 0.5px;
+        }
+
+        .hero h1 {
+            font-size: clamp(32px, 5vw, 56px);
+            font-weight: 900;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 16px;
+            letter-spacing: -1px;
+        }
+
+        .hero-subtitle {
+            font-size: 18px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto 32px;
+            font-weight: 400;
+        }
+
+        .hero-meta {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            flex-wrap: wrap;
+        }
+
+        .hero-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .hero-meta-item span {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        /* Container */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Golden Rules */
+        .rules-section {
+            margin: 0 auto 60px;
+            max-width: 900px;
+            padding: 0 24px;
+        }
+
+        .rules-card {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.05) 0%, rgba(234, 179, 8, 0.05) 100%);
+            border: 1px solid rgba(239, 68, 68, 0.15);
+            border-radius: 16px;
+            padding: 36px;
+        }
+
+        .rules-title {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--accent-red);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .rule-item {
+            display: flex;
+            gap: 14px;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(239, 68, 68, 0.08);
+            align-items: flex-start;
+        }
+
+        .rule-item:last-child { border-bottom: none; }
+
+        .rule-number {
+            flex-shrink: 0;
+            width: 28px;
+            height: 28px;
+            background: rgba(239, 68, 68, 0.15);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--accent-red);
+        }
+
+        .rule-text {
+            font-size: 15px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .rule-text strong {
+            color: var(--text-primary);
+        }
+
+        /* Day Navigation */
+        .day-nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(10, 10, 15, 0.85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            padding: 12px 24px;
+            margin-bottom: 48px;
+        }
+
+        .day-nav-inner {
+            max-width: 900px;
+            margin: 0 auto;
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding: 4px 0;
+        }
+
+        .day-nav-btn {
+            flex-shrink: 0;
+            padding: 8px 20px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--text-secondary);
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+
+        .day-nav-btn:hover {
+            background: var(--bg-card);
+            color: var(--text-primary);
+            border-color: var(--border-light);
+        }
+
+        .day-nav-btn.active,
+        .day-nav-btn:focus {
+            background: var(--accent-blue);
+            color: white;
+            border-color: var(--accent-blue);
+        }
+
+        /* Day Section */
+        .day-section {
+            margin-bottom: 80px;
+            scroll-margin-top: 80px;
+        }
+
+        .day-header {
+            margin-bottom: 36px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .day-label {
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+        }
+
+        .day-0 .day-label { color: var(--accent-red); }
+        .day-1 .day-label { color: var(--accent-blue); }
+        .day-2 .day-label { color: var(--accent-purple); }
+        .day-3 .day-label { color: var(--accent-green); }
+        .day-4 .day-label { color: var(--accent-orange); }
+        .day-5 .day-label { color: var(--accent-cyan); }
+
+        .day-header h2 {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .day-header p {
+            font-size: 16px;
+            color: var(--text-secondary);
+        }
+
+        /* Time Blocks */
+        .time-block {
+            margin-bottom: 40px;
+        }
+
+        .time-block-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .time-badge {
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .time-badge.morning {
+            background: rgba(234, 179, 8, 0.12);
+            color: var(--accent-yellow);
+        }
+
+        .time-badge.afternoon {
+            background: rgba(139, 92, 246, 0.12);
+            color: var(--accent-purple);
+        }
+
+        .time-block-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        /* Task Cards */
+        .task-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 28px;
+            margin-bottom: 16px;
+            transition: all 0.2s;
+        }
+
+        .task-card:hover {
+            border-color: var(--border-light);
+            background: var(--bg-card-hover);
+        }
+
+        .task-card-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .task-id {
+            flex-shrink: 0;
+            padding: 3px 10px;
+            border-radius: 6px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .day-0 .task-id { background: rgba(239, 68, 68, 0.12); color: var(--accent-red); }
+        .day-1 .task-id { background: rgba(79, 143, 255, 0.12); color: var(--accent-blue); }
+        .day-2 .task-id { background: rgba(139, 92, 246, 0.12); color: var(--accent-purple); }
+        .day-3 .task-id { background: rgba(34, 197, 94, 0.12); color: var(--accent-green); }
+        .day-4 .task-id { background: rgba(249, 115, 22, 0.12); color: var(--accent-orange); }
+        .day-5 .task-id { background: rgba(6, 182, 212, 0.12); color: var(--accent-cyan); }
+
+        .task-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .task-duration {
+            margin-left: auto;
+            flex-shrink: 0;
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .task-body {
+            color: var(--text-secondary);
+            font-size: 15px;
+        }
+
+        .task-body p {
+            margin-bottom: 12px;
+        }
+
+        .task-body ul, .task-body ol {
+            padding-left: 20px;
+            margin-bottom: 12px;
+        }
+
+        .task-body li {
+            margin-bottom: 6px;
+        }
+
+        .task-body strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        /* Code Blocks */
+        pre {
+            background: var(--bg-code);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 20px;
+            overflow-x: auto;
+            margin: 16px 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            line-height: 1.8;
+            color: #c8c8d8;
+        }
+
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+        }
+
+        :not(pre) > code {
+            background: rgba(79, 143, 255, 0.1);
+            color: var(--accent-blue);
+            padding: 2px 7px;
+            border-radius: 5px;
+            font-size: 13px;
+        }
+
+        .code-comment { color: #5a6a7a; }
+        .code-keyword { color: #c678dd; }
+        .code-string { color: #98c379; }
+        .code-function { color: #61afef; }
+        .code-number { color: #d19a66; }
+
+        /* Checkpoint */
+        .checkpoint {
+            background: linear-gradient(135deg, rgba(234, 179, 8, 0.06) 0%, rgba(249, 115, 22, 0.06) 100%);
+            border: 1px solid rgba(234, 179, 8, 0.15);
+            border-left: 3px solid var(--accent-yellow);
+            border-radius: 0 12px 12px 0;
+            padding: 24px 28px;
+            margin: 24px 0;
+        }
+
+        .checkpoint-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--accent-yellow);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .checkpoint ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .checkpoint li {
+            padding: 8px 0;
+            padding-left: 24px;
+            position: relative;
+            color: var(--text-secondary);
+            font-size: 14px;
+            border-bottom: 1px solid rgba(234, 179, 8, 0.06);
+        }
+
+        .checkpoint li:last-child { border-bottom: none; }
+
+        .checkpoint li::before {
+            content: '?';
+            position: absolute;
+            left: 0;
+            width: 18px;
+            height: 18px;
+            background: rgba(234, 179, 8, 0.12);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--accent-yellow);
+            top: 9px;
+        }
+
+        /* Deliverables */
+        .deliverables {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.06) 0%, rgba(6, 182, 212, 0.06) 100%);
+            border: 1px solid rgba(34, 197, 94, 0.15);
+            border-radius: 14px;
+            padding: 28px;
+            margin: 32px 0;
+        }
+
+        .deliverables-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--accent-green);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .deliverable-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 0;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .deliverable-item::before {
+            content: '';
+            width: 18px;
+            height: 18px;
+            border: 2px solid var(--border-light);
+            border-radius: 5px;
+            flex-shrink: 0;
+        }
+
+        .deliverable-file {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--accent-green);
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        /* EAR Diagram */
+        .ear-diagram {
+            background: var(--bg-code);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 28px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .ear-diagram pre {
+            border: none;
+            padding: 0;
+            margin: 0;
+            background: transparent;
+            display: inline-block;
+            text-align: left;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        .ear-formula {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(79, 143, 255, 0.1) 100%);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            margin: 16px 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 16px;
+            color: var(--accent-purple);
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        /* Test Table */
+        .test-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin: 16px 0;
+            font-size: 14px;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+
+        .test-table th {
+            background: var(--bg-code);
+            padding: 12px 16px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .test-table td {
+            padding: 12px 16px;
+            border-top: 1px solid var(--border);
+            color: var(--text-secondary);
+        }
+
+        .test-table tr:hover td {
+            background: rgba(79, 143, 255, 0.03);
+        }
+
+        .test-table .empty-cell {
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        /* Notes Section */
+        .notes-section {
+            margin: 80px auto;
+            max-width: 900px;
+            padding: 0 24px;
+        }
+
+        .notes-title {
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 32px;
+            color: var(--text-primary);
+        }
+
+        .note-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 28px;
+            margin-bottom: 16px;
+        }
+
+        .note-card h4 {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .note-field {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 12px;
+            align-items: flex-start;
+        }
+
+        .note-field-label {
+            flex-shrink: 0;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+            min-width: 200px;
+            padding-top: 8px;
+        }
+
+        .note-field-input {
+            flex: 1;
+            min-height: 40px;
+            background: var(--bg-code);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 8px 14px;
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            resize: vertical;
+        }
+
+        .note-field-input:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+        }
+
+        /* Bonus */
+        .bonus-section {
+            margin: 0 auto 80px;
+            max-width: 900px;
+            padding: 0 24px;
+        }
+
+        .bonus-card {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.05) 0%, rgba(236, 72, 153, 0.05) 100%);
+            border: 1px solid rgba(139, 92, 246, 0.15);
+            border-radius: 16px;
+            padding: 36px;
+        }
+
+        .bonus-title {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--accent-purple);
+            margin-bottom: 20px;
+        }
+
+        .bonus-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 0;
+            color: var(--text-secondary);
+            font-size: 15px;
+        }
+
+        .bonus-check {
+            width: 22px;
+            height: 22px;
+            border: 2px solid var(--accent-purple-dim);
+            border-radius: 6px;
+            flex-shrink: 0;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .bonus-check:hover {
+            border-color: var(--accent-purple);
+        }
+
+        /* Footer Quote */
+        .footer-quote {
+            text-align: center;
+            padding: 60px 24px 80px;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .footer-quote p {
+            font-size: 17px;
+            font-style: italic;
+            color: var(--text-muted);
+            line-height: 1.8;
+        }
+
+        .footer-quote p strong {
+            color: var(--text-secondary);
+        }
+
+        /* Overview Table */
+        .overview-section {
+            margin: 0 auto 60px;
+            max-width: 900px;
+            padding: 0 24px;
+        }
+
+        .overview-title {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+        }
+
+        .overview-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .overview-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px 16px;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .overview-item:hover {
+            border-color: var(--border-light);
+            transform: translateY(-2px);
+        }
+
+        .overview-day {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 8px;
+        }
+
+        .overview-item:nth-child(1) .overview-day { color: var(--accent-red); }
+        .overview-item:nth-child(2) .overview-day { color: var(--accent-blue); }
+        .overview-item:nth-child(3) .overview-day { color: var(--accent-purple); }
+        .overview-item:nth-child(4) .overview-day { color: var(--accent-green); }
+        .overview-item:nth-child(5) .overview-day { color: var(--accent-orange); }
+        .overview-item:nth-child(6) .overview-day { color: var(--accent-cyan); }
+
+        .overview-topic {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+        }
+
+        .overview-desc {
+            font-size: 12px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        /* Warning callout */
+        .warning-callout {
+            background: rgba(239, 68, 68, 0.06);
+            border: 1px solid rgba(239, 68, 68, 0.15);
+            border-left: 3px solid var(--accent-red);
+            border-radius: 0 10px 10px 0;
+            padding: 16px 20px;
+            margin: 16px 0;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .warning-callout strong {
+            color: var(--accent-red);
+        }
+
+        /* Info callout */
+        .info-callout {
+            background: rgba(79, 143, 255, 0.06);
+            border: 1px solid rgba(79, 143, 255, 0.15);
+            border-left: 3px solid var(--accent-blue);
+            border-radius: 0 10px 10px 0;
+            padding: 16px 20px;
+            margin: 16px 0;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .info-callout strong {
+            color: var(--accent-blue);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .overview-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .hero { padding: 48px 20px 40px; }
+            .hero-meta { gap: 16px; }
+            .note-field { flex-direction: column; }
+            .note-field-label { min-width: auto; }
+        }
+
+        @media (max-width: 480px) {
+            .overview-grid {
+                grid-template-columns: 1fr;
+            }
+            .task-card-header { flex-direction: column; }
+            .task-duration { margin-left: 0; }
+        }
+
+        /* Print */
+        @media print {
+            .day-nav { display: none; }
+            body { background: white; color: black; }
+            .task-card, .note-card { break-inside: avoid; }
+        }
+
+        /* Story Block */
+        .story-block {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, rgba(236, 72, 153, 0.05) 100%);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-left: 4px solid var(--accent-purple);
+            border-radius: 0 14px 14px 0;
+            padding: 28px;
+            margin: 20px 0;
+            line-height: 1.9;
+            color: var(--text-secondary);
+        }
+
+        .story-block .story-label {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--accent-purple);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .story-block p {
+            font-size: 15px;
+            margin-bottom: 14px;
+        }
+
+        .story-block p:last-child {
+            margin-bottom: 0;
+        }
+
+        .story-block strong {
+            color: var(--text-primary);
+        }
+
+        .story-block em {
+            color: var(--accent-purple);
+            font-style: normal;
+            font-weight: 600;
+        }
+
+        /* Research Block */
+        .research-block {
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.08) 0%, rgba(79, 143, 255, 0.05) 100%);
+            border: 1px solid rgba(6, 182, 212, 0.2);
+            border-left: 4px solid var(--accent-cyan);
+            border-radius: 0 14px 14px 0;
+            padding: 24px 28px;
+            margin: 20px 0;
+        }
+
+        .research-block .research-label {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--accent-cyan);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .research-block ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .research-block li {
+            padding: 8px 0;
+            padding-left: 24px;
+            position: relative;
+            color: var(--text-secondary);
+            font-size: 14px;
+            border-bottom: 1px solid rgba(6, 182, 212, 0.08);
+        }
+
+        .research-block li:last-child {
+            border-bottom: none;
+        }
+
+        .research-block li::before {
+            content: '?';
+            position: absolute;
+            left: 0;
+            width: 18px;
+            height: 18px;
+            background: rgba(6, 182, 212, 0.15);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--accent-cyan);
+            top: 9px;
+        }
+
+        .research-block .research-note {
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 1px solid rgba(6, 182, 212, 0.12);
+            font-size: 13px;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        /* Exam Section */
+        .exam-block {
+            background: linear-gradient(135deg, rgba(234, 179, 8, 0.08) 0%, rgba(239, 68, 68, 0.05) 100%);
+            border: 1px solid rgba(234, 179, 8, 0.2);
+            border-radius: 14px;
+            padding: 28px;
+            margin: 20px 0;
+        }
+
+        .exam-block .exam-label {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--accent-yellow);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 16px;
+        }
+
+        .exam-topic {
+            display: flex;
+            gap: 14px;
+            padding: 14px 0;
+            border-bottom: 1px solid rgba(234, 179, 8, 0.1);
+            align-items: flex-start;
+        }
+
+        .exam-topic:last-child {
+            border-bottom: none;
+        }
+
+        .exam-topic-week {
+            flex-shrink: 0;
+            padding: 3px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .exam-topic-week.w1 {
+            background: rgba(79, 143, 255, 0.12);
+            color: var(--accent-blue);
+        }
+
+        .exam-topic-week.w2 {
+            background: rgba(139, 92, 246, 0.12);
+            color: var(--accent-purple);
+        }
+
+        .exam-topic-week.w3 {
+            background: rgba(34, 197, 94, 0.12);
+            color: var(--accent-green);
+        }
+
+        .exam-topic-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .exam-topic-desc {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .exam-textarea {
+            width: 100%;
+            min-height: 120px;
+            background: var(--bg-code);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 14px;
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            line-height: 1.7;
+            resize: vertical;
+            margin-top: 10px;
+        }
+
+        .exam-textarea:focus {
+            outline: none;
+            border-color: var(--accent-yellow);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="hero-badge">STAJ PROGRAMI 2026 — ÖDEV 3</div>
+        <h1>GuardWatch AI — Ödev 3</h1>
+        <p class="hero-subtitle">Düşünerek öğren, araştırarak büyü — OOP, modüler yapı, veritabanı ve temiz kod</p>
+        <div class="hero-meta">
+            <div class="hero-meta-item">Stajyer: <span>Taha</span></div>
+            <div class="hero-meta-item">Süre: <span>6 Gün (Gün 1-6)</span></div>
+            <div class="hero-meta-item">Günlük: <span>Min. 7 Saat</span></div>
+            <div class="hero-meta-item">Toplam: <span>~42 Saat</span></div>
+        </div>
+    </section>
+
+    <!-- RULES -->
+    <section class="rules-section">
+        <div class="rules-card">
+            <div class="rules-title">Altın Kurallar</div>
+            <div class="rule-item">
+                <div class="rule-number">1</div>
+                <div class="rule-text">AI'a <strong>"şu kodu yaz" DEME.</strong> Ama "şu kavramı anlat" diyebilirsin.</div>
+            </div>
+            <div class="rule-item">
+                <div class="rule-number">2</div>
+                <div class="rule-text">Her aşamayı <strong>AYRI commit et.</strong> Commit mesajın ne yaptığını açıklasın.</div>
+            </div>
+            <div class="rule-item">
+                <div class="rule-number">3</div>
+                <div class="rule-text">Her gün sonunda kısa bir yorum yaz. <strong>Ne öğrendin, nerede takıldın?</strong></div>
+            </div>
+            <div class="rule-item">
+                <div class="rule-number">4</div>
+                <div class="rule-text">Kodu satır satır açıklayabilmelisin. <strong>Hocanla konuşurken anlatamıyorsan o adım tamamlanmamış demektir.</strong></div>
+            </div>
+            <div class="rule-item">
+                <div class="rule-number">5</div>
+                <div class="rule-text">Hikaye bölümlerini <strong>ÖNCE oku, SONRA araştır, EN SON kod yaz.</strong> Sırayı atlatma.</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- OVERVIEW -->
+    <section class="overview-section">
+        <div class="overview-title">Haftalık Genel Bakış</div>
+        <div class="overview-grid">
+            <div class="overview-item">
+                <div class="overview-day">Gün 1</div>
+                <div class="overview-topic">OOP Temelleri</div>
+                <div class="overview-desc">class, __init__, self, method</div>
+            </div>
+            <div class="overview-item">
+                <div class="overview-day">Gün 2</div>
+                <div class="overview-topic">OOP Pratik</div>
+                <div class="overview-desc">Tracker class, kalıtım, entegrasyon</div>
+            </div>
+            <div class="overview-item">
+                <div class="overview-day">Gün 3</div>
+                <div class="overview-topic">Modüler Yapı</div>
+                <div class="overview-desc">import, dosya ayırma, paket</div>
+            </div>
+            <div class="overview-item">
+                <div class="overview-day">Gün 4</div>
+                <div class="overview-topic">SQLite Veritabanı</div>
+                <div class="overview-desc">SQL temelleri, CSV'den geçiş</div>
+            </div>
+            <div class="overview-item">
+                <div class="overview-day">Gün 5</div>
+                <div class="overview-topic">Temiz Kod</div>
+                <div class="overview-desc">PEP8, encoding, debugging, gitignore</div>
+            </div>
+            <div class="overview-item">
+                <div class="overview-day">Gün 6</div>
+                <div class="overview-topic">Bilgi Sınavı</div>
+                <div class="overview-desc">3 haftayı kendi cümleleriyle anlat</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- DAY NAV -->
+    <nav class="day-nav">
+        <div class="day-nav-inner">
+            <a href="#gun1" class="day-nav-btn">Gün 1: OOP Temeli</a>
+            <a href="#gun2" class="day-nav-btn">Gün 2: OOP Pratik</a>
+            <a href="#gun3" class="day-nav-btn">Gün 3: Modüler</a>
+            <a href="#gun4" class="day-nav-btn">Gün 4: SQLite</a>
+            <a href="#gun5" class="day-nav-btn">Gün 5: Temiz Kod</a>
+            <a href="#gun6" class="day-nav-btn">Gün 6: Sınav</a>
+            <a href="#notlar" class="day-nav-btn">Notlar</a>
+        </div>
+    </nav>
+
+    <!-- CONTENT -->
+    <div class="container">
+
+        <!-- ============================================== -->
+        <!-- GUN 1 -->
+        <!-- ============================================== -->
+        <section id="gun1" class="day-section day-0">
+            <div class="day-header">
+                <div class="day-label">GÜN 1</div>
+                <h2>OOP Temelleri &mdash; "Her Şeyin Bir Kalıbı Var"</h2>
+                <p>class, __init__, self ve method &mdash; soyut değil, hikayelerle öğren</p>
+            </div>
+
+            <!-- SABAH -->
+            <div class="time-block">
+                <div class="time-block-header">
+                    <span class="time-badge morning">Sabah</span>
+                    <span class="time-block-title">class, __init__, self &mdash; 3.5 saat</span>
+                </div>
+
+                <!-- Task 1.1 -->
+                <div class="task-card">
+                    <div class="task-card-header">
+                        <span class="task-id">1.1</span>
+                        <span class="task-title">Hikaye &mdash; Kurabiye Kalıbı</span>
+                        <span class="task-duration">30 dk</span>
+                    </div>
+                    <div class="task-body">
+
+                        <div class="story-block">
+                            <div class="story-label">Hikaye</div>
+                            <p>Annenin mutfağında bir kurabiye kalıbı var diyelim. Yıldız şeklinde. Bu kalıpla 10 tane kurabiye yapabilirsin. Her kurabiye aynı şekilde çıkar ama birinin üstüne çikolata, diğerine fındık koyabilirsin.</p>
+                            <p>İşte programlamada <strong>class</strong> = o kurabiye kalıbı. Her kurabiye = bir <strong>object</strong> (nesne). Kalıp bir tane, ama ondan istediğin kadar kurabiye (nesne) çıkarabilirsin.</p>
+                            <p>Şimdi düşün: guardwatch.py'deki <code>uyku_zamanlayicilari</code>, <code>son_bilinen_konumlar</code>, <code>hareketsizlik_zamanlayicilari</code> &mdash; bunlar hep ayrı ayrı dictionary'ler, birbirleriyle ilişkileri yok. Her kişi için 3 ayrı yerde bilgi tutuyorsun. Ya her kişi kendi bilgilerini kendi taşısa? İşte <strong>class</strong> bunu sağlıyor.</p>
+                        </div>
+
+                        <div class="research-block">
+                            <div class="research-label">Araştır &mdash; AI'a Sor</div>
+                            <ul>
+                                <li>"Python'da class nedir? Basit bir örnek göster."</li>
+                                <li>"class ile object (nesne) arasındaki fark nedir?"</li>
+                                <li>"__init__ metodu ne işe yarar? Neden her class'ta var?"</li>
+                                <li>"self nedir? Neden her metodun ilk parametresi self?"</li>
+                            </ul>
+                            <div class="research-note">Teknik detayları AI'dan öğren, ama KOPYALAMA. Anladığını kendi cümlelerinle bir kağıda yaz.</div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Task 1.2 -->
+                <div class="task-card">
+                    <div class="task-card-header">
+                        <span class="task-id">1.2</span>
+                        <span class="task-title">İlk Class'ını Yaz &mdash; BankaHesabi</span>
+                        <span class="task-duration">1.5 saat</span>
+                    </div>
+                    <div class="task-body">
+
+                        <div class="story-block">
+                            <div class="story-label">Hikaye</div>
+                            <p>Bir bankaya gittiğini düşün. Hesap açıyorsun. Banka sana ne sorar? İsim, başlangıç bakiyesi. Sonra ne yapabilirsin? Para yatır, para çek, bakiye sorgula.</p>
+                            <p>İşte <code>BankaHesabi</code> class'ı tam olarak bu:</p>
+                            <p><strong>Doğum anı (__init__)</strong>: Hesap açılınca isim ve bakiye belirlenir<br>
+                            <strong>Yapabildiği şeyler (method)</strong>: para_yatir(), para_cek(), bakiye_goster()<br>
+                            <strong>Kendi bilgileri (self)</strong>: self.isim, self.bakiye &mdash; her hesabın KENDİ bilgisi</p>
+                        </div>
+
+                        <p><strong>Alıştırma:</strong> Şimdi <code>BankaHesabi</code> class'ını yaz. Sıfırdan, bakarak değil.</p>
+                        <ol>
+                            <li><code>__init__</code> ile isim ve bakiye al</li>
+                            <li><code>para_yatir(miktar)</code> metodu &mdash; bakiyeye ekle, "X TL yatırıldı" yazdır</li>
+                            <li><code>para_cek(miktar)</code> metodu &mdash; bakiye yetiyorsa çıkar, yetmiyorsa "Yetersiz bakiye" yaz</li>
+                            <li><code>bakiye_goster()</code> metodu &mdash; "İsim: ... | Bakiye: ... TL" yazdır</li>
+                            <li>2 farklı hesap oluştur (Taha ve Ali), her birine işlem yap</li>
+                        </ol>
+
+                        <div class="warning-callout">
+                            <strong>Dikkat:</strong> class'ı yazarken AI'a bakma. Araştırma aşamasında öğrendiklerini HATIRLA ve kendin yaz. Takılırsan ÖNCE 10 dakika düşün, sonra AI'a "nerede hata yapıyorum" diye sor.
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Task 1.3 -->
+                <div class="task-card">
+                    <div class="task-card-header">
+                        <span class="task-id">1.3</span>
+                        <span class="task-title">Hikaye &mdash; Telefon Fabrikası</span>
+                        <span class="task-duration">30 dk</span>
+                    </div>
+                    <div class="task-body">
+
+                        <div class="story-block">
+                            <div class="story-label">Hikaye</div>
+                            <p>Samsung fabrikasını düşün. Bir telefon modeli tasarlıyorlar: Galaxy A55. Bu tasarım bir <strong>class</strong>. Fabrikadan çıkan her telefon bir <strong>object</strong>.</p>
+                            <p>Her telefonun kendine ait şeyleri var: IMEI numarası, rengi, hafıza kapasitesi. Bunlar <strong>attribute</strong> (özellik).<br>
+                            Her telefonun yapabildiği şeyler var: arama yap, mesaj gönder, fotoğraf çek. Bunlar <strong>method</strong>.</p>
+                            <p>Ama hepsi aynı kalıptan çıktı. Samsung 1 milyon telefon üretir &mdash; her birinin kendi IMEI'si var ama hepsi aynı şeyleri yapabilir.</p>
+                            <p>Şimdi guardwatch'a dön: Her tespit edilen kişi aslında bir 'nesne' değil mi? Her birinin kendi ID'si, kendi EAR değeri, kendi uyku süresi var. Ama şu an bunları ayrı dictionary'lerde tutuyorsun. Her kişi bir class'tan üretilen nesne olsa?</p>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Task 1.4 -->
+                <div class="task-card">
+                    <div class="task-card-header">
+                        <span class="task-id">1.4</span>
+                        <span class="task-title">İkinci Class &mdash; Ogrenci</span>
+                        <span class="task-duration">1 saat</span>
+                    </div>
+                    <div class="task-body">
+                        <p><strong>Alıştırma:</strong> <code>Ogrenci</code> class'ı yaz:</p>
+                        <ol>
+                            <li><code>__init__</code> ile isim, numara, notlar listesi (başta boş liste) al</li>
+                            <li><code>not_ekle(not_degeri)</code> metodu</li>
+                            <li><code>ortalama_hesapla()</code> metodu &mdash; notların ortalamasını döndür</li>
+                            <li><code>durum()</code> metodu &mdash; ortalama &gt;= 50 ise "Geçti", değilse "Kaldı" yazdır</li>
+                            <li><code>bilgi()</code> metodu &mdash; tüm bilgileri güzel formatlı yazdır</li>
+                            <li>3 öğrenci oluştur, notlar ekle, durumlarını yazdır</li>
+                        </ol>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- ÖĞLEDEN SONRA -->
+            <div class="time-block">
+                <div class="time-block-header">
+                    <span class="time-badge afternoon">Öğleden Sonra</span>
+                    <span class="time-block-title">Kişi class'ı ve mini proje &mdash; 3.5 saat</span>
+                </div>
+
+                <!-- Task 1.5 -->
+                <div class="task-card">
+                    <div class="task-card-header">
+                        <span class="task-id">1.5</span>
+                        <span class="task-title">Hikaye &mdash; Apartmandaki Kaos</span>
+                        <span class="task-duration">30 dk</span>
+                    </div>
+                    <div class="task-body">
+
+                        <div class="story-block">
+                            <div class="story-label">Hikaye</div>
+                            <p>Bir apartman düşün. 10 daire var. Herkes aynı buzdolabını paylaşıyor (ortak mutfak). Ali süt koyuyor, Veli çıkarıyor, Ayşe yoğurt alıyor &mdash; kimse kimin ne yaptığını bilmiyor. Süt kayboluyor, kavga çıkıyor.</p>
+                            <p>Çözüm? Her dairenin KENDİ buzdolabı olsun.</p>
+                            <p>İşte guardwatch.py'de olan tam olarak bu:</p>
+<pre>uyku_zamanlayicilari = {}    <span class="code-comment"># ortak buzdolabı 1</span>
+son_bilinen_konumlar = {}     <span class="code-comment"># ortak buzdolabı 2</span>
+hareketsizlik_zamanlayicilari = {}  <span class="code-comment"># ortak buzdolabı 3</span></pre>
+                            <p>Her kişinin bilgisi farklı dictionary'lerde dağılmış. Kişi ID'si ile 3 ayrı yere bakıyorsun. Ya her kişi kendi bilgilerini kendi taşısa?</p>
+<pre><span class="code-keyword">class</span> <span class="code-function">Kisi</span>:
+    <span class="code-keyword">def</span> <span class="code-function">__init__</span>(self, kisi_id):
+        self.kisi_id = kisi_id
+        self.uyku_baslangic = <span class="code-keyword">None</span>
+        self.son_konum = <span class="code-keyword">None</span>
+        self.hareketsizlik_baslangic = <span class="code-keyword">None</span></pre>
+                            <p>Şimdi her kişi kendi 'dairesinde' yaşıyor. Bilgileri karışmaz.</p>
+                        </div>
+
+                        <div class="research-block">
+                            <div class="research-label">Araştır &mdash; AI'a Sor</div>
+                            <ul>
+                                <li>"Python'da class attribute ve instance attribute arasındaki fark nedir?"</li>
+                                <li>"Bir class'ın birden fazla instance'ı (nesnesi) olduğunda veriler birbirine karışır mı?"</li>
+                                <li>"Python'da __str__ metodu ne işe yarar?"</li>
+                            </ul>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Task 1.6 -->
+                <div class="task-card">
+                    <div class="task-card-header">
+                        <span class="task-id">1.6</span>
+                        <span class="task-title">Kisi Class'ı Yaz</span>
+                        <span class="task-duration">1.5 saat</span>
+                    </div>
+                    <div class="task-body">
+                        <p>guardwatch'taki kişi kavramını class'a çevir. Dosya: <code>gun1_kisi.py</code></p>
+                        <ol>
+                            <li><code>Kisi</code> class'ı yaz:
+                                <ul>
+                                    <li><code>__init__(self, kisi_id, konum)</code> &mdash; ID ve başlangıç konumu</li>
+                                    <li><code>self.uyku_baslangic = None</code> (henüz uyumamış)</li>
+                                    <li><code>self.hareketsizlik_baslangic = None</code></li>
+                                    <li><code>self.toplam_ihlal = 0</code></li>
+                                </ul>
+                            </li>
+                            <li><code>konum_guncelle(self, yeni_konum)</code> &mdash; konumu güncelle</li>
+                            <li><code>uyku_baslat(self)</code> &mdash; <code>self.uyku_baslangic = time.time()</code></li>
+                            <li><code>uyku_kontrol(self, esik)</code> &mdash; başlangıçtan beri geçen süre eşiği geçtiyse True dön</li>
+                            <li><code>uyku_sifirla(self)</code> &mdash; uyku başlangıcını None yap</li>
+                            <li><code>__str__</code> metodu &mdash; "Kişi #3 | Konum: (120, 340) | İhlal: 2"</li>
+                            <li>3 kişi oluştur, konumlarını güncelle, uyku başlat/kontrol et/sıfırla</li>
+                        </ol>
+
+                        <div class="info-callout">
+                            <strong>Bilgi:</strong> Bu class, Hafta 4'te guardwatch_v3.py'nin temeli olacak. Şimdi düzgün yaz!
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Task 1.7 -->
+                <div class="task-card">
+                    <div class="task-card-header">
+                        <span class="task-id">1.7</span>
+                        <span class="task-title">Hikaye &mdash; Kendi Kendine Konuşan Nesne</span>
+                        <span class="task-duration">30 dk</span>
+                    </div>
+                    <div class="task-body">
+
+                        <div class="story-block">
+                            <div class="story-label">Hikaye</div>
+                            <p>Düşün ki bir robot köpeğin var. 'Otur' diyorsun, oturuyor. 'Havla' diyorsun, havlıyor. Ama robota 'sen kimsin?' diye de sorabilirsin &mdash; o da 'Ben Max, 3 yaşındayım, kahverengi' diyor.</p>
+                            <p>Python'da <code>print(nesne)</code> dediğinde ne olur? Normalde <code>&lt;__main__.Kisi object at 0x7f...&gt;</code> gibi anlamsız bir şey yazar. Ama <code>__str__</code> metodu yazarsan, nesne kendini TANITIR.</p>
+                            <p>Bu 'sihirli metotlara' (magic methods / dunder methods) denir. <code>__init__</code> de bunlardan biri zaten &mdash; nesnenin 'doğum' anı.</p>
+                        </div>
+
+                        <div class="research-block">
+                            <div class="research-label">Araştır &mdash; AI'a Sor</div>
+                            <ul>
+                                <li>"__str__ ve __repr__ arasındaki fark nedir?"</li>
+                                <li>"Python'da başka hangi dunder method'lar var? En çok kullanılan 5 tanesini öğren."</li>
+                                <li>"__len__ ne yapar? Bir class'a nasıl len() desteği eklersin?"</li>
+                            </ul>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Task 1.8 -->
+                <div class="task-card">
+                    <div class="task-card-header">
+                        <span class="task-id">1.8</span>
+                        <span class="task-title">Günün Mini Projesi &mdash; KisiBulucu</span>
+                        <span class="task-duration">1 saat</span>
+                    </div>
+                    <div class="task-body">
+                        <p>Dosya: <code>gun1_kisi_bulucu.py</code></p>
+                        <ul>
+                            <li><code>Kisi</code> class'ını kullan (gun1_kisi.py'den kopyalama, yeniden yaz veya import et)</li>
+                            <li>5 kişi oluştur, rastgele konumlar ver</li>
+                            <li>Her turda konumları rastgele değiştir</li>
+                            <li>Her kişi için uyku durumunu kontrol et (rastgele True/False)</li>
+                            <li>10 tur çalıştır, her turda kişilerin durumunu yazdır</li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- CHECKPOINT GÜN 1 -->
+            <div class="checkpoint">
+                <div class="checkpoint-title">&#9898; Kontrol Noktası &mdash; Gün 1</div>
+                <ul>
+                    <li>class ve object (nesne) arasındaki fark nedir? Gerçek hayat örneği ver.</li>
+                    <li>__init__ ne zaman çalışır? Ne işe yarar?</li>
+                    <li>self nedir? Neden her metodda ilk parametre?</li>
+                    <li>Bir class'ın iki farklı nesnesi aynı attribute'lara sahip mi? Değerleri aynı mı?</li>
+                    <li>guardwatch'taki global dictionary'ler yerine neden class kullanmalıyız?</li>
+                </ul>
+            </div>
+
+            <!-- DELIVERABLES GÜN 1 -->
+            <div class="deliverables">
+                <div class="deliverables-title">&#9745; Gün 1 Teslim Listesi</div>
+                <div class="deliverable-item"><span class="deliverable-file">gun1_banka.py</span> &mdash; BankaHesabi class'ı</div>
+                <div class="deliverable-item"><span class="deliverable-file">gun1_ogrenci.py</span> &mdash; Ogrenci class'ı</div>
+                <div class="deliverable-item"><span class="deliverable-file">gun1_kisi.py</span> &mdash; Kisi class'ı (guardwatch odaklı)</div>
+                <div class="deliverable-item"><span class="deliverable-file">gun1_kisi_bulucu.py</span> &mdash; Mini proje</div>
+                <div class="deliverable-item">Git commit: <code>"Gün 1: OOP temelleri — class, init, self, method"</code></div>
+            </div>
+
+        </section>
+
+        <!-- ============================================== -->
+        <!-- GUN 2 -->
+        <!-- ============================================== -->
+        <section id="gun2" class="day-section day-1">
+            <div class="day-header">
+                <div class="day-label">GÜN 2</div>
+                <h2>OOP Pratik &mdash; "Miras ve Düzen"</h2>
+                <p>Kalıtım, composition, guardwatch bileşenlerini class'a çevirme</p>
+            </div>
+
+            <!-- SABAH -->
+            <div class="time-block">
+                <div class="time-block-header">
+                    <span class="time-badge morning">Sabah</span>
+                    <span class="time-block-title">Kalıtım ve composition &mdash; 3.5 saat</span>
+                </div>
+
+                <!-- Task 2.1 -->
+                <div class="task-card">
+                    <div class="task-card-header">
+                        <span class="task-id">2.1</span>
+                        <span class="task-title">Hikaye &mdash; Genetik Miras</span>
+                        <span class="task-duration">30 dk</span>
+                    </div>
+                    <div class="task-body">
+
+                        <div class="story-block">
+                            <div class="story-label">Hikaye</div>
+                            <p>Babanın gözleri mavi, boyun uzun, saçın kıvırcık. Bunları babandan 'miras' aldın. Ama senin de kendi özelliklerin var &mdash; mesela babanda olmayan bir yetenek, gitar çalmak.</p>
+                            <p>Programlamada buna <strong>kalıtım (inheritance)</strong> deniyor. Bir class, başka bir class'tan özellikler 'miras' alabilir.</p>
+                            <p>Diyelim ki bir <code>Arac</code> class'ın var: marka, model, hiz, calistir(), durdur(). Sonra <code>Araba</code> class'ı yapıyorsun &mdash; Araç'ın TÜM özelliklerini alıyor, bir de kendi eklediğin <code>bagaj_ac()</code> metodunu koyuyorsun. <code>Motosiklet</code> class'ı da Araç'tan miras alıyor ama <code>kask_tak()</code> ekliyor.</p>
+                            <p>3 class yazdın ama <code>calistir()</code> ve <code>durdur()</code> metodunu SADECE Araç'ta bir kez yazdın. Araba ve Motosiklet onu bedavaya aldı.</p>
+                        </div>
+
+                        <div class="research-block">
+                            <div class="research-label">Araştır &mdash; AI'a Sor</div>
+                            <ul>
+                                <li>"Python'da inheritance (kalıtım) nasıl yapılır? Basit bir örnek göster."</li>
+                                <li>"super() fonksiyonu ne işe yarar? Ne zaman kullanılır?"</li>
+                                <li>"Bir child class, parent class'ın metodunu değiştirebilir mi? Buna ne denir? (method overriding)"</li>
+                            </ul>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Task 2.2 -->
+                <div class="task-card">
+                    <div class="task-card-header">
+                        <span class="task-id">2.2</span>
+                        <span class="task-title">Kalıtım Alıştırması &mdash; Araç Sistemi</span>
+                        <span class="task-duration">1.5 saat</span>
+                    </div>
+                    <div class="task-body">
+                        <ol>
+                            <li><code>Arac</code> class'ı (parent):
+                                <ul>
+                                    <li><code>__init__</code>: marka, model, hiz=0</li>
+                                    <li><code>calistir()</code>: "Motor çalıştı" yazdır</li>
+                                    <li><code>hizlan(miktar)</code>: hızı artır</li>
+                                    <li><code>durdur()</code>: hızı sıfırla</li>
+                                    <li><code>bilgi()</code>: marka, model, hız yazdır</li>
+                                </ul>
+                            </li>
+                            <li><code>Araba(Arac)</code> class'ı (child):
+                                <ul>
+                                    <li><code>__init__</code>: marka, model, yolcu_sayisi &mdash; super() ile parent'ı çağır</li>
+                                    <li><code>bagaj_ac()</code>: kendi metodu</li>
+                                </ul>
+                            </li>
+                            <li><code>Motosiklet(Arac)</code> class'ı (child):
+                                <ul>
+                                    <li><code>hizlan(miktar)</code>: Override &mdash; motosiklet %50 daha hızlı hızlanır</li>
+                                </ul>
+                            </li>
+                            <li>Her birinden nesne oluştur, test et</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <!-- Task 2.3 -->
+                <div class="task-card">
+                    <div class="task-card-header">
+                        <span class="task-id">2.3</span>
+                        <span class="task-title">Hikaye &mdash; Lego Blokları</span>
+                        <span class="task-duration">30 dk</span>
+                    </div>
+                    <div class="task-body">
+
+                        <div class="story-block">
+                            <div class="story-label">Hikaye</div>
+                            <p>Kalıtım (inheritance) her zaman en iyi yol değil. Bazen <strong>composition</strong> (birleştirme) daha iyi.</p>
+                            <p>Lego düşün. Bir ev yapmak istiyorsun. Evin duvarları var, kapısı var, çatısı var. Duvar bir Lego bloğu, kapı başka bir blok, çatı başka. Bunları birleştirerek ev yapıyorsun.</p>
+                            <p>guardwatch'ı düşün:</p>
+                            <p><strong>Tracker</strong> &rarr; Kişileri takip eden parça<br>
+                            <strong>CSVLogger</strong> &rarr; Verileri kaydeden parça<br>
+                            <strong>AlarmSistemi</strong> &rarr; Alarm çalan parça</p>
+                            <p>Bunlar birbirinden miras almıyor &mdash; bir CSVLogger Tracker'dan miras almaz, saçma olur. Ama hepsi bir arada çalışıyor. GuardWatch bu 'Lego bloklarını' birleştiren ana yapı.</p>
+                            <p>Bu yaklaşıma <strong>composition</strong> deniyor: 'bir şey başka şeylerDEN OLUŞUR' (has-a ilişkisi). Kalıtım ise 'bir şey başka bir şey TÜRÜdür' (is-a ilişkisi). Araba bir araç TÜRÜDÜR (kalıtım). GuardWatch bir Tracker'A SAHİPTİR (composition).</p>
+                        </div>
+
+                        <div class="research-block">
+                            <div class="research-label">Araştır &mdash; AI'a Sor</div>
+                            <ul>
+                                <li>"Inheritance vs Composition &mdash; ne zaman hangisini kullanmalıyım?"</li>
+                                <li>"Python'da bir class içinde başka bir class'ın nesnesini nasıl tutarım?"</li>
+                                <li>"'has-a' ve 'is-a' ilişkisi ne demek? Örnekle açıkla."</li>
+                            </ul>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Task 2.4 -->
+                <div class="task-card">
+                    <div class="task-card-header">
+                        <span class="task-id">2.4</span>
+                        <span class="task-title">CSVLogger Class'ı Yaz</span>
+                        <span class="task-duration">1 saat</span>
+                    </div>
+                    <div class="task-body">
+                        <p>Dosya: <code>gun2_csv_logger.py</code></p>
+                        <p>guardwatch'taki CSV işlemlerini bir class'a topla:</p>
+                        <ol>
+                            <li><code>CSVLogger</code> class'ı:
+                                <ul>
+                                    <li><code>__init__(self, dosya_adi)</code> &mdash; dosya adını kaydet, dosya yoksa başlık satırı yaz</li>
+                                    <li><code>ihlal_kaydet(self, kisi_id, ihlal_turu, sure, ear)</code> &mdash; CSV'ye bir satır ekle</li>
+                                    <li><code>ozet_getir(self)</code> &mdash; dosyayı oku, toplam ihlal sayısı ve kişi bazlı sayıları döndür</li>
+                                    <li><code>temizle(self)</code> &mdash; dosyayı sil ve yeniden oluştur</li>
+                                </ul>
+                            </li>
+                            <li>Test: logger nesnesi oluştur, 5 ihlal kaydet, özeti yazdır</li>
+                        </ol>
+
+                        <div class="info-callout">
+                            <strong>Bilgi:</strong> Dikkat et: CSV yazma/okuma bilgisini Hafta 2'den zaten biliyorsun. Burada yeni olan şey: bu işlemleri bir class'ın içine TOPLAMAK. Böylece <code>logger.ihlal_kaydet(...)</code> diyorsun, dosya adını her seferinde yazmana gerek yok.
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- ÖĞLEDEN SONRA -->
+            <div class="time-block">
+                <div class="time-block-header">
+                    <span class="time-badge afternoon">Öğleden Sonra</span>
+                    <span class="time-block-title">AlarmSistemi, Tracker ve entegrasyon &mdash; 3.5 saat</span>
+                </div>
+
+                <!-- Task 2.5 -->
+                <div class="task-card">
+                    <div class="task-card-header">
+                        <span class="task-id">2.5</span>
+                        <span class="task-title">AlarmSistemi Class'ı Yaz</span>
+                        <span class="task-duration">1 saat</span>
+                    </div>
+                    <div class="task-body">
+                        <p>Dosya: <code>gun2_alarm.py</code></p>
+                        <ol>
+                            <li><code>AlarmSistemi</code> class'ı:
+                                <ul>
+                                    <li><code>__init__(self, ses_dosyasi)</code> &mdash; ses dosyasını kontrol et, yoksa uyar</li>
+                                    <li><code>self.aktif = False</code></li>
+                                    <li><code>cal(self)</code> &mdash; threading ile sesi çal (aktifse tekrar çalma)</li>
+                                    <li><code>durdur(self)</code> &mdash; alarmı durdur</li>
+                                    <li><code>durum(self)</code> &mdash; "Alarm aktif" veya "Alarm pasif" döndür</li>
+                                </ul>
+                            </li>
+                            <li>Test et</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <!-- Task 2.6 -->
+                <div class="task-card">
+                    <div class="task-card-header">
+                        <span class="task-id">2.6</span>
+                        <span class="task-title">Tracker Class'ı Yaz</span>
+                        <span class="task-duration">1.5 saat</span>
+                    </div>
+                    <div class="task-body">
+                        <p>Dosya: <code>gun2_tracker.py</code></p>
+                        <p>guardwatch'taki centroid tracker'ı class'a çevir:</p>
+                        <ol>
+                            <li><code>Tracker</code> class'ı:
+                                <ul>
+                                    <li><code>__init__(self, max_mesafe=50)</code> &mdash; boş kişi listesi, sıradaki ID</li>
+                                    <li><code>guncelle(self, yeni_konumlar)</code> &mdash; mevcut kişileri yeni konumlarla eşle, yenileri ekle, kaybolanları sil. Kisi nesnesi döndür (Gün 1'deki class!)</li>
+                                    <li><code>kisi_getir(self, kisi_id)</code> &mdash; ID'ye göre kişi nesnesini döndür</li>
+                                    <li><code>aktif_kisiler(self)</code> &mdash; aktif kişi listesini döndür</li>
+                                </ul>
+                            </li>
+                            <li>Test: 5 konumla başla, konumları değiştir, tracker'ın doğru eşlediğini gör</li>
+                        </ol>
+
+                        <div class="warning-callout">
+                            <strong>Dikkat:</strong> Bu Hafta 1'deki centroid tracker ile AYNI mantık. Ama şimdi fonksiyon + dictionary yerine CLASS kullanıyorsun. Farkı hisset!
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Task 2.7 -->
+                <div class="task-card">
+                    <div class="task-card-header">
+                        <span class="task-id">2.7</span>
+                        <span class="task-title">Hikaye &mdash; Orkestra Şefi</span>
+                        <span class="task-duration">30 dk</span>
+                    </div>
+                    <div class="task-body">
+
+                        <div class="story-block">
+                            <div class="story-label">Hikaye</div>
+                            <p>Bir orkestra düşün. Kemanlar, flütler, davullar var. Her biri kendi işini bilir. Ama hepsini bir araya getiren, 'şimdi kemanlar çalsın, şimdi davullar sussun' diyen biri var: ŞEF.</p>
+                            <p>guardwatch_v2.py aslında bir orkestra şefi. Tracker'a 'kişileri güncelle' diyor, CSVLogger'a 'bunu kaydet' diyor, AlarmSistemi'ne 'çal' diyor. Ama şu an şef (main fonksiyon) her enstrümanın iç işlerine karışıyor &mdash; notaları kendisi yazıyor, davulu kendisi çalıyor. Kötü bir şef.</p>
+                            <p>İyi bir şef: 'Kemanlar, 3. bölümü çalın' der, kemanlar nasıl çalacağını bilir. İşte class'lar bu &mdash; her biri kendi işini bilen bağımsız parçalar. Main fonksiyon sadece 'orkestra şefi' olmalı.</p>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Task 2.8 -->
+                <div class="task-card">
+                    <div class="task-card-header">
+                        <span class="task-id">2.8</span>
+                        <span class="task-title">Günün Mini Projesi &mdash; Hepsini Birleştir</span>
+                        <span class="task-duration">1 saat</span>
+                    </div>
+                    <div class="task-body">
+                        <p>Dosya: <code>gun2_entegrasyon.py</code></p>
+                        <p>Bugün yazdığın 3 class'ı (Kisi, CSVLogger, AlarmSistemi) tek dosyada birleştir:</p>
+                        <ol>
+                            <li>3 Kisi nesnesi oluştur</li>
+                            <li>CSVLogger nesnesi oluştur</li>
+                            <li>AlarmSistemi nesnesi oluştur (ses dosyası yoksa None ile)</li>
+                            <li>Bir simülasyon döngüsü: 10 tur
+                                <ul>
+                                    <li>Her turda rastgele bir kişiye ihlal olsun</li>
+                                    <li>İhlali CSV'ye kaydet</li>
+                                    <li>3+ ihlal yapan kişi için alarm çal</li>
+                                </ul>
+                            </li>
+                            <li>Sonunda özet yazdır</li>
+                        </ol>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- CHECKPOINT GÜN 2 -->
+            <div class="checkpoint">
+                <div class="checkpoint-title">&#9898; Kontrol Noktası &mdash; Gün 2</div>
+                <ul>
+                    <li>Kalıtım (inheritance) nedir? Gerçek hayat örneği ver.</li>
+                    <li>super() ne yapar? Neden lazım?</li>
+                    <li>Composition ve inheritance arasındaki fark nedir?</li>
+                    <li>CSVLogger class'ının avantajı nedir? Fonksiyonla yazmaktan farkı ne?</li>
+                    <li>'Orkestra şefi' analojisini kendi cümlelerinle anlat.</li>
+                </ul>
+            </div>
+
+            <!-- DELIVERABLES GÜN 2 -->
+            <div class="deliverables">
+                <div class="deliverables-title">&#9745; Gün 2 Teslim Listesi</div>
+                <div class="deliverable-item"><span class="deliverable-file">gun2_arac.py</span> &mdash; Araç kalıtım alıştırması</div>
+                <div class="deliverable-item"><span class="deliverable-file">gun2_csv_logger.py</span> &mdash; CSVLogger class'ı</div>
+                <div class="deliverable-item"><span class="deliverable-file">gun2_alarm.py</span> &mdash; AlarmSistemi class'ı</div>
+                <div class="deliverable-item"><span class="deliverable-file">gun2_tracker.py</span> &mdash; Tracker class'ı</div>
+                <div class="deliverable-item"><span class="deliverable-file">gun2_entegrasyon.py</span> &mdash; Mini proje</div>
+                <div class="deliverable-item">Git commit: <code>"Gün 2: OOP pratik — Tracker, CSVLogger, AlarmSistemi class'ları"</code></div>
+            </div>
+
+        </section>
+
+        <!-- ============================================== -->
+        <!-- GUN 3 -->
+        <!-- ============================================== -->
+        <section id="gun3" class="day-section day-2">
+            <div class="day-header">
+                <div class="day-label">GÜN 3</div>
+                <h2>Modüler Yapı &mdash; "Tek Dosyadan Kurtar"</h2>
+                <p>import, from, paket yapısı &mdash; tek dosyalık kaostan kurtulma</p>
+            </div>
+
+            <!-- SABAH -->
+            <div class="time-block">
+                <div class="time-block-header">
+                    <span class="time-badge morning">Sabah</span>
+                    <span class="time-block-title">import, __name__, paket yapısı &mdash; 3.5 saat</span>
+                </div>
+
+                <!-- Task 3.1 -->
+                <div class="task-card">
+                    <div class="task-card-header">
+                        <span class="task-id">3.1</span>
+                        <span class="task-title">Hikaye &mdash; Restoran Mutfağı</span>
+                        <span class="task-duration">30 dk</span>
+                    </div>
+                    <div class="task-body">
+
+                        <div class="story-block">
+                            <div class="story-label">Hikaye</div>
+                            <p>Bir restoran düşün. Aşçıbaşı, tatlıcı, ızgaracı, salatacı &mdash; hepsi AYRI bölümlerde çalışıyor. Aşçıbaşı tatlıcıya <em>'bir porsiyon baklava hazırla'</em> diyor, tatlıcı kendi bölümünde yapıyor. Kimse kimsenin tezgahına karışmıyor.</p>
+                            <p>Şimdi <code>guardwatch_v2.py</code>'yi düşün: 548 satır, TEK DOSYA. Tracker, CSV, alarm, EAR hesaplama, config yükleme, YOLO tespiti &mdash; hepsi aynı mutfakta. Aşçıbaşı hem et pişiriyor, hem tatlı yapıyor, hem salata doğruyor. <strong>Kaos!</strong></p>
+                            <p>Çözüm: Her 'aşçıyı' kendi bölümüne koy. Python'da bu demek:</p>
+                            <ul>
+                                <li><code>tracker.py</code> &rarr; Tracker class'ı (ızgaracı)</li>
+                                <li><code>logger.py</code> &rarr; CSVLogger class'ı (garson)</li>
+                                <li><code>alarm.py</code> &rarr; AlarmSistemi class'ı (müzisyen)</li>
+                                <li><code>detector.py</code> &rarr; EAR hesaplama fonksiyonları (salatacı)</li>
+                                <li><code>main.py</code> &rarr; Ana program (aşçıbaşı &mdash; sadece koordine eder)</li>
+                            </ul>
+                            <p>Ve aşçıbaşı diğerlerine şöyle seslenir:<br>
+                            <code>from tracker import Tracker</code> &rarr; <em>'Izgaracıdan Tracker'ı getir'</em></p>
+                        </div>
+
+                        <div class="research-block">
+                            <div class="research-label">Araştır &mdash; AI'a Sor</div>
+                            <ul>
+                                <li>"Python'da import nasıl çalışır? <code>import X</code> ile <code>from X import Y</code> arasındaki fark nedir?"</li>
+                                <li>"<code>if __name__ == '__main__':</code> ne demek? Neden kullanılır?"</li>
+                                <li>"Python'da paket (package) nedir? <code>__init__.py</code> dosyası ne işe yarar?"</li>
+                                <li>"Circular import nedir? Neden sorun olur?"</li>
+                            </ul>
+                            <div class="research-note">import sistemini anlamak ÇOK ÖNEMLİ. Bunu derinlemesine araştır.</div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Task 3.2 -->
+                <div class="task-card">
+                    <div class="task-card-header">
+                        <span class="task-id">3.2</span>
+                        <span class="task-title">İlk Modül Deneyimi</span>
+                        <span class="task-duration">1 saat</span>
+                    </div>
+                    <div class="task-body">
+                        <p><strong>Alıştırma:</strong> 2 dosya oluştur:</p>
+                        <p><strong>1. <code>matematik.py</code>:</strong></p>
+                        <ul>
+                            <li><code>topla(a, b)</code> fonksiyonu</li>
+                            <li><code>cikar(a, b)</code> fonksiyonu</li>
+                            <li><code>carp(a, b)</code> fonksiyonu</li>
+                            <li>Dosyanın en altında <code>if __name__ == "__main__":</code> bloğu ile test kodları yaz</li>
+                        </ul>
+                        <p><strong>2. <code>hesap_makinesi.py</code>:</strong></p>
+                        <ul>
+                            <li><code>from matematik import topla, cikar, carp</code></li>
+                            <li>Kullanıcıdan 2 sayı ve işlem al, sonucu yazdır</li>
+                        </ul>
+
+                        <div class="info-callout">
+                            <strong>Bilgi:</strong> <code>matematik.py</code>'yi direkt çalıştırınca test kodları çalışsın. Ama <code>hesap_makinesi.py</code>'den import edince test kodları ÇALIŞMASIN. İşte <code>__name__ == '__main__'</code> bunu sağlıyor.
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Task 3.3 -->
+                <div class="task-card">
+                    <div class="task-card-header">
+                        <span class="task-id">3.3</span>
+                        <span class="task-title">Hikaye &mdash; Posta Kutusu Adresi</span>
+                        <span class="task-duration">30 dk</span>
+                    </div>
+                    <div class="task-body">
+
+                        <div class="story-block">
+                            <div class="story-label">Hikaye</div>
+                            <p>Bir mektup gönderiyorsun. Adres yazıyorsun: Türkiye / Ankara / Çankaya / Atatürk Caddesi No:5.</p>
+                            <p>Python'da paketler de böyle çalışır:</p>
+<pre>guardwatch/
+├── __init__.py        <span class="code-comment"># 'Bu bir paket' demek</span>
+├── tracker.py         <span class="code-comment"># guardwatch.tracker</span>
+├── logger.py          <span class="code-comment"># guardwatch.logger</span>
+├── alarm.py           <span class="code-comment"># guardwatch.alarm</span>
+└── detector.py        <span class="code-comment"># guardwatch.detector</span></pre>
+                            <p><code>from guardwatch.tracker import Tracker</code> = <em>'guardwatch paketinin tracker modülünden Tracker class'ını getir'</em>. Tıpkı posta adresi gibi: ülke &rarr; şehir &rarr; mahalle &rarr; ev.</p>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Task 3.4 -->
+                <div class="task-card">
+                    <div class="task-card-header">
+                        <span class="task-id">3.4</span>
+                        <span class="task-title">Paket Yapısı Oluşturma</span>
+                        <span class="task-duration">1.5 saat</span>
+                    </div>
+                    <div class="task-body">
+                        <p><strong>Alıştırma:</strong> Gün 2'de yazdığın class'ları paket haline getir:</p>
+                        <ol>
+                            <li><code>guardwatch/</code> klasörü oluştur</li>
+                            <li>İçine <code>__init__.py</code> (boş olabilir)</li>
+                            <li><code>guardwatch/tracker.py</code> &mdash; Tracker class'ını taşı</li>
+                            <li><code>guardwatch/logger.py</code> &mdash; CSVLogger class'ını taşı</li>
+                            <li><code>guardwatch/alarm.py</code> &mdash; AlarmSistemi class'ını taşı</li>
+                            <li><code>guardwatch/kisi.py</code> &mdash; Kisi class'ını taşı</li>
+                            <li><code>main.py</code> (klasörün DIŞINDA):</li>
+                        </ol>
+<pre><span class="code-keyword">from</span> guardwatch.tracker <span class="code-keyword">import</span> Tracker
+<span class="code-keyword">from</span> guardwatch.logger <span class="code-keyword">import</span> CSVLogger
+<span class="code-keyword">from</span> guardwatch.kisi <span class="code-keyword">import</span> Kisi
+
+tracker = Tracker(max_mesafe=<span class="code-number">50</span>)
+logger = CSVLogger(<span class="code-string">"ihlaller.csv"</span>)
+<span class="code-function">print</span>(<span class="code-string">"Tüm modüller başarıyla yüklendi!"</span>)</pre>
+
+                        <div class="warning-callout">
+                            <strong>Dikkat:</strong> Dosyaları taşırken import'lar bozulabilir. <code>from guardwatch.kisi import Kisi</code> gibi tam yol yazman gerekebilir. Hata alırsan AI'a "ModuleNotFoundError nasıl çözülür" diye sor.
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- ÖĞLEDEN SONRA -->
+            <div class="time-block">
+                <div class="time-block-header">
+                    <span class="time-badge afternoon">Öğleden Sonra</span>
+                    <span class="time-block-title">__init__.py, kısayollar ve modüler proje &mdash; 3.5 saat</span>
+                </div>
+
+                <!-- Task 3.5 -->
+                <div class="task-card">
+                    <div class="task-card-header">
+                        <span class="task-id">3.5</span>
+                        <span class="task-title">Hikaye &mdash; Kütüphane Kartı</span>
+                        <span class="task-duration">30 dk</span>
+                    </div>
+                    <div class="task-body">
+
+                        <div class="story-block">
+                            <div class="story-label">Hikaye</div>
+                            <p>Kütüphaneye gittin. 10.000 kitap var. Hepsini tek bir oda mı koyarsın? Hayır &mdash; Edebiyat, Bilim, Tarih, Matematik diye bölümlere ayırırsın.</p>
+                            <p><code>__init__.py</code> dosyası kütüphanenin giriş masası gibi. <em>'Bu bölümde şunlar var'</em> diye listeliyor. İstersen orada kısayollar tanımlarsın:</p>
+<pre><span class="code-comment"># guardwatch/__init__.py</span>
+<span class="code-keyword">from</span> .tracker <span class="code-keyword">import</span> Tracker
+<span class="code-keyword">from</span> .logger <span class="code-keyword">import</span> CSVLogger
+<span class="code-keyword">from</span> .alarm <span class="code-keyword">import</span> AlarmSistemi</pre>
+                            <p>Artık dışarıdan şöyle kullanabilirsin:</p>
+<pre><span class="code-keyword">from</span> guardwatch <span class="code-keyword">import</span> Tracker, CSVLogger, AlarmSistemi</pre>
+                            <p>Tek tek modül adı yazmana gerek kalmadı. Kütüphanenin masasına sordun, <em>'Tracker nerede?'</em>, o sana yönlendirdi.</p>
+                        </div>
+
+                        <div class="research-block">
+                            <div class="research-label">Araştır &mdash; AI'a Sor</div>
+                            <ul>
+                                <li>"<code>__init__.py</code> dosyasında ne yazılır? Boş bırakılabilir mi?"</li>
+                                <li>"Relative import (<code>from .tracker import ...</code>) ile absolute import farkı nedir?"</li>
+                                <li>"Python'da bir projeyi pip ile kurulabilir yapmak için ne lazım? (<code>setup.py</code> veya <code>pyproject.toml</code>)"</li>
+                            </ul>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Task 3.6 -->
+                <div class="task-card">
+                    <div class="task-card-header">
+                        <span class="task-id">3.6</span>
+                        <span class="task-title">__init__.py Düzenleme</span>
+                        <span class="task-duration">1 saat</span>
+                    </div>
+                    <div class="task-body">
+                        <ol>
+                            <li><code>guardwatch/__init__.py</code> dosyasını düzenle:
+                                <ul>
+                                    <li>Tüm class'ları import et</li>
+                                    <li><code>__version__ = "2.0"</code> ekle</li>
+                                </ul>
+                            </li>
+                            <li><code>main.py</code>'yi güncelle: <code>from guardwatch import Tracker, CSVLogger, Kisi</code></li>
+                            <li>Çalıştır, hata olmadığını gör</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <!-- Task 3.7 -->
+                <div class="task-card">
+                    <div class="task-card-header">
+                        <span class="task-id">3.7</span>
+                        <span class="task-title">Modüler Mini Proje</span>
+                        <span class="task-duration">1.5 saat</span>
+                    </div>
+                    <div class="task-body">
+                        <p><strong>Dosya yapısı:</strong></p>
+<pre>gun3_proje/
+├── guardwatch/
+│   ├── __init__.py
+│   ├── kisi.py
+│   ├── tracker.py
+│   ├── logger.py
+│   └── alarm.py
+└── main.py</pre>
+                        <p><code>main.py</code> şunları yapsın:</p>
+                        <ol>
+                            <li>Tüm class'ları import et</li>
+                            <li>Tracker, CSVLogger, AlarmSistemi nesneleri oluştur</li>
+                            <li>5 kişilik simülasyon (10 tur)</li>
+                            <li>Her turda: tracker güncelle &rarr; ihlal kontrol &rarr; CSV'ye kaydet &rarr; gerekirse alarm çal</li>
+                            <li>Sonunda özet yazdır</li>
+                        </ol>
+
+                        <div class="info-callout">
+                            <strong>Bilgi:</strong> Bu yapı Hafta 4'teki guardwatch_v3'ün İSKELETİ. Şimdi düzgün kurarsan, sonra sadece gerçek YOLO/MediaPipe kodunu eklemen yeterli olacak.
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Task 3.8 -->
+                <div class="task-card">
+                    <div class="task-card-header">
+                        <span class="task-id">3.8</span>
+                        <span class="task-title">Hikaye &mdash; Neden Bu Kadar Uğraşıyoruz?</span>
+                        <span class="task-duration">30 dk</span>
+                    </div>
+                    <div class="task-body">
+
+                        <div class="story-block">
+                            <div class="story-label">Hikaye</div>
+                            <p>Belki düşünüyorsun: <em>'Tek dosyada çalışıyordu, neden böldük?'</em></p>
+                            <p>Şöyle düşün: Bugün <code>guardwatch.py</code>'nin Tracker mantığında bir bug buldun. 548 satırlık dosyayı açıyorsun, 200. satırdan 350. satıra kadar Tracker ile ilgili kodu arıyorsun, diğer kodlara dokunmamaya çalışıyorsun...</p>
+                            <p><strong>Modüler yapıda?</strong> <code>tracker.py</code>'yi açıyorsun. 50 satır. Sadece Tracker. Hızlıca buluyorsun, düzeltiyorsun, diğer hiçbir şey etkilenmemiyor.</p>
+                            <p>Ya da yarın bir arkadaşın <em>'Bana sadece Tracker class'ını verir misin, kendi projem için lazım'</em> dedi. Tek dosyada: <em>'Gel şu 548 satırdan 150 satırı kes yapıştır'</em>. Modüler yapıda: <em>'Al, tracker.py dosyası. Kopyala, import et, kullan.'</em></p>
+                            <p><strong>Profesyonel yazılımda KİMSE tek dosyada çalışmaz.</strong> Şirketlerde projeler yüzlerce dosyadan oluşur. Bu hafta öğrendiğin yapı, GERÇEK DÜNYA yapısı.</p>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- CHECKPOINT GÜN 3 -->
+            <div class="checkpoint">
+                <div class="checkpoint-title">&#9898; Kontrol Noktası &mdash; Gün 3</div>
+                <ul>
+                    <li><code>import X</code> ile <code>from X import Y</code> arasındaki fark nedir?</li>
+                    <li><code>if __name__ == "__main__":</code> ne işe yarar? Olmasa ne olur?</li>
+                    <li><code>__init__.py</code> dosyası ne işe yarar?</li>
+                    <li>Bir class'ı başka dosyadan import etmek için dosya yapısı nasıl olmalı?</li>
+                    <li>Tek dosyalık kodu modüler yapıya çevirmenin 3 avantajını say.</li>
+                </ul>
+            </div>
+
+            <!-- DELIVERABLES GÜN 3 -->
+            <div class="deliverables">
+                <div class="deliverables-title">&#9745; Gün 3 Teslim Listesi</div>
+                <div class="deliverable-item"><span class="deliverable-file">matematik.py</span> + <span class="deliverable-file">hesap_makinesi.py</span> &mdash; İlk import denemesi</div>
+                <div class="deliverable-item"><span class="deliverable-file">guardwatch/</span> paket klasörü (tracker.py, logger.py, alarm.py, kisi.py, __init__.py)</div>
+                <div class="deliverable-item"><span class="deliverable-file">main.py</span> &mdash; Modüler ana program</div>
+                <div class="deliverable-item">Git commit: <code>"Gün 3: Modüler yapı — guardwatch paketi oluşturuldu"</code></div>
+            </div>
+
+        </section>
+
+        <!-- ============================================== -->
+        <!-- GUN 4 -->
+        <!-- ============================================== -->
+        <section id="gun4" class="day-section day-3">
+            <div class="day-header">
+                <div class="day-label">GÜN 4</div>
+                <h2>SQLite Veritabanı &mdash; "CSV'nin Ağabeyi"</h2>
+                <p>SQL temelleri, sqlite3 modülü, CSV'den veritabanına geçiş</p>
+            </div>
+
+            <!-- SABAH -->
+            <div class="time-block">
+                <div class="time-block-header">
+                    <span class="time-badge morning">Sabah</span>
+                    <span class="time-block-title">SQL temelleri ve ilk veritabanı &mdash; 3.5 saat</span>
+                </div>
+
+                <!-- Task 4.1 -->
+                <div class="task-card">
+                    <div class="task-card-header">
+                        <span class="task-id">4.1</span>
+                        <span class="task-title">Hikaye &mdash; Not Defteri vs Dosya Dolabı</span>
+                        <span class="task-duration">30 dk</span>
+                    </div>
+                    <div class="task-body">
+
+                        <div class="story-block">
+                            <div class="story-label">Hikaye</div>
+                            <p>CSV bir not defteri gibi. Her satıra bir şey yazıyorsun. <em>'Taha'nın ihlallerini bul'</em> dersen? Tüm sayfaları çevirmen lazım. 1000 satırda Taha'yı aramak = 1000 satır okumak.</p>
+                            <p>SQLite bir dosya dolabı. Her çekmece etiketli. <em>'Taha'</em> yazan çekmeceyi açıyorsun &mdash; anında buluyorsun. 10 satır da olsa, 10 milyon satır da olsa, aynı hızda.</p>
+                            <p>Hafta 2'de CSV ile yaşadığın sorunları hatırla:</p>
+                            <ul>
+                                <li>Başlıkta boşluk bug'ı (<code>' kisi_id'</code> vs <code>'kisi_id'</code>) &rarr; Veritabanında sütun adları NET</li>
+                                <li>Türkçe karakter sorunu &rarr; Veritabanı encoding'i belli</li>
+                                <li>Arama yapamıyorsun &rarr; SQL ile <em>'son 1 saatteki ihlalleri getir'</em> bir satır</li>
+                                <li>Veri bütünlüğü yok &rarr; Veritabanı <em>'bu sütun sayı olmalı'</em> diye zorlayabilir</li>
+                            </ul>
+                            <p>Ama CSV kötü değil! Basit veriler için hâlâ güzel. Veritabanı, veri büyüdüğünde veya <strong>SORGULAMA</strong> gerektiğinde devreye girer.</p>
+                        </div>
+
+                        <div class="research-block">
+                            <div class="research-label">Araştır &mdash; AI'a Sor</div>
+                            <ul>
+                                <li>"SQLite nedir? Diğer veritabanlarından (MySQL, PostgreSQL) farkı ne?"</li>
+                                <li>"SQL nedir? En temel 4 komut nedir? (CREATE, INSERT, SELECT, DELETE)"</li>
+                                <li>"Python sqlite3 modülü nasıl kullanılır? Basit bir örnek göster."</li>
+                                <li>"cursor nedir? connection ve cursor arasındaki fark ne?"</li>
+                            </ul>
+                            <div class="research-note">SQL büyük bir dünya. Şimdilik sadece TEMELLERİ öğren. İleri SQL (JOIN, INDEX, FOREIGN KEY) ileride gelecek.</div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Task 4.2 -->
+                <div class="task-card">
+                    <div class="task-card-header">
+                        <span class="task-id">4.2</span>
+                        <span class="task-title">İlk Veritabanı &mdash; Öğrenci Sistemi</span>
+                        <span class="task-duration">1 saat</span>
+                    </div>
+                    <div class="task-body">
+                        <p>Dosya: <code>gun4_ilk_db.py</code></p>
+                        <ol>
+                            <li><code>sqlite3.connect("ogrenciler.db")</code> ile veritabanı oluştur</li>
+                            <li>Tablo oluştur:</li>
+                        </ol>
+<pre><span class="code-keyword">CREATE TABLE IF NOT EXISTS</span> ogrenciler (
+    id <span class="code-function">INTEGER PRIMARY KEY AUTOINCREMENT</span>,
+    isim <span class="code-function">TEXT NOT NULL</span>,
+    numara <span class="code-function">TEXT UNIQUE</span>,
+    ortalama <span class="code-function">REAL</span>
+)</pre>
+                        <ol start="3">
+                            <li>5 öğrenci ekle: <code>INSERT INTO ogrenciler (isim, numara, ortalama) VALUES (?, ?, ?)</code></li>
+                            <li>Tüm öğrencileri listele: <code>SELECT * FROM ogrenciler</code></li>
+                            <li>Ortalaması 70'in üstündekileri listele: <code>SELECT * FROM ogrenciler WHERE ortalama > 70</code></li>
+                            <li>Bir öğrencinin ortalamasını güncelle: <code>UPDATE ogrenciler SET ortalama = ? WHERE isim = ?</code></li>
+                            <li>Bir öğrenciyi sil: <code>DELETE FROM ogrenciler WHERE isim = ?</code></li>
+                            <li>Her işlemden sonra <code>conn.commit()</code> unutma!</li>
+                        </ol>
+
+                        <div class="warning-callout">
+                            <strong>Dikkat:</strong> SQL komutlarında ASLA f-string kullanma! <code>f"INSERT INTO ... VALUES ({isim})"</code> &rarr; SQL injection açığı! Her zaman <code>?</code> placeholder kullan: <code>cursor.execute("INSERT INTO ... VALUES (?, ?)", (isim, ort))</code>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Task 4.3 -->
+                <div class="task-card">
+                    <div class="task-card-header">
+                        <span class="task-id">4.3</span>
+                        <span class="task-title">Hikaye &mdash; Garson ve Şef</span>
+                        <span class="task-duration">30 dk</span>
+                    </div>
+                    <div class="task-body">
+
+                        <div class="story-block">
+                            <div class="story-label">Hikaye</div>
+                            <p>Veritabanı ile çalışmak restorana gitmek gibi:</p>
+                            <p><strong>connection</strong> = Restoranın kapısından girmek. Bağlantı açmak.<br>
+                            <strong>cursor</strong> = Garson. Siparişini (SQL komutunu) şefe (veritabanına) iletir, sonucu sana getirir.<br>
+                            <strong>execute()</strong> = Siparişi vermek. <em>'Bana ortalaması 70 üstü olanları getir.'</em><br>
+                            <strong>fetchall()</strong> = Garsonun siparişi masana getirmesi. Sonuçları almak.<br>
+                            <strong>commit()</strong> = Hesabı ödemek. <em>'Bu değişiklikleri kaydet, geri alamam.'</em><br>
+                            <strong>close()</strong> = Restorandan çıkmak. Bağlantıyı kapatmak.</p>
+                            <p><code>commit()</code> yapmayı unutursan? Yemeği yedin ama ödemedin &mdash; restoran (veritabanı) kaydı <strong>KAYDETMEZ</strong>. Değişiklikler kaybolur.</p>
+                        </div>
+
+                        <div class="research-block">
+                            <div class="research-label">Araştır &mdash; AI'a Sor</div>
+                            <ul>
+                                <li>"Python'da <code>with sqlite3.connect(...) as conn:</code> kullanılabilir mi? Avantajı ne?"</li>
+                                <li>"<code>fetchone()</code>, <code>fetchall()</code>, <code>fetchmany()</code> arasındaki fark nedir?"</li>
+                                <li>"SQL'de PRIMARY KEY ve AUTOINCREMENT ne demek?"</li>
+                                <li>"SQL'de UNIQUE constraint ne işe yarar?"</li>
+                            </ul>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Task 4.4 -->
+                <div class="task-card">
+                    <div class="task-card-header">
+                        <span class="task-id">4.4</span>
+                        <span class="task-title">SQL Sorguları Alıştırması</span>
+                        <span class="task-duration">1 saat</span>
+                    </div>
+                    <div class="task-body">
+                        <p>Dosya: <code>gun4_sorgular.py</code></p>
+                        <p>Önceki veritabanını kullanarak şu sorguları yaz:</p>
+                        <ol>
+                            <li>Toplam öğrenci sayısı: <code>SELECT COUNT(*) FROM ogrenciler</code></li>
+                            <li>En yüksek ortalama: <code>SELECT MAX(ortalama) FROM ogrenciler</code></li>
+                            <li>Ortalamayı hesapla: <code>SELECT AVG(ortalama) FROM ogrenciler</code></li>
+                            <li>İsme göre sırala: <code>SELECT * FROM ogrenciler ORDER BY isim</code></li>
+                            <li>Ortalaması 50-80 arası: <code>SELECT * FROM ogrenciler WHERE ortalama BETWEEN 50 AND 80</code></li>
+                            <li>İsmi 'A' ile başlayanlar: <code>SELECT * FROM ogrenciler WHERE isim LIKE 'A%'</code></li>
+                            <li>Her sorgunun sonucunu güzel formatlı yazdır</li>
+                        </ol>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- ÖĞLEDEN SONRA -->
+            <div class="time-block">
+                <div class="time-block-header">
+                    <span class="time-badge afternoon">Öğleden Sonra</span>
+                    <span class="time-block-title">İhlal veritabanı ve DBLogger &mdash; 3.5 saat</span>
+                </div>
+
+                <!-- Task 4.5 -->
+                <div class="task-card">
+                    <div class="task-card-header">
+                        <span class="task-id">4.5</span>
+                        <span class="task-title">Hikaye &mdash; CSV'den Göç</span>
+                        <span class="task-duration">30 dk</span>
+                    </div>
+                    <div class="task-body">
+
+                        <div class="story-block">
+                            <div class="story-label">Hikaye</div>
+                            <p>Bir şehirden başka bir şehre taşınıyorsun. Eski eşyalarını (CSV verileri) yeni eve (SQLite) taşıman lazım.</p>
+                            <p>İhlaller CSV'den veritabanına geçiş:</p>
+                            <ul>
+                                <li>CSV sütunları &rarr; Tablo sütunları</li>
+                                <li>CSV satırları &rarr; INSERT komutları</li>
+                                <li>CSV'den okuma &rarr; SELECT sorguları</li>
+                            </ul>
+                            <p>Ama taşınırken bazı şeyler DEĞİŞİR:</p>
+                            <ul>
+                                <li>CSV'de her şey TEXT. Veritabanında INTEGER, REAL, TEXT ayrı.</li>
+                                <li>CSV'de <code>' kisi_id'</code> (boşluklu) olabilir. Veritabanında sütun adı NET.</li>
+                                <li>CSV'de arama: tüm dosyayı oku. Veritabanında: WHERE koşulu.</li>
+                            </ul>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Task 4.6 -->
+                <div class="task-card">
+                    <div class="task-card-header">
+                        <span class="task-id">4.6</span>
+                        <span class="task-title">İhlal Veritabanı Oluşturma</span>
+                        <span class="task-duration">1.5 saat</span>
+                    </div>
+                    <div class="task-body">
+                        <p>Dosya: <code>gun4_ihlal_db.py</code></p>
+                        <p><strong>1.</strong> <code>ihlaller</code> tablosu oluştur:</p>
+<pre><span class="code-keyword">CREATE TABLE IF NOT EXISTS</span> ihlaller (
+    id <span class="code-function">INTEGER PRIMARY KEY AUTOINCREMENT</span>,
+    zaman <span class="code-function">TEXT NOT NULL</span>,
+    kisi_id <span class="code-function">TEXT NOT NULL</span>,
+    ihlal_turu <span class="code-function">TEXT NOT NULL</span>,
+    sure_sn <span class="code-function">REAL</span>,
+    ear_degeri <span class="code-function">REAL</span>,
+    frame_yolu <span class="code-function">TEXT</span>
+)</pre>
+                        <p><strong>2.</strong> 10 sahte ihlal ekle (random verilerle)</p>
+                        <p><strong>3.</strong> Sorgular yaz:</p>
+                        <ul>
+                            <li>Tüm ihlalleri listele</li>
+                            <li>Kişi bazlı ihlal sayısı: <code>SELECT kisi_id, COUNT(*) FROM ihlaller GROUP BY kisi_id</code></li>
+                            <li>En uzun ihlal: <code>SELECT * FROM ihlaller ORDER BY sure_sn DESC LIMIT 1</code></li>
+                            <li>Son 5 ihlal: <code>SELECT * FROM ihlaller ORDER BY id DESC LIMIT 5</code></li>
+                            <li>Belirli bir kişinin ihlalleri: <code>SELECT * FROM ihlaller WHERE kisi_id = ?</code></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Task 4.7 -->
+                <div class="task-card">
+                    <div class="task-card-header">
+                        <span class="task-id">4.7</span>
+                        <span class="task-title">DBLogger Class'ı &mdash; OOP + SQLite</span>
+                        <span class="task-duration">1 saat</span>
+                    </div>
+                    <div class="task-body">
+                        <p>Dosya: <code>gun4_db_logger.py</code></p>
+                        <p>Gün 2'deki CSVLogger'ın veritabanı versiyonu:</p>
+                        <ol>
+                            <li><code>DBLogger</code> class'ı:
+                                <ul>
+                                    <li><code>__init__(self, db_dosyasi)</code> &mdash; bağlantı aç, tablo yoksa oluştur</li>
+                                    <li><code>ihlal_kaydet(self, kisi_id, ihlal_turu, sure, ear, frame_yolu="")</code> &mdash; INSERT</li>
+                                    <li><code>ihlalleri_getir(self, kisi_id=None)</code> &mdash; tümü veya kişiye özel SELECT</li>
+                                    <li><code>ozet(self)</code> &mdash; kişi bazlı COUNT, toplam, en uzun ihlal</li>
+                                    <li><code>kapat(self)</code> &mdash; bağlantıyı kapat</li>
+                                </ul>
+                            </li>
+                            <li>Test: 10 ihlal kaydet, özet yazdır</li>
+                        </ol>
+
+                        <div class="info-callout">
+                            <strong>Bilgi:</strong> CSVLogger ile DBLogger'ı karşılaştır. İkisi de aynı şeyi yapıyor: kaydet, oku, özetle. Ama biri CSV, diğeri SQLite kullanıyor. İşte class'ların gücü: dışarıdan aynı görünüyor (<code>logger.ihlal_kaydet(...)</code>), içeride farklı çalışıyor.
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Task 4.8 -->
+                <div class="task-card">
+                    <div class="task-card-header">
+                        <span class="task-id">4.8</span>
+                        <span class="task-title">CSV'den SQLite'a Göç</span>
+                        <span class="task-duration">30 dk</span>
+                    </div>
+                    <div class="task-body">
+                        <p>Dosya: <code>gun4_goc.py</code></p>
+                        <ol>
+                            <li>Hafta 2'deki <code>ihlaller.csv</code> dosyasını oku (<code>csv.DictReader</code> ile)</li>
+                            <li>Her satırı SQLite veritabanına kaydet (DBLogger kullanarak)</li>
+                            <li>Sonunda: <em>"X kayıt CSV'den SQLite'a aktarıldı"</em> yazdır</li>
+                            <li>SQLite'tan sorgu yaparak doğrula</li>
+                        </ol>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- CHECKPOINT GÜN 4 -->
+            <div class="checkpoint">
+                <div class="checkpoint-title">&#9898; Kontrol Noktası &mdash; Gün 4</div>
+                <ul>
+                    <li>CSV ve SQLite arasındaki 3 temel fark nedir?</li>
+                    <li><code>cursor.execute()</code> ile SQL komutu nasıl çalıştırılır?</li>
+                    <li><code>conn.commit()</code> neden önemli? Yapmazsak ne olur?</li>
+                    <li>SQL injection nedir? Neden <code>?</code> placeholder kullanıyoruz?</li>
+                    <li><code>GROUP BY</code> ne işe yarar? Hangi durumda kullanılır?</li>
+                </ul>
+            </div>
+
+            <!-- DELIVERABLES GÜN 4 -->
+            <div class="deliverables">
+                <div class="deliverables-title">&#9745; Gün 4 Teslim Listesi</div>
+                <div class="deliverable-item"><span class="deliverable-file">gun4_ilk_db.py</span> &mdash; İlk veritabanı alıştırması</div>
+                <div class="deliverable-item"><span class="deliverable-file">gun4_sorgular.py</span> &mdash; SQL sorgu alıştırmaları</div>
+                <div class="deliverable-item"><span class="deliverable-file">gun4_ihlal_db.py</span> &mdash; İhlal veritabanı</div>
+                <div class="deliverable-item"><span class="deliverable-file">gun4_db_logger.py</span> &mdash; DBLogger class'ı</div>
+                <div class="deliverable-item"><span class="deliverable-file">gun4_goc.py</span> &mdash; CSV'den SQLite'a göç</div>
+                <div class="deliverable-item">Git commit: <code>"Gün 4: SQLite veritabanı — ihlal kayıt sistemi"</code></div>
+            </div>
+
+        </section>
+
+        <!-- ============================================== -->
+        <!-- GUN 5 -->
+        <!-- ============================================== -->
+        <section id="gun5" class="day-section day-4">
+            <div class="day-header">
+                <div class="day-label">GÜN 5</div>
+                <h2>Temiz Kod &mdash; "Profesyonellik Detaylarda Gizlidir"</h2>
+                <p>PEP 8, encoding, debugging, .gitignore &mdash; küçük ama kritik alışkanlıklar</p>
+            </div>
+
+            <!-- SABAH -->
+            <div class="time-block">
+                <div class="time-block-header">
+                    <span class="time-badge morning">Sabah</span>
+                    <span class="time-block-title">PEP 8, Encoding &mdash; 3.5 saat</span>
+                </div>
+
+                <!-- Task 5.1 -->
+                <div class="task-card">
+                    <div class="task-card-header">
+                        <span class="task-id">5.1</span>
+                        <span class="task-title">Hikaye &mdash; Temiz Mutfak</span>
+                        <span class="task-duration">30 dk</span>
+                    </div>
+                    <div class="task-body">
+
+                        <div class="story-block">
+                            <div class="story-label">Hikaye</div>
+                            <p>İki aşçı var. İkisi de aynı yemeği yapıyor. Ama birinin tezgahı tertemiz &mdash; her malzeme yerli yerinde, bıçaklar sıralanmış, tabaklar hazır. Diğerinin tezgahı kaos &mdash; soğan kabukları yerde, bıçak sap kısmı dışarı sarkıyor, tuz kabı devrilmiş.</p>
+                            <p>İkisi de yemeği bitirir. Ama temiz tezgahlı aşçı 30 dakikada, kaotik aşçı 1 saatte. Temiz aşçı hata yapmaz, kaotik aşçı tuzu şekeri karıştırır.</p>
+                            <p>Kod da böyle. Çalışan ama dağınık kod = kaotik mutfak. <strong>PEP 8</strong> = mutfak kuralları. "Bıçaklar şuraya, baharatlar buraya" gibi. "Değişkenler snake_case olsun, import'lar en üstte olsun, satır 79 karakteri geçmesin."</p>
+                            <p><code>guardwatch_v2.py</code>'ni aç ve şunlara bak:</p>
+                            <p>&bull; <code>import os</code> iki kez yazılmış (çift malzeme)<br>
+                            &bull; Bazı yerlerde boşluk var, bazı yerlerde yok (dağınık tezgah)<br>
+                            &bull; Değişken isimleri bazen Türkçe, bazen İngilizce (tutarsız etiketler)<br>
+                            &bull; <code>CONFIDENCE_THRESHOLD</code> tanımlı ama hiç kullanılmamış (gereksiz malzeme)</p>
+                        </div>
+
+                        <div class="research-block">
+                            <div class="research-label">Araştır &mdash; AI'a Sor</div>
+                            <ul>
+                                <li>"PEP 8 nedir? En önemli 10 kuralını listele."</li>
+                                <li>"Python'da snake_case ve camelCase arasındaki fark nedir? Hangisi kullanılır?"</li>
+                                <li>"Import sırası nasıl olmalı? (standard library &rarr; third party &rarr; local)"</li>
+                                <li>"Python'da linter nedir? pylint veya flake8 nasıl kullanılır?"</li>
+                            </ul>
+                            <div class="research-note">PEP 8'i tamamen ezberleme. Ama temel kuralları bil ve kodunda uygula.</div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Task 5.2 -->
+                <div class="task-card">
+                    <div class="task-card-header">
+                        <span class="task-id">5.2</span>
+                        <span class="task-title">PEP 8 ile Kod Düzeltme</span>
+                        <span class="task-duration">1.5 saat</span>
+                    </div>
+                    <div class="task-body">
+                        <p>Dosya: <code>gun5_temiz_tracker.py</code></p>
+                        <p>Alıştırma: <code>gun2_tracker.py</code> dosyasını al ve PEP 8'e uygun hale getir:</p>
+                        <ol>
+                            <li>Import'ları düzenle (standart kütüphane &rarr; üçüncü parti &rarr; yerel)</li>
+                            <li>Değişken isimlerini kontrol et (snake_case mi?)</li>
+                            <li>Fonksiyon/method isimleri snake_case olsun</li>
+                            <li>Satırlar 79 karakteri geçmesin</li>
+                            <li>Fonksiyonlar arasında 2 boş satır olsun</li>
+                            <li>Gereksiz import veya değişken varsa sil</li>
+                            <li>Yorum ve docstring ekle (kısa, anlamlı)</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <!-- Task 5.3 -->
+                <div class="task-card">
+                    <div class="task-card-header">
+                        <span class="task-id">5.3</span>
+                        <span class="task-title">Hikaye &mdash; Mektup Zarfı ve Encoding</span>
+                        <span class="task-duration">30 dk</span>
+                    </div>
+                    <div class="task-body">
+
+                        <div class="story-block">
+                            <div class="story-label">Hikaye</div>
+                            <p>Japonya'dan bir mektup geldi. Açtın. İçinde: 日本語テキスト. Okuyamıyorsun &mdash; çünkü sen Türkçe biliyorsun, mektup Japoncada.</p>
+                            <p>Bilgisayarlar da aynı sorunu yaşıyor. Bir dosya oluşturuyorsun, "Ayşe" yazıyorsun. Başka bilgisayarda açıyorsun: "Ay&#xFFFD;e". Ne oldu?</p>
+                            <p>Her dosyanın bir "zarfı" var &mdash; <strong>encoding</strong>. Bu zarf diyor ki "bu mektubu şu dilde oku." <em>UTF-8</em> zarfı: Türkçe, Japonca, Arapça &mdash; HER DİLİ destekler. <em>ASCII</em> zarfı: sadece İngilizce. <em>Latin-1</em> zarfı: Batı Avrupa dilleri.</p>
+                            <p>Senin <code>requirements.txt</code>'in hatırlıyor musun? Bozuktu. Neden? Muhtemelen UTF-16 encoding ile kaydedildi, pip UTF-8 bekliyordu. Zarflar uyuşmadı.</p>
+                            <p><strong>Kural: HER ZAMAN UTF-8 kullan.</strong> Dosya açarken <code>encoding='utf-8'</code> yaz. Hayatın kurtulur.</p>
+                        </div>
+
+                        <div class="research-block">
+                            <div class="research-label">Araştır &mdash; AI'a Sor</div>
+                            <ul>
+                                <li>"UTF-8 nedir? ASCII ile farkı ne?"</li>
+                                <li>"Python'da dosya açarken encoding nasıl belirtilir?"</li>
+                                <li>"BOM (Byte Order Mark) nedir? Neden sorun çıkarır?"</li>
+                                <li>"Python'da chardet kütüphanesi ne işe yarar?"</li>
+                            </ul>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Task 5.4 -->
+                <div class="task-card">
+                    <div class="task-card-header">
+                        <span class="task-id">5.4</span>
+                        <span class="task-title">Encoding Sorunlarını Çöz</span>
+                        <span class="task-duration">1 saat</span>
+                    </div>
+                    <div class="task-body">
+                        <p>Dosya: <code>gun5_encoding.py</code> ve güncellenmiş <code>requirements.txt</code></p>
+                        <p>Alıştırma:</p>
+                        <ol>
+                            <li>Bir dosyaya Türkçe karakterlerle veri yaz: "Şükrü Öztürk, İğdır, Çağrı"</li>
+                            <li>Dosyayı <code>encoding="utf-8"</code> ile aç ve oku &mdash; doğru mu?</li>
+                            <li>Dosyayı encoding BELİRTMEDEN aç &mdash; ne olur?</li>
+                            <li><code>requirements.txt</code> dosyasını sıfırdan oluştur:
+                                <ul>
+                                    <li>Sadece gerekli paketler: opencv-python, ultralytics, mediapipe, flask, matplotlib, requests</li>
+                                    <li><code>encoding="utf-8"</code> ile yaz</li>
+                                    <li><code>pip install -r requirements.txt</code> ile test et</li>
+                                </ul>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- ÖĞLEDEN SONRA -->
+            <div class="time-block">
+                <div class="time-block-header">
+                    <span class="time-badge afternoon">Öğleden Sonra</span>
+                    <span class="time-block-title">Debugging, .gitignore, Kod İnceleme &mdash; 3.5 saat</span>
+                </div>
+
+                <!-- Task 5.5 -->
+                <div class="task-card">
+                    <div class="task-card-header">
+                        <span class="task-id">5.5</span>
+                        <span class="task-title">Hikaye &mdash; Dedektif ve İpuçları</span>
+                        <span class="task-duration">30 dk</span>
+                    </div>
+                    <div class="task-body">
+
+                        <div class="story-block">
+                            <div class="story-label">Hikaye</div>
+                            <p>Bir cinayet mahallinde dedektif var. İpuçları arıyor. Ama her yere kırmızı boya ile "BEN BURADAYIM" yazmış &mdash; kendi bıraktığı izler, gerçek ipuçlarını gizliyor.</p>
+                            <p><code>print()</code> debugging de böyle. Koda 50 tane <code>print('BURAYA GELDİ')</code> yazıyorsun. Sonra hangisi hangisi, sırayı kaybediyorsun. Debugging bitince silmeyi unutuyorsun, production'da <code>print('BURAYA GELDİ')</code> çıkıyor.</p>
+                            <p>Daha iyi yollar var:</p>
+                            <p>1. <strong><code>breakpoint()</code></strong> &mdash; Kodu durdur, değişkenlere bak, adım adım ilerle<br>
+                            2. <strong><code>logging</code> modülü</strong> &mdash; Zaten biliyorsun! print yerine <code>logging.debug()</code> kullan, seviyeyi ayarla<br>
+                            3. <strong>Rubber duck debugging</strong> &mdash; Sorunu bir ördek oyuncağa (veya arkadaşına) sesli anlat. Anlatırken çoğu zaman çözümü kendin bulursun.</p>
+                        </div>
+
+                        <div class="research-block">
+                            <div class="research-label">Araştır &mdash; AI'a Sor</div>
+                            <ul>
+                                <li>"Python'da breakpoint() nasıl kullanılır? pdb komutları nelerdir? (n, s, c, p)"</li>
+                                <li>"logging modülünde DEBUG, INFO, WARNING, ERROR, CRITICAL seviyeleri ne demek?"</li>
+                                <li>"Python'da assert ne işe yarar? Ne zaman kullanılır?"</li>
+                            </ul>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Task 5.6 -->
+                <div class="task-card">
+                    <div class="task-card-header">
+                        <span class="task-id">5.6</span>
+                        <span class="task-title">Debugging Pratik</span>
+                        <span class="task-duration">1 saat</span>
+                    </div>
+                    <div class="task-body">
+                        <p>Dosya: <code>gun5_debug.py</code></p>
+                        <p>Alıştırma: Aşağıdaki kodu bir dosyaya yaz. İçinde 3 bug var. <code>breakpoint()</code> kullanarak bul ve düzelt:</p>
+<pre><code>def ortalama_hesapla(notlar):
+    toplam = 0
+    for not_degeri in notlar:
+        toplam += not_degeri
+    return toplam / len(notlar)
+
+def basarili_ogrenciler(ogrenciler):
+    basarililer = []
+    for ogr in ogrenciler:
+        ort = ortalama_hesapla(ogr["notlar"])
+        if ort > 70:
+            basarililer.append(ogr)
+    return basarililer
+
+veriler = [
+    {"isim": "Taha", "notlar": [80, 90, 70]},
+    {"isim": "Ali", "notlar": []},
+    {"isim": "Ayse", "notlar": [60, "85", 75]},
+]
+
+sonuc = basarili_ogrenciler(veriler)
+for s in sonuc:
+    print(f"{s['isim']}: Basarili")</code></pre>
+                        <p>Bug'lar: boş liste (<code>ZeroDivisionError</code>), string not (<code>"85"</code>), ve başka potansiyel sorunlar. <code>breakpoint()</code> ile bul.</p>
+                    </div>
+                </div>
+
+                <!-- Task 5.7 -->
+                <div class="task-card">
+                    <div class="task-card-header">
+                        <span class="task-id">5.7</span>
+                        <span class="task-title">.gitignore ve Proje Temizliği</span>
+                        <span class="task-duration">1 saat</span>
+                    </div>
+                    <div class="task-body">
+
+                        <div class="story-block">
+                            <div class="story-label">Hikaye</div>
+                            <p>Bir bavul hazırlıyorsun. İç çamaşırlarını, diş fırçanı, pijamanı koyuyorsun. Ama çöp kutusunu bavula koymazsın, değil mi?</p>
+                            <p>Git'e commit ederken de bazı dosyalar "çöp kutusu":</p>
+                            <p>&bull; <code>.venv/</code> &mdash; Sanal ortam (her bilgisayarda yeniden kurulur)<br>
+                            &bull; <code>__pycache__/</code> &mdash; Python önbelleği (otomatik oluşur)<br>
+                            &bull; <code>*.pyc</code> &mdash; Derlenmiş Python dosyaları<br>
+                            &bull; <code>yolov8n.pt</code> &mdash; 6MB model dosyası (repo'yu şişirir)<br>
+                            &bull; <code>.env</code> &mdash; Gizli anahtarlar (API key, şifre)<br>
+                            &bull; <code>*.db</code> &mdash; Veritabanı dosyaları (her ortamda farklı)<br>
+                            &bull; <code>kayitlar/</code> &mdash; Frame kayıtları (binlerce jpg)</p>
+                        </div>
+
+                        <p>Alıştırma:</p>
+                        <ol>
+                            <li>Düzgün bir <code>.gitignore</code> dosyası yaz (yukarıdaki tüm pattern'leri ekle)</li>
+                            <li><code>pip freeze > requirements.txt</code> yerine daha iyi bir yol: sadece doğrudan bağımlılıkları yaz</li>
+                            <li>Proje klasör yapısını düzenle</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <!-- Task 5.8 -->
+                <div class="task-card">
+                    <div class="task-card-header">
+                        <span class="task-id">5.8</span>
+                        <span class="task-title">Kendi Kodunu İncele</span>
+                        <span class="task-duration">1 saat</span>
+                    </div>
+                    <div class="task-body">
+                        <p>Dosya: <code>gun5_inceleme.md</code> (Markdown dosyası)</p>
+                        <p>Hafta 2'deki <code>guardwatch_v2.py</code> dosyasını aç ve şu soruları yanıtla:</p>
+                        <ol>
+                            <li>Kaç tane <code>import os</code> var? (ipucu: birden fazla)</li>
+                            <li><code>CONFIDENCE_THRESHOLD</code> değişkeni nerede tanımlanmış? Nerede kullanılmış?</li>
+                            <li><code>gun_sonu_raporu()</code> fonksiyonundaki <code>continue</code> satırından sonraki kod çalışıyor mu?</li>
+                            <li><code>beep:wav</code> mı <code>beep.wav</code> mı olmalı?</li>
+                            <li>Yorumda "%20" diyor ama kodda hangi değer kullanılmış?</li>
+                            <li>PEP 8'e göre 3 kural ihlali bul.</li>
+                            <li>Bu dosyayı modüler yapıya nasıl bölerdin? (Dosya adlarını yaz)</li>
+                        </ol>
+
+                        <div class="warning-callout">
+                            <strong>Dikkat:</strong> Bu alıştırma çok önemli. KENDİ kodunu eleştirel gözle incelemek, başkasının kodunu incelemekten daha zor ama daha öğretici.
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- CHECKPOINT GÜN 5 -->
+            <div class="checkpoint">
+                <div class="checkpoint-title">&#9898; Kontrol Noktası &mdash; Gün 5</div>
+                <ul>
+                    <li>PEP 8 nedir? En önemli 3 kuralı say.</li>
+                    <li>UTF-8 nedir? Neden her zaman UTF-8 kullanmalıyız?</li>
+                    <li><code>breakpoint()</code> ne yapar? <code>print()</code> debugging'den farkı ne?</li>
+                    <li><code>.gitignore</code> dosyası ne işe yarar? Neden <code>.venv/</code> eklenir?</li>
+                    <li>Kendi kodundaki en büyük temizlik ihtiyacı nedir?</li>
+                </ul>
+            </div>
+
+            <!-- DELIVERABLES GÜN 5 -->
+            <div class="deliverables">
+                <div class="deliverables-title">&#9745; Gün 5 Teslim Listesi</div>
+                <div class="deliverable-item"><span class="deliverable-file">gun5_temiz_tracker.py</span> &mdash; PEP 8 uyumlu Tracker</div>
+                <div class="deliverable-item"><span class="deliverable-file">gun5_encoding.py</span> &mdash; Encoding alıştırması</div>
+                <div class="deliverable-item"><span class="deliverable-file">requirements.txt</span> &mdash; Düzgün, sadece gerekli paketler</div>
+                <div class="deliverable-item"><span class="deliverable-file">gun5_debug.py</span> &mdash; Debugging alıştırması (bug'lar bulunmuş ve düzeltilmiş)</div>
+                <div class="deliverable-item"><span class="deliverable-file">.gitignore</span> &mdash; Kapsamlı gitignore dosyası</div>
+                <div class="deliverable-item"><span class="deliverable-file">gun5_inceleme.md</span> &mdash; Kod inceleme raporu</div>
+                <div class="deliverable-item">Git commit: <code>"Gün 5: Temiz kod — PEP8, encoding, debugging, gitignore"</code></div>
+            </div>
+
+        </section>
+
+        <!-- ============================================== -->
+        <!-- GUN 6 -->
+        <!-- ============================================== -->
+        <section id="gun6" class="day-section day-5">
+            <div class="day-header">
+                <div class="day-label">GÜN 6</div>
+                <h2>Bilgi Sınavı &mdash; "Her Şeyi Anlat"</h2>
+                <p>3 haftada öğrendiğin HER ŞEYİ kendi cümlelerinle yaz</p>
+            </div>
+
+            <!-- TAM GÜN -->
+            <div class="time-block">
+                <div class="time-block-header">
+                    <span class="time-badge morning">Sabah + Öğleden Sonra</span>
+                    <span class="time-block-title">Tam gün &mdash; 7 saat</span>
+                </div>
+
+                <!-- Task 6.1 -->
+                <div class="task-card">
+                    <div class="task-card-header">
+                        <span class="task-id">6.1</span>
+                        <span class="task-title">Sınav Kuralları</span>
+                        <span class="task-duration">15 dk</span>
+                    </div>
+                    <div class="task-body">
+                        <p>Bu gün FARKLI. Kod yazmıyorsun. YAZIYORSUN.</p>
+                        <p>Aşağıda 3 haftanın tüm gün başlıkları var. Her birini kendi cümlelerinle açıkla:</p>
+                        <ul>
+                            <li>Teknik terim kullan ama KOPYALA-YAPIŞTIR yapma</li>
+                            <li>"Bu ne işe yarar?" ve "Neden lazım?" sorularını cevapla</li>
+                            <li>Mümkünse gerçek hayat örneği ver</li>
+                            <li>Her konu için en az 4-5 cümle yaz</li>
+                            <li>Anlamadığın veya hatırlamadığın konuları da dürüstçe belirt</li>
+                        </ul>
+
+                        <div class="warning-callout">
+                            <strong>Dikkat:</strong> Bu sınavda AI KULLANMAK YASAK. Kendi cümlelerinle yazacaksın. Hocan okuduğunda senin mi AI'ın mı yazdığını ANLAR. Yazım hatan olsun, cümlen kusurlu olsun &mdash; ama SENİN olsun.
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Task 6.2: Hafta 1 -->
+                <div class="task-card">
+                    <div class="task-card-header">
+                        <span class="task-id">6.2</span>
+                        <span class="task-title">Hafta 1 Konuları</span>
+                    </div>
+                    <div class="task-body">
+
+                        <div class="exam-block">
+                            <div class="exam-label">Hafta 1 &mdash; Sıfırdan GuardWatch</div>
+
+                            <div class="exam-topic">
+                                <div class="exam-topic-week w1">Hafta 1</div>
+                                <div style="flex:1">
+                                    <div class="exam-topic-title">Dictionary, time.time(), Mesafe Hesabı, JSON</div>
+                                    <div class="exam-topic-desc">Python temel yapıları ve ilerideki günlerin altyapısı</div>
+                                    <textarea class="exam-textarea" placeholder="Cevabını buraya yaz..."></textarea>
+                                </div>
+                            </div>
+
+                            <div class="exam-topic">
+                                <div class="exam-topic-week w1">Hafta 1</div>
+                                <div style="flex:1">
+                                    <div class="exam-topic-title">OpenCV Temelleri &mdash; Kamera, Frame, Çizim, FPS</div>
+                                    <div class="exam-topic-desc">Görüntü işlemenin temelleri</div>
+                                    <textarea class="exam-textarea" placeholder="Cevabını buraya yaz..."></textarea>
+                                </div>
+                            </div>
+
+                            <div class="exam-topic">
+                                <div class="exam-topic-week w1">Hafta 1</div>
+                                <div style="flex:1">
+                                    <div class="exam-topic-title">YOLO ile İnsan Tespiti</div>
+                                    <div class="exam-topic-desc">Yapay zeka modeli ile nesne tespiti</div>
+                                    <textarea class="exam-textarea" placeholder="Cevabını buraya yaz..."></textarea>
+                                </div>
+                            </div>
+
+                            <div class="exam-topic">
+                                <div class="exam-topic-week w1">Hafta 1</div>
+                                <div style="flex:1">
+                                    <div class="exam-topic-title">MediaPipe ve EAR (Göz Açıklık Oranı)</div>
+                                    <div class="exam-topic-desc">Yüz landmark tespiti ve göz durumu analizi</div>
+                                    <textarea class="exam-textarea" placeholder="Cevabını buraya yaz..."></textarea>
+                                </div>
+                            </div>
+
+                            <div class="exam-topic">
+                                <div class="exam-topic-week w1">Hafta 1</div>
+                                <div style="flex:1">
+                                    <div class="exam-topic-title">State Management ve Centroid Tracker</div>
+                                    <div class="exam-topic-desc">Süreli ihlal takibi ve kişi takip sistemi</div>
+                                    <textarea class="exam-textarea" placeholder="Cevabını buraya yaz..."></textarea>
+                                </div>
+                            </div>
+
+                            <div class="exam-topic">
+                                <div class="exam-topic-week w1">Hafta 1</div>
+                                <div style="flex:1">
+                                    <div class="exam-topic-title">Entegrasyon &mdash; Config, Alarm, Logging, Test</div>
+                                    <div class="exam-topic-desc">Tüm parçaları birleştirme</div>
+                                    <textarea class="exam-textarea" placeholder="Cevabını buraya yaz..."></textarea>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Task 6.3: Hafta 2 -->
+                <div class="task-card">
+                    <div class="task-card-header">
+                        <span class="task-id">6.3</span>
+                        <span class="task-title">Hafta 2 Konuları</span>
+                    </div>
+                    <div class="task-body">
+
+                        <div class="exam-block">
+                            <div class="exam-label">Hafta 2 &mdash; Profesyonelleştirme</div>
+
+                            <div class="exam-topic">
+                                <div class="exam-topic-week w2">Hafta 2</div>
+                                <div style="flex:1">
+                                    <div class="exam-topic-title">Virtual Environment ve argparse</div>
+                                    <div class="exam-topic-desc">Proje altyapısı ve komut satırı argümanları</div>
+                                    <textarea class="exam-textarea" placeholder="Cevabını buraya yaz..."></textarea>
+                                </div>
+                            </div>
+
+                            <div class="exam-topic">
+                                <div class="exam-topic-week w2">Hafta 2</div>
+                                <div style="flex:1">
+                                    <div class="exam-topic-title">Hata Yönetimi (try/except)</div>
+                                    <div class="exam-topic-desc">Kodun çökmemesi için savunma mekanizmaları</div>
+                                    <textarea class="exam-textarea" placeholder="Cevabını buraya yaz..."></textarea>
+                                </div>
+                            </div>
+
+                            <div class="exam-topic">
+                                <div class="exam-topic-week w2">Hafta 2</div>
+                                <div style="flex:1">
+                                    <div class="exam-topic-title">CSV ile Veri Kaydetme</div>
+                                    <div class="exam-topic-desc">Dosyaya veri yazma ve okuma</div>
+                                    <textarea class="exam-textarea" placeholder="Cevabını buraya yaz..."></textarea>
+                                </div>
+                            </div>
+
+                            <div class="exam-topic">
+                                <div class="exam-topic-week w2">Hafta 2</div>
+                                <div style="flex:1">
+                                    <div class="exam-topic-title">Dosya/Klasör Yönetimi (os, pathlib)</div>
+                                    <div class="exam-topic-desc">Dosya sistemi işlemleri ve frame kaydetme</div>
+                                    <textarea class="exam-textarea" placeholder="Cevabını buraya yaz..."></textarea>
+                                </div>
+                            </div>
+
+                            <div class="exam-topic">
+                                <div class="exam-topic-week w2">Hafta 2</div>
+                                <div style="flex:1">
+                                    <div class="exam-topic-title">Threading ve HTTP İstekleri</div>
+                                    <div class="exam-topic-desc">Paralel çalışma ve web API kullanımı</div>
+                                    <textarea class="exam-textarea" placeholder="Cevabını buraya yaz..."></textarea>
+                                </div>
+                            </div>
+
+                            <div class="exam-topic">
+                                <div class="exam-topic-week w2">Hafta 2</div>
+                                <div style="flex:1">
+                                    <div class="exam-topic-title">Matplotlib ve Flask</div>
+                                    <div class="exam-topic-desc">Grafik oluşturma ve web sunucu</div>
+                                    <textarea class="exam-textarea" placeholder="Cevabını buraya yaz..."></textarea>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Task 6.4: Hafta 3 -->
+                <div class="task-card">
+                    <div class="task-card-header">
+                        <span class="task-id">6.4</span>
+                        <span class="task-title">Hafta 3 Konuları</span>
+                    </div>
+                    <div class="task-body">
+
+                        <div class="exam-block">
+                            <div class="exam-label">Hafta 3 &mdash; Yapısal Düşünme</div>
+
+                            <div class="exam-topic">
+                                <div class="exam-topic-week w3">Hafta 3</div>
+                                <div style="flex:1">
+                                    <div class="exam-topic-title">OOP Temelleri &mdash; class, __init__, self, method</div>
+                                    <div class="exam-topic-desc">Nesne yönelimli programlamaya giriş</div>
+                                    <textarea class="exam-textarea" placeholder="Cevabını buraya yaz..."></textarea>
+                                </div>
+                            </div>
+
+                            <div class="exam-topic">
+                                <div class="exam-topic-week w3">Hafta 3</div>
+                                <div style="flex:1">
+                                    <div class="exam-topic-title">OOP Pratik &mdash; Kalıtım, Composition</div>
+                                    <div class="exam-topic-desc">Miras alma ve bileşen birleştirme</div>
+                                    <textarea class="exam-textarea" placeholder="Cevabını buraya yaz..."></textarea>
+                                </div>
+                            </div>
+
+                            <div class="exam-topic">
+                                <div class="exam-topic-week w3">Hafta 3</div>
+                                <div style="flex:1">
+                                    <div class="exam-topic-title">Modüler Yapı &mdash; import, paket, dosya ayırma</div>
+                                    <div class="exam-topic-desc">Tek dosyadan profesyonel yapıya geçiş</div>
+                                    <textarea class="exam-textarea" placeholder="Cevabını buraya yaz..."></textarea>
+                                </div>
+                            </div>
+
+                            <div class="exam-topic">
+                                <div class="exam-topic-week w3">Hafta 3</div>
+                                <div style="flex:1">
+                                    <div class="exam-topic-title">SQLite Veritabanı</div>
+                                    <div class="exam-topic-desc">CSV'den veritabanına geçiş</div>
+                                    <textarea class="exam-textarea" placeholder="Cevabını buraya yaz..."></textarea>
+                                </div>
+                            </div>
+
+                            <div class="exam-topic">
+                                <div class="exam-topic-week w3">Hafta 3</div>
+                                <div style="flex:1">
+                                    <div class="exam-topic-title">Temiz Kod &mdash; PEP8, Encoding, Debugging</div>
+                                    <div class="exam-topic-desc">Profesyonel yazılım alışkanlıkları</div>
+                                    <textarea class="exam-textarea" placeholder="Cevabını buraya yaz..."></textarea>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Task 6.5: Bonus Sorular -->
+                <div class="task-card">
+                    <div class="task-card-header">
+                        <span class="task-id">6.5</span>
+                        <span class="task-title">Bonus Sorular</span>
+                    </div>
+                    <div class="task-body">
+
+                        <div class="exam-block">
+                            <div class="exam-label">Bonus &mdash; Derinleştir</div>
+
+                            <div class="exam-topic">
+                                <div style="flex:1">
+                                    <div class="exam-topic-title">En çok zorlandığın konu hangisiydi? Neden?</div>
+                                    <textarea class="exam-textarea" placeholder="Cevabını buraya yaz..."></textarea>
+                                </div>
+                            </div>
+
+                            <div class="exam-topic">
+                                <div style="flex:1">
+                                    <div class="exam-topic-title">AI'a sormadan kendi başına çözdüğün en zor problem neydi?</div>
+                                    <textarea class="exam-textarea" placeholder="Cevabını buraya yaz..."></textarea>
+                                </div>
+                            </div>
+
+                            <div class="exam-topic">
+                                <div style="flex:1">
+                                    <div class="exam-topic-title">guardwatch.py'yi sıfırdan yeniden yazsan neyi farklı yapardın?</div>
+                                    <textarea class="exam-textarea" placeholder="Cevabını buraya yaz..."></textarea>
+                                </div>
+                            </div>
+
+                            <div class="exam-topic">
+                                <div style="flex:1">
+                                    <div class="exam-topic-title">Bu 3 haftada öğrendiğin en değerli şey nedir?</div>
+                                    <textarea class="exam-textarea" placeholder="Cevabını buraya yaz..."></textarea>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- DELIVERABLES GÜN 6 -->
+            <div class="deliverables">
+                <div class="deliverables-title">&#9745; Gün 6 Teslim Listesi</div>
+                <div class="deliverable-item">Tüm textarea'lar doldurulmuş (bu sayfayı Ctrl+S ile HTML olarak kaydet veya ayrı bir .md dosyasına yaz)</div>
+                <div class="deliverable-item">Alternatif: <span class="deliverable-file">gun6_sinav.md</span> &mdash; Markdown formatında tüm cevaplar</div>
+                <div class="deliverable-item">Git commit: <code>"Gün 6: Bilgi sınavı tamamlandı"</code></div>
+            </div>
+
+        </section>
+
+    </div>
+
+    <!-- ============================================== -->
+    <!-- NOTLAR -->
+    <!-- ============================================== -->
+    <section id="notlar" class="notes-section">
+        <h3 class="notes-title">6 Günlük Notlar (Taha doldurur)</h3>
+
+        <div class="note-card">
+            <h4 style="color: var(--accent-red);">Gün 1 Notu</h4>
+            <div class="note-field">
+                <span class="note-field-label">Bugün ne öğrendim:</span>
+                <textarea class="note-field-input" rows="2"></textarea>
+            </div>
+            <div class="note-field">
+                <span class="note-field-label">Nerede takıldım:</span>
+                <textarea class="note-field-input" rows="2"></textarea>
+            </div>
+            <div class="note-field">
+                <span class="note-field-label">class ve object'i kendi cümlelerimle:</span>
+                <textarea class="note-field-input" rows="2"></textarea>
+            </div>
+        </div>
+
+        <div class="note-card">
+            <h4 style="color: var(--accent-blue);">Gün 2 Notu</h4>
+            <div class="note-field">
+                <span class="note-field-label">Bugün ne öğrendim:</span>
+                <textarea class="note-field-input" rows="2"></textarea>
+            </div>
+            <div class="note-field">
+                <span class="note-field-label">Nerede takıldım:</span>
+                <textarea class="note-field-input" rows="2"></textarea>
+            </div>
+            <div class="note-field">
+                <span class="note-field-label">Kalıtım ve composition farkını kendi cümlelerimle:</span>
+                <textarea class="note-field-input" rows="2"></textarea>
+            </div>
+        </div>
+
+        <div class="note-card">
+            <h4 style="color: var(--accent-purple);">Gün 3 Notu</h4>
+            <div class="note-field">
+                <span class="note-field-label">Bugün ne öğrendim:</span>
+                <textarea class="note-field-input" rows="2"></textarea>
+            </div>
+            <div class="note-field">
+                <span class="note-field-label">Nerede takıldım:</span>
+                <textarea class="note-field-input" rows="2"></textarea>
+            </div>
+            <div class="note-field">
+                <span class="note-field-label">Modüler yapının avantajını kendi cümlelerimle:</span>
+                <textarea class="note-field-input" rows="2"></textarea>
+            </div>
+        </div>
+
+        <div class="note-card">
+            <h4 style="color: var(--accent-green);">Gün 4 Notu</h4>
+            <div class="note-field">
+                <span class="note-field-label">Bugün ne öğrendim:</span>
+                <textarea class="note-field-input" rows="2"></textarea>
+            </div>
+            <div class="note-field">
+                <span class="note-field-label">Nerede takıldım:</span>
+                <textarea class="note-field-input" rows="2"></textarea>
+            </div>
+            <div class="note-field">
+                <span class="note-field-label">SQL sorgularını ne kadar anladım:</span>
+                <textarea class="note-field-input" rows="2"></textarea>
+            </div>
+        </div>
+
+        <div class="note-card">
+            <h4 style="color: var(--accent-orange);">Gün 5 Notu</h4>
+            <div class="note-field">
+                <span class="note-field-label">Bugün ne öğrendim:</span>
+                <textarea class="note-field-input" rows="2"></textarea>
+            </div>
+            <div class="note-field">
+                <span class="note-field-label">Nerede takıldım:</span>
+                <textarea class="note-field-input" rows="2"></textarea>
+            </div>
+            <div class="note-field">
+                <span class="note-field-label">Kendi kodumda en çok neyi düzeltmem gerekiyormuş:</span>
+                <textarea class="note-field-input" rows="2"></textarea>
+            </div>
+        </div>
+
+        <div class="note-card">
+            <h4 style="color: var(--accent-cyan);">Gün 6 Notu</h4>
+            <div class="note-field">
+                <span class="note-field-label">Sınav nasıl geçti:</span>
+                <textarea class="note-field-input" rows="2"></textarea>
+            </div>
+            <div class="note-field">
+                <span class="note-field-label">Hangi konuları hatırlayamadım:</span>
+                <textarea class="note-field-input" rows="2"></textarea>
+            </div>
+            <div class="note-field">
+                <span class="note-field-label">3 hafta boyunca en çok ne değişti bende:</span>
+                <textarea class="note-field-input" rows="2"></textarea>
+            </div>
+        </div>
+
+    </section>
+
+    <!-- BONUS -->
+    <div class="bonus-section">
+        <div class="bonus-card">
+            <div class="bonus-title">Bonus Görevler (6 günden önce bitirirsen)</div>
+            <div class="bonus-item"><div class="bonus-check"></div> guardwatch_v2.py'yi tamamen class-based yapıya çevir (GuardWatch class'ı)</div>
+            <div class="bonus-item"><div class="bonus-check"></div> DBLogger'a grafik çizme metodu ekle (matplotlib entegrasyonu)</div>
+            <div class="bonus-item"><div class="bonus-check"></div> Tüm class'lar için docstring yaz</div>
+            <div class="bonus-item"><div class="bonus-check"></div> <code>guardwatch</code> paketini <code>pip install -e .</code> ile kurulabilir yap (setup.py)</div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer-quote">
+        <p>Bu ödevin amacı kod yazmak değil, <strong>DÜŞÜNMEK</strong>. Hikayelerle başladın, araştırarak derinleştin, yazarak pekiştirdin. 3 haftanın sonunda elinde sadece kod yok &mdash; bir düşünme biçimi var. <strong>OOP sadece class yazmak değil, dünyayı nesneler olarak görmeyi öğrenmektir.</strong></p>
+    </div>
+
+    <script>
+        // Sticky nav active state
+        const sections = document.querySelectorAll('.day-section, .notes-section');
+        const navBtns = document.querySelectorAll('.day-nav-btn');
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    navBtns.forEach(btn => btn.classList.remove('active'));
+                    const id = entry.target.id;
+                    const activeBtn = document.querySelector(`.day-nav-btn[href="#${id}"]`);
+                    if (activeBtn) activeBtn.classList.add('active');
+                }
+            });
+        }, { rootMargin: '-100px 0px -60% 0px' });
+
+        sections.forEach(s => observer.observe(s));
+
+        // Smooth scroll
+        navBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const target = document.querySelector(btn.getAttribute('href'));
+                if (target) target.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+    </script>
+
+</body>
+</html>

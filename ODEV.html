@@ -1,0 +1,2245 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GuardWatch AI — Taha Odev Plani</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-card: #1a1a2e;
+            --bg-card-hover: #1f1f35;
+            --bg-code: #0d0d15;
+            --border: #2a2a40;
+            --border-light: #3a3a55;
+            --text-primary: #e8e8f0;
+            --text-secondary: #9090a8;
+            --text-muted: #606078;
+            --accent-blue: #4f8fff;
+            --accent-blue-dim: #2a4f8f;
+            --accent-purple: #8b5cf6;
+            --accent-purple-dim: #4c2d8f;
+            --accent-green: #22c55e;
+            --accent-green-dim: #15503a;
+            --accent-yellow: #eab308;
+            --accent-yellow-dim: #5c4a0a;
+            --accent-red: #ef4444;
+            --accent-red-dim: #5c1a1a;
+            --accent-orange: #f97316;
+            --accent-cyan: #06b6d4;
+            --gradient-1: linear-gradient(135deg, #4f8fff 0%, #8b5cf6 100%);
+            --gradient-2: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
+            --gradient-3: linear-gradient(135deg, #22c55e 0%, #06b6d4 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg-primary); }
+        ::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--accent-blue); }
+
+        /* Hero */
+        .hero {
+            position: relative;
+            padding: 80px 40px 60px;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(ellipse at 50% 0%, rgba(79, 143, 255, 0.08) 0%, transparent 60%),
+                        radial-gradient(ellipse at 80% 50%, rgba(139, 92, 246, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 16px;
+            background: rgba(79, 143, 255, 0.1);
+            border: 1px solid rgba(79, 143, 255, 0.2);
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--accent-blue);
+            margin-bottom: 24px;
+            letter-spacing: 0.5px;
+        }
+
+        .hero h1 {
+            font-size: clamp(32px, 5vw, 56px);
+            font-weight: 900;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 16px;
+            letter-spacing: -1px;
+        }
+
+        .hero-subtitle {
+            font-size: 18px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto 32px;
+            font-weight: 400;
+        }
+
+        .hero-meta {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            flex-wrap: wrap;
+        }
+
+        .hero-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .hero-meta-item span {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        /* Container */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Golden Rules */
+        .rules-section {
+            margin: 0 auto 60px;
+            max-width: 900px;
+            padding: 0 24px;
+        }
+
+        .rules-card {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.05) 0%, rgba(234, 179, 8, 0.05) 100%);
+            border: 1px solid rgba(239, 68, 68, 0.15);
+            border-radius: 16px;
+            padding: 36px;
+        }
+
+        .rules-title {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--accent-red);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .rule-item {
+            display: flex;
+            gap: 14px;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(239, 68, 68, 0.08);
+            align-items: flex-start;
+        }
+
+        .rule-item:last-child { border-bottom: none; }
+
+        .rule-number {
+            flex-shrink: 0;
+            width: 28px;
+            height: 28px;
+            background: rgba(239, 68, 68, 0.15);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--accent-red);
+        }
+
+        .rule-text {
+            font-size: 15px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .rule-text strong {
+            color: var(--text-primary);
+        }
+
+        /* Day Navigation */
+        .day-nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(10, 10, 15, 0.85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            padding: 12px 24px;
+            margin-bottom: 48px;
+        }
+
+        .day-nav-inner {
+            max-width: 900px;
+            margin: 0 auto;
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding: 4px 0;
+        }
+
+        .day-nav-btn {
+            flex-shrink: 0;
+            padding: 8px 20px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--text-secondary);
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+
+        .day-nav-btn:hover {
+            background: var(--bg-card);
+            color: var(--text-primary);
+            border-color: var(--border-light);
+        }
+
+        .day-nav-btn.active,
+        .day-nav-btn:focus {
+            background: var(--accent-blue);
+            color: white;
+            border-color: var(--accent-blue);
+        }
+
+        /* Day Section */
+        .day-section {
+            margin-bottom: 80px;
+            scroll-margin-top: 80px;
+        }
+
+        .day-header {
+            margin-bottom: 36px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .day-label {
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+        }
+
+        .day-0 .day-label { color: var(--accent-red); }
+        .day-1 .day-label { color: var(--accent-blue); }
+        .day-2 .day-label { color: var(--accent-purple); }
+        .day-3 .day-label { color: var(--accent-green); }
+        .day-4 .day-label { color: var(--accent-orange); }
+        .day-5 .day-label { color: var(--accent-cyan); }
+
+        .day-header h2 {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .day-header p {
+            font-size: 16px;
+            color: var(--text-secondary);
+        }
+
+        /* Time Blocks */
+        .time-block {
+            margin-bottom: 40px;
+        }
+
+        .time-block-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .time-badge {
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .time-badge.morning {
+            background: rgba(234, 179, 8, 0.12);
+            color: var(--accent-yellow);
+        }
+
+        .time-badge.afternoon {
+            background: rgba(139, 92, 246, 0.12);
+            color: var(--accent-purple);
+        }
+
+        .time-block-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        /* Task Cards */
+        .task-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 28px;
+            margin-bottom: 16px;
+            transition: all 0.2s;
+        }
+
+        .task-card:hover {
+            border-color: var(--border-light);
+            background: var(--bg-card-hover);
+        }
+
+        .task-card-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .task-id {
+            flex-shrink: 0;
+            padding: 3px 10px;
+            border-radius: 6px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .day-0 .task-id { background: rgba(239, 68, 68, 0.12); color: var(--accent-red); }
+        .day-1 .task-id { background: rgba(79, 143, 255, 0.12); color: var(--accent-blue); }
+        .day-2 .task-id { background: rgba(139, 92, 246, 0.12); color: var(--accent-purple); }
+        .day-3 .task-id { background: rgba(34, 197, 94, 0.12); color: var(--accent-green); }
+        .day-4 .task-id { background: rgba(249, 115, 22, 0.12); color: var(--accent-orange); }
+        .day-5 .task-id { background: rgba(6, 182, 212, 0.12); color: var(--accent-cyan); }
+
+        .task-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .task-duration {
+            margin-left: auto;
+            flex-shrink: 0;
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .task-body {
+            color: var(--text-secondary);
+            font-size: 15px;
+        }
+
+        .task-body p {
+            margin-bottom: 12px;
+        }
+
+        .task-body ul, .task-body ol {
+            padding-left: 20px;
+            margin-bottom: 12px;
+        }
+
+        .task-body li {
+            margin-bottom: 6px;
+        }
+
+        .task-body strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        /* Code Blocks */
+        pre {
+            background: var(--bg-code);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 20px;
+            overflow-x: auto;
+            margin: 16px 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            line-height: 1.8;
+            color: #c8c8d8;
+        }
+
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+        }
+
+        :not(pre) > code {
+            background: rgba(79, 143, 255, 0.1);
+            color: var(--accent-blue);
+            padding: 2px 7px;
+            border-radius: 5px;
+            font-size: 13px;
+        }
+
+        .code-comment { color: #5a6a7a; }
+        .code-keyword { color: #c678dd; }
+        .code-string { color: #98c379; }
+        .code-function { color: #61afef; }
+        .code-number { color: #d19a66; }
+
+        /* Checkpoint */
+        .checkpoint {
+            background: linear-gradient(135deg, rgba(234, 179, 8, 0.06) 0%, rgba(249, 115, 22, 0.06) 100%);
+            border: 1px solid rgba(234, 179, 8, 0.15);
+            border-left: 3px solid var(--accent-yellow);
+            border-radius: 0 12px 12px 0;
+            padding: 24px 28px;
+            margin: 24px 0;
+        }
+
+        .checkpoint-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--accent-yellow);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .checkpoint ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .checkpoint li {
+            padding: 8px 0;
+            padding-left: 24px;
+            position: relative;
+            color: var(--text-secondary);
+            font-size: 14px;
+            border-bottom: 1px solid rgba(234, 179, 8, 0.06);
+        }
+
+        .checkpoint li:last-child { border-bottom: none; }
+
+        .checkpoint li::before {
+            content: '?';
+            position: absolute;
+            left: 0;
+            width: 18px;
+            height: 18px;
+            background: rgba(234, 179, 8, 0.12);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--accent-yellow);
+            top: 9px;
+        }
+
+        /* Deliverables */
+        .deliverables {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.06) 0%, rgba(6, 182, 212, 0.06) 100%);
+            border: 1px solid rgba(34, 197, 94, 0.15);
+            border-radius: 14px;
+            padding: 28px;
+            margin: 32px 0;
+        }
+
+        .deliverables-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--accent-green);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .deliverable-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 0;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .deliverable-item::before {
+            content: '';
+            width: 18px;
+            height: 18px;
+            border: 2px solid var(--border-light);
+            border-radius: 5px;
+            flex-shrink: 0;
+        }
+
+        .deliverable-file {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--accent-green);
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        /* EAR Diagram */
+        .ear-diagram {
+            background: var(--bg-code);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 28px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .ear-diagram pre {
+            border: none;
+            padding: 0;
+            margin: 0;
+            background: transparent;
+            display: inline-block;
+            text-align: left;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        .ear-formula {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(79, 143, 255, 0.1) 100%);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            margin: 16px 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 16px;
+            color: var(--accent-purple);
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        /* Test Table */
+        .test-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin: 16px 0;
+            font-size: 14px;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+
+        .test-table th {
+            background: var(--bg-code);
+            padding: 12px 16px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .test-table td {
+            padding: 12px 16px;
+            border-top: 1px solid var(--border);
+            color: var(--text-secondary);
+        }
+
+        .test-table tr:hover td {
+            background: rgba(79, 143, 255, 0.03);
+        }
+
+        .test-table .empty-cell {
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        /* Notes Section */
+        .notes-section {
+            margin: 80px auto;
+            max-width: 900px;
+            padding: 0 24px;
+        }
+
+        .notes-title {
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 32px;
+            color: var(--text-primary);
+        }
+
+        .note-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 28px;
+            margin-bottom: 16px;
+        }
+
+        .note-card h4 {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .note-field {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 12px;
+            align-items: flex-start;
+        }
+
+        .note-field-label {
+            flex-shrink: 0;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+            min-width: 200px;
+            padding-top: 8px;
+        }
+
+        .note-field-input {
+            flex: 1;
+            min-height: 40px;
+            background: var(--bg-code);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 8px 14px;
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            resize: vertical;
+        }
+
+        .note-field-input:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+        }
+
+        /* Bonus */
+        .bonus-section {
+            margin: 0 auto 80px;
+            max-width: 900px;
+            padding: 0 24px;
+        }
+
+        .bonus-card {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.05) 0%, rgba(236, 72, 153, 0.05) 100%);
+            border: 1px solid rgba(139, 92, 246, 0.15);
+            border-radius: 16px;
+            padding: 36px;
+        }
+
+        .bonus-title {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--accent-purple);
+            margin-bottom: 20px;
+        }
+
+        .bonus-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 0;
+            color: var(--text-secondary);
+            font-size: 15px;
+        }
+
+        .bonus-check {
+            width: 22px;
+            height: 22px;
+            border: 2px solid var(--accent-purple-dim);
+            border-radius: 6px;
+            flex-shrink: 0;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .bonus-check:hover {
+            border-color: var(--accent-purple);
+        }
+
+        /* Footer Quote */
+        .footer-quote {
+            text-align: center;
+            padding: 60px 24px 80px;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .footer-quote p {
+            font-size: 17px;
+            font-style: italic;
+            color: var(--text-muted);
+            line-height: 1.8;
+        }
+
+        .footer-quote p strong {
+            color: var(--text-secondary);
+        }
+
+        /* Overview Table */
+        .overview-section {
+            margin: 0 auto 60px;
+            max-width: 900px;
+            padding: 0 24px;
+        }
+
+        .overview-title {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+        }
+
+        .overview-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .overview-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px 16px;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .overview-item:hover {
+            border-color: var(--border-light);
+            transform: translateY(-2px);
+        }
+
+        .overview-day {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 8px;
+        }
+
+        .overview-item:nth-child(1) .overview-day { color: var(--accent-red); }
+        .overview-item:nth-child(2) .overview-day { color: var(--accent-blue); }
+        .overview-item:nth-child(3) .overview-day { color: var(--accent-purple); }
+        .overview-item:nth-child(4) .overview-day { color: var(--accent-green); }
+        .overview-item:nth-child(5) .overview-day { color: var(--accent-orange); }
+        .overview-item:nth-child(6) .overview-day { color: var(--accent-cyan); }
+
+        .overview-topic {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+        }
+
+        .overview-desc {
+            font-size: 12px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        /* Warning callout */
+        .warning-callout {
+            background: rgba(239, 68, 68, 0.06);
+            border: 1px solid rgba(239, 68, 68, 0.15);
+            border-left: 3px solid var(--accent-red);
+            border-radius: 0 10px 10px 0;
+            padding: 16px 20px;
+            margin: 16px 0;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .warning-callout strong {
+            color: var(--accent-red);
+        }
+
+        /* Info callout */
+        .info-callout {
+            background: rgba(79, 143, 255, 0.06);
+            border: 1px solid rgba(79, 143, 255, 0.15);
+            border-left: 3px solid var(--accent-blue);
+            border-radius: 0 10px 10px 0;
+            padding: 16px 20px;
+            margin: 16px 0;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .info-callout strong {
+            color: var(--accent-blue);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .overview-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .hero { padding: 48px 20px 40px; }
+            .hero-meta { gap: 16px; }
+            .note-field { flex-direction: column; }
+            .note-field-label { min-width: auto; }
+        }
+
+        @media (max-width: 480px) {
+            .overview-grid {
+                grid-template-columns: 1fr;
+            }
+            .task-card-header { flex-direction: column; }
+            .task-duration { margin-left: 0; }
+        }
+
+        /* Print */
+        @media print {
+            .day-nav { display: none; }
+            body { background: white; color: black; }
+            .task-card, .note-card { break-inside: avoid; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+    <div class="hero-badge">STAJ PROGRAMI 2026</div>
+    <h1>GuardWatch AI</h1>
+    <p class="hero-subtitle">Sifirdan Ogrenme Odevi &mdash; Her satiri anlayarak yaz, her kavram&#305; ozumse.</p>
+    <div class="hero-meta">
+        <div class="hero-meta-item">Stajyer: <span>Taha</span></div>
+        <div class="hero-meta-item">Sure: <span>6 Gun (Gun 0-5)</span></div>
+        <div class="hero-meta-item">Gunluk: <span>Min. 7 Saat</span></div>
+        <div class="hero-meta-item">Toplam: <span>~42 Saat</span></div>
+    </div>
+</div>
+
+<!-- RULES -->
+<div class="rules-section">
+    <div class="rules-card">
+        <div class="rules-title">&#9888; Altin Kurallar</div>
+        <div class="rule-item">
+            <div class="rule-number">1</div>
+            <div class="rule-text"><strong>AI'a "su kodu yaz" DEME.</strong> Takilirsan "EAR formulu nedir acikla" diyebilirsin ama "EAR hesaplayan fonksiyon yaz" diyemezsin.</div>
+        </div>
+        <div class="rule-item">
+            <div class="rule-number">2</div>
+            <div class="rule-text"><strong>Her asamayi AYRI commit et.</strong> Commit mesajin ne yaptigini aciklasin.</div>
+        </div>
+        <div class="rule-item">
+            <div class="rule-number">3</div>
+            <div class="rule-text"><strong>Her gun sonunda kisa bir yorum yaz.</strong> Ne ogrendin, nerede takildin?</div>
+        </div>
+        <div class="rule-item">
+            <div class="rule-number">4</div>
+            <div class="rule-text"><strong>Kodu satir satir aciklayabilmelisin.</strong> Hocana aciklayamiyorsan o adim tamamlanmamis demektir.</div>
+        </div>
+        <div class="rule-item">
+            <div class="rule-number">5</div>
+            <div class="rule-text"><strong>Kopyala yapistir YASAK.</strong> Eski projedeki kodu kopyalama. Sifirdan yaz.</div>
+        </div>
+    </div>
+</div>
+
+<!-- OVERVIEW -->
+<div class="overview-section">
+    <div class="overview-title">6 Gunluk Yol Haritasi</div>
+    <div class="overview-grid">
+        <div class="overview-item">
+            <div class="overview-day">Gun 0</div>
+            <div class="overview-topic">Python Hazirlik</div>
+            <div class="overview-desc">Dictionary, time, mesafe hesabi, JSON</div>
+        </div>
+        <div class="overview-item">
+            <div class="overview-day">Gun 1</div>
+            <div class="overview-topic">OpenCV Temelleri</div>
+            <div class="overview-desc">Kamera, frame, cizim, FPS, ROI</div>
+        </div>
+        <div class="overview-item">
+            <div class="overview-day">Gun 2</div>
+            <div class="overview-topic">YOLO Tespiti</div>
+            <div class="overview-desc">Insan tespiti, bbox, confidence, filtreleme</div>
+        </div>
+        <div class="overview-item">
+            <div class="overview-day">Gun 3</div>
+            <div class="overview-topic">MediaPipe &amp; EAR</div>
+            <div class="overview-desc">FaceMesh, landmark, goz aciklik orani</div>
+        </div>
+        <div class="overview-item">
+            <div class="overview-day">Gun 4</div>
+            <div class="overview-topic">State &amp; Tracking</div>
+            <div class="overview-desc">Sureli ihlal, hareketsizlik, centroid tracker</div>
+        </div>
+        <div class="overview-item">
+            <div class="overview-day">Gun 5</div>
+            <div class="overview-topic">Entegrasyon</div>
+            <div class="overview-desc">Temiz kod, config, alarm, test, loglama</div>
+        </div>
+    </div>
+</div>
+
+<!-- DAY NAV -->
+<nav class="day-nav">
+    <div class="day-nav-inner">
+        <a href="#gun0" class="day-nav-btn">Gun 0: Python</a>
+        <a href="#gun1" class="day-nav-btn">Gun 1: OpenCV</a>
+        <a href="#gun2" class="day-nav-btn">Gun 2: YOLO</a>
+        <a href="#gun3" class="day-nav-btn">Gun 3: MediaPipe</a>
+        <a href="#gun4" class="day-nav-btn">Gun 4: State &amp; Tracking</a>
+        <a href="#gun5" class="day-nav-btn">Gun 5: Entegrasyon</a>
+        <a href="#notlar" class="day-nav-btn">Notlar</a>
+    </div>
+</nav>
+
+<!-- ============================================== -->
+<!-- GUN 0 -->
+<!-- ============================================== -->
+<div class="container">
+<section id="gun0" class="day-section day-0">
+    <div class="day-header">
+        <div class="day-label">Gun 0</div>
+        <h2>Python Hazirlik &mdash; "Temeli Saglam At"</h2>
+        <p>Dictionary, time, mesafe hesabi ve JSON &mdash; ilerideki gunlerin yapitaslari</p>
+    </div>
+
+    <!-- Sabah -->
+    <div class="time-block">
+        <div class="time-block-header">
+            <span class="time-badge morning">Sabah</span>
+            <span class="time-block-title">Temel Python Kavramlari &mdash; 3.5 saat</span>
+        </div>
+
+        <div class="task-card">
+            <div class="task-card-header">
+                <span class="task-id">0.1</span>
+                <span class="task-title">Dictionary (Sozluk) Alistirmalari</span>
+                <span class="task-duration">1.5 saat</span>
+            </div>
+            <div class="task-body">
+                <p><strong>Dictionary</strong> = Pythondaki "anahtar: deger" yapisi. Telefon rehberi gibi dusun: isim -&gt; numara</p>
+                <ul>
+                    <li>Olusturma: <code>rehber = {"Ali": "0555...", "Veli": "0532..."}</code></li>
+                    <li>Eleman ekleme: <code>rehber["Ayse"] = "0544..."</code></li>
+                    <li>Okuma: <code>rehber["Ali"]</code> &rarr; "0555..."</li>
+                    <li>Olmayan key'e erisince ne olur? <code>.get()</code> metodu ne ise yarar?</li>
+                    <li>FOR dongusu ile dictionary uzerinde gezinme: <code>for isim, numara in rehber.items():</code></li>
+                </ul>
+                <p><strong>Alistirmalar:</strong></p>
+                <ol>
+                    <li>Telefon rehberi yap: 5 kisi ekle, birini sil, birini guncelle, hepsini yazdir</li>
+                    <li>Ogrenci not sistemi: <code>{"Ali": [80, 90, 70], "Veli": [60, 85, 75]}</code> &mdash; her ogrencinin ortalamasini hesapla</li>
+                    <li>Kelime sayaci: Bir cumledeki her kelimenin kac kez gectigini say (dictionary ile)</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="task-card">
+            <div class="task-card-header">
+                <span class="task-id">0.2</span>
+                <span class="task-title">None ve Durum Takibi</span>
+                <span class="task-duration">1 saat</span>
+            </div>
+            <div class="task-body">
+                <p><code>None</code> = "Henuz bir deger yok" demek. Bos degil, sifir degil, DEGER YOK.</p>
+                <p><code>if degisken is None:</code> kontrolu (<code>==</code> degil, <code>is</code> kullanilir)</p>
+                <p><strong>Alistirma:</strong> Terminal'de basit isik kontrolu yaz:</p>
+<pre>isik_acilma_zamani = None
+
+<span class="code-keyword">while</span> <span class="code-keyword">True</span>:
+    komut = <span class="code-function">input</span>(<span class="code-string">"Komut (ac/kapa/durum): "</span>)
+    <span class="code-keyword">if</span> komut == <span class="code-string">"ac"</span>:
+        isik_acilma_zamani = time.time()
+        <span class="code-function">print</span>(<span class="code-string">"Isik acildi!"</span>)
+    <span class="code-keyword">elif</span> komut == <span class="code-string">"kapa"</span>:
+        <span class="code-keyword">if</span> isik_acilma_zamani <span class="code-keyword">is not</span> None:
+            sure = time.time() - isik_acilma_zamani
+            <span class="code-function">print</span>(<span class="code-string">f"Isik {sure:.1f} saniye acik kaldi"</span>)
+        isik_acilma_zamani = None
+    <span class="code-keyword">elif</span> komut == <span class="code-string">"durum"</span>:
+        <span class="code-keyword">if</span> isik_acilma_zamani <span class="code-keyword">is</span> None:
+            <span class="code-function">print</span>(<span class="code-string">"Isik KAPALI"</span>)
+        <span class="code-keyword">else</span>:
+            sure = time.time() - isik_acilma_zamani
+            <span class="code-function">print</span>(<span class="code-string">f"Isik ACIK ({sure:.1f} sn)"</span>)</pre>
+                <div class="info-callout">
+                    <strong>Dikkat:</strong> Bu alistirma Gun 4'teki "goz suresi takibinin" TAM OLARAK aynisi. Anla!
+                </div>
+            </div>
+        </div>
+
+        <div class="task-card">
+            <div class="task-card-header">
+                <span class="task-id">0.3</span>
+                <span class="task-title">time.time() ile Sure Olcme</span>
+                <span class="task-duration">1 saat</span>
+            </div>
+            <div class="task-body">
+                <p><code>time.time()</code> = 1970'den bu yana gecen saniye sayisi (Unix timestamp)</p>
+                <p>Iki olcum arasindaki fark = gecen sure</p>
+                <p><strong>Alistirmalar:</strong></p>
+                <ol>
+                    <li>Kronometresi yaz: "baslat" deyince sayma baslasin, "durdur" deyince sureyi gostersin</li>
+                    <li>"Reaksiyon hizi testi": Rastgele bir sure bekle, "SIMDI BAS!" yaz, kullanicinin ne kadar surede bastigini olc</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ogleden Sonra -->
+    <div class="time-block">
+        <div class="time-block-header">
+            <span class="time-badge afternoon">Ogleden Sonra</span>
+            <span class="time-block-title">JSON, f-string, Mesafe ve Mini Proje &mdash; 3.5 saat</span>
+        </div>
+
+        <div class="task-card">
+            <div class="task-card-header">
+                <span class="task-id">0.4</span>
+                <span class="task-title">JSON Dosya Okuma</span>
+                <span class="task-duration">30 dk</span>
+            </div>
+            <div class="task-body">
+                <p><strong>JSON</strong> = ayarlarini dosyada tutma formati</p>
+                <ul>
+                    <li><code>json.load()</code> ile dosya okuma</li>
+                    <li>Okunan veri bir dictionary oluyor</li>
+                </ul>
+                <p><strong>Alistirma:</strong> <code>ayarlar.json</code> dosyasi olustur, icine <code>{"isim": "Taha", "seviye": 1, "puan": 0}</code> yaz, Python'dan oku ve yazdir.</p>
+            </div>
+        </div>
+
+        <div class="task-card">
+            <div class="task-card-header">
+                <span class="task-id">0.5</span>
+                <span class="task-title">f-string ve Formatlama</span>
+                <span class="task-duration">30 dk</span>
+            </div>
+            <div class="task-body">
+                <p><code>f"Merhaba {isim}"</code> kullanimi</p>
+                <p>Sayi formatlama: <code>f"{deger:.2f}"</code> (2 ondalik), <code>f"{deger:.1f}"</code> (1 ondalik)</p>
+                <p><strong>Alistirma:</strong> Bir dictionary'deki kisi bilgilerini formatli yazdir:</p>
+<pre><span class="code-string">"Ad: Taha | Puan: 85.50 | Seviye: 3"</span></pre>
+            </div>
+        </div>
+
+        <div class="task-card">
+            <div class="task-card-header">
+                <span class="task-id">0.6</span>
+                <span class="task-title">Iki Nokta Arasi Mesafe: Pisagor</span>
+                <span class="task-duration">1.5 saat</span>
+            </div>
+            <div class="task-body">
+                <div class="warning-callout">
+                    <strong>Bu bolum onemli!</strong> Gun 3'te EAR formulunde, Gun 4'te tracker'da bu hesabi kullanacaksin.
+                </div>
+                <p><strong>Aciklama:</strong></p>
+                <ul>
+                    <li>Haritada iki sehir arasindaki kus ucusu mesafe nasil hesaplanir?</li>
+                    <li>Pisagor teoremi: <code>c = sqrt(a^2 + b^2)</code></li>
+                    <li>Koordinat duzleminde iki nokta: A(x1, y1) ve B(x2, y2)</li>
+                    <li>Mesafe = <code>sqrt((x2-x1)^2 + (y2-y1)^2)</code></li>
+                    <li>Bu formule "Oklid mesafesi" (Euclidean distance) denir &mdash; ama ozunde PISAGOR</li>
+                </ul>
+
+                <div class="ear-diagram">
+<pre>   B(x2,y2)
+   /|
+  / |
+ /  | (y2-y1)
+/   |
+A----
+(x1,y1)  (x2-x1)
+
+Mesafe = sqrt((x2-x1)^2 + (y2-y1)^2)</pre>
+                </div>
+
+                <p><strong>Alistirmalar:</strong></p>
+                <ol>
+                    <li><code>mesafe_hesapla(p1, p2)</code> fonksiyonu yaz. Test: A(0,0) B(3,4) &rarr; 5.0, A(1,1) B(4,5) &rarr; 5.0</li>
+                    <li>5 sehrin koordinatlarini bir dictionary'ye yaz. Kullanicidan 2 sehir sec, mesafeyi hesapla.</li>
+                    <li>En yakin noktayi bulma: Bir hedef nokta ver, bir listedeki noktalardan hangisi en yakin? (Bu Gun 4 tracker'in TEMELI)</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="task-card">
+            <div class="task-card-header">
+                <span class="task-id">0.7</span>
+                <span class="task-title">Mini Proje: Hareket Simulatoru</span>
+                <span class="task-duration">1 saat</span>
+            </div>
+            <div class="task-body">
+                <p>Gunun ogrendiklerini birlestiren proje (dosya: <code>gun0_mini_proje.py</code>):</p>
+                <ul>
+                    <li>Bir dictionary'de 3 "nesne" tut: <code>{"Araba": (100, 200), "Kisi": (300, 150), "Top": (50, 50)}</code></li>
+                    <li>Her dongude <code>random.randint(-30, 30)</code> ile rastgele hareket ettir</li>
+                    <li>Her nesne icin onceki konum ile yeni konum arasindaki mesafeyi hesapla</li>
+                    <li>Mesafe &lt; 10 ise "HAREKETSIZ", mesafe &ge; 10 ise "HAREKET EDIYOR" yazdir</li>
+                    <li>Sonuclari f-string ile formatli yazdir</li>
+                    <li><code>time.sleep(1)</code> ile 1 sn bekle, 10 tur calistir</li>
+                </ul>
+                <div class="info-callout">
+                    <strong>Bilgi:</strong> Bu mini proje, ilerideki YOLO tracker + hareketsizlik tespitinin basitlestirilmis hali! Ayni mantik, sadece "nesne" yerine "kisi", "rastgele hareket" yerine "YOLO tespiti" olacak.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="checkpoint">
+        <div class="checkpoint-title">&#9898; Kontrol Noktasi 0</div>
+        <ul>
+            <li>Dictionary'ye yeni eleman nasil eklenir? Var olan elemani nasil guncellersin?</li>
+            <li>None ne demek? <code>if x is None</code> ile <code>if x == None</code> arasinda fark var mi?</li>
+            <li><code>time.time()</code> ne donduruyor? Iki olcum arasindaki fark neyi verir?</li>
+            <li>Pisagor teoremi ile iki nokta arasi mesafe nasil hesaplanir?</li>
+            <li>JSON dosyasi okudugunda Python'da hangi veri tipi olarak geliyor?</li>
+        </ul>
+    </div>
+
+    <div class="deliverables">
+        <div class="deliverables-title">&#9745; Gun 0 Teslim Listesi</div>
+        <div class="deliverable-item"><span class="deliverable-file">gun0_dictionary.py</span> &mdash; Dictionary alistirmalari</div>
+        <div class="deliverable-item"><span class="deliverable-file">gun0_durum_takibi.py</span> &mdash; None + isik durum takibi</div>
+        <div class="deliverable-item"><span class="deliverable-file">gun0_kronometresi.py</span> &mdash; time.time() alistirmalari</div>
+        <div class="deliverable-item"><span class="deliverable-file">gun0_mesafe.py</span> &mdash; Pisagor mesafe hesabi</div>
+        <div class="deliverable-item"><span class="deliverable-file">gun0_mini_proje.py</span> &mdash; Hareket simulatoru</div>
+        <div class="deliverable-item">Kontrol noktasi cevaplari</div>
+        <div class="deliverable-item">Git commit: <code>"Gun 0: Python hazirlik — dictionary, time, mesafe, JSON"</code></div>
+    </div>
+</section>
+
+<!-- ============================================== -->
+<!-- GUN 1 -->
+<!-- ============================================== -->
+<section id="gun1" class="day-section day-1">
+    <div class="day-header">
+        <div class="day-label">Gun 1</div>
+        <h2>Temeller &mdash; "Goruntu Nedir?"</h2>
+        <p>OpenCV ve video islemedeki temel kavramlari ogren</p>
+    </div>
+
+    <!-- Sabah -->
+    <div class="time-block">
+        <div class="time-block-header">
+            <span class="time-badge morning">Sabah</span>
+            <span class="time-block-title">Teori ve Deney &mdash; 3 saat</span>
+        </div>
+
+        <div class="task-card">
+            <div class="task-card-header">
+                <span class="task-id">1.1</span>
+                <span class="task-title">Python Temel Kontrol</span>
+                <span class="task-duration">10 dk</span>
+            </div>
+            <div class="task-body">
+                <p>Gun 0'da ogrendiklerini hatirliyorsun: dictionary, time.time(), mesafe hesabi, JSON okuma. Bugun bunlari OpenCV ile birlestireceksin. Hazir misin?</p>
+            </div>
+        </div>
+
+        <div class="task-card">
+            <div class="task-card-header">
+                <span class="task-id">1.2</span>
+                <span class="task-title">OpenCV Nedir?</span>
+                <span class="task-duration">30 dk</span>
+            </div>
+            <div class="task-body">
+                <p>Arastir ve <strong>kendi cumlelerinle</strong> yaz:</p>
+                <ul>
+                    <li>OpenCV ne ise yarar?</li>
+                    <li><code>cv2.VideoCapture(0)</code> ne yapar? Icindeki <code>0</code> ne anlama gelir?</li>
+                    <li>Bir "frame" nedir? Bilgisayar bir goruntyu nasil tutar? (numpy array, shape, BGR)</li>
+                    <li><code>cv2.imshow()</code> ve <code>cv2.waitKey(1)</code> neden birlikte kullanilir?</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="task-card">
+            <div class="task-card-header">
+                <span class="task-id">1.3</span>
+                <span class="task-title">Ilk Script: Kamerayi Ac</span>
+                <span class="task-duration">1 saat</span>
+            </div>
+            <div class="task-body">
+                <p><code>gun1_kamera.py</code> adinda bir dosya olustur. Sadece su isleri yapsin:</p>
+                <ul>
+                    <li>Webcam'i ac</li>
+                    <li>Surekli frame oku ve ekranda goster</li>
+                    <li><code>q</code> tusuna basilinca kapat</li>
+                    <li>Frame boyutunu (yukseklik, genislik) ekrana yazdir</li>
+                </ul>
+                <p><strong>Beklenen cikti:</strong> Webcam goruntusu acilir, sol ustte "640x480" gibi bir yazi gorursun.</p>
+            </div>
+        </div>
+
+        <div class="checkpoint">
+            <div class="checkpoint-title">&#9898; Kontrol Noktasi 1</div>
+            <ul>
+                <li><code>cap.read()</code> fonksiyonu kac deger donduruyor ve bunlar ne?</li>
+                <li><code>frame.shape</code> ne donduruyor? Her bir deger ne anlama geliyor?</li>
+                <li><code>cv2.waitKey(1) &amp; 0xFF</code> ifadesindeki <code>&amp; 0xFF</code> ne ise yariyor?</li>
+                <li>Frame'in renk formati ne? RGB mi BGR mi?</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Ogleden Sonra -->
+    <div class="time-block">
+        <div class="time-block-header">
+            <span class="time-badge afternoon">Ogleden Sonra</span>
+            <span class="time-block-title">Goruntu Uzerinde Cizim &mdash; 4 saat</span>
+        </div>
+
+        <div class="task-card">
+            <div class="task-card-header">
+                <span class="task-id">1.4</span>
+                <span class="task-title">Frame Uzerinde Cizim Deneyleri</span>
+                <span class="task-duration">1.5 saat</span>
+            </div>
+            <div class="task-body">
+                <p>Ayni dosyayi gelistir. Frame uzerine sirayla su islemleri yap:</p>
+                <ul>
+                    <li><code>cv2.rectangle()</code> ile sabit bir dikdortgen ciz. Parametreleri degistirerek ne oldugunu gor.</li>
+                    <li><code>cv2.putText()</code> ile ekrana yazi yaz. Font boyutunu, rengini, pozisyonunu degistir.</li>
+                    <li><code>cv2.circle()</code> ile bir daire ciz.</li>
+                    <li>Renkleri dene: <code>(0, 0, 255)</code> neden kirmizi? <code>(255, 0, 0)</code> neden mavi? BGR mantigini anla.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="task-card">
+            <div class="task-card-header">
+                <span class="task-id">1.5</span>
+                <span class="task-title">FPS Hesaplama</span>
+                <span class="task-duration">1.5 saat</span>
+            </div>
+            <div class="task-body">
+                <p><code>gun1_fps.py</code> dosyasi olustur:</p>
+                <ul>
+                    <li>Her frame'de <code>time.time()</code> ile onceki frame'den bu yana gecen sureyi hesapla</li>
+                    <li><strong>FPS = 1 / gecen_sure</strong></li>
+                    <li>FPS degerini frame uzerine yaz</li>
+                    <li><strong>BONUS:</strong> Son 10 frame'in ortalamasini al (neden daha stabil oldugunu dusun)</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="task-card">
+            <div class="task-card-header">
+                <span class="task-id">1.6</span>
+                <span class="task-title">Fareyle Bolge Secimi (ROI)</span>
+                <span class="task-duration">1 saat</span>
+            </div>
+            <div class="task-body">
+                <p><code>gun1_bolge.py</code> dosyasi olustur:</p>
+                <ul>
+                    <li><code>cv2.selectROI()</code> fonksiyonunu kullanarak ekrandan bir bolge sec</li>
+                    <li>Secilen bolgenin koordinatlarini <code>(x, y, w, h)</code> terminale yazdir</li>
+                    <li>Sadece o bolgeyi ayri bir pencerede goster (<code>frame[y:y+h, x:x+w]</code> dilimleme)</li>
+                    <li>"ROI" (Region of Interest) kavramini anla &mdash; neden lazim oldugunu dusun</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="checkpoint">
+            <div class="checkpoint-title">&#9898; Kontrol Noktasi 2</div>
+            <ul>
+                <li>FPS nedir? 30 FPS ne anlama gelir?</li>
+                <li><code>time.time()</code> hangi birimde deger donduruyor?</li>
+                <li>Neden her frame'de FPS degeri farkli cikabiliyor?</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="deliverables">
+        <div class="deliverables-title">&#9745; Gun 1 Teslim Listesi</div>
+        <div class="deliverable-item"><span class="deliverable-file">gun1_kamera.py</span> &mdash; Webcam + boyut yazdirma</div>
+        <div class="deliverable-item"><span class="deliverable-file">gun1_fps.py</span> &mdash; FPS hesaplama</div>
+        <div class="deliverable-item"><span class="deliverable-file">gun1_bolge.py</span> &mdash; ROI secimi</div>
+        <div class="deliverable-item">Kontrol noktasi cevaplari (kagit veya yorum)</div>
+        <div class="deliverable-item">Git commit: <code>"Gun 1: OpenCV temelleri — kamera, cizim, FPS, ROI"</code></div>
+    </div>
+</section>
+
+<!-- ============================================== -->
+<!-- GUN 2 -->
+<!-- ============================================== -->
+<section id="gun2" class="day-section day-2">
+    <div class="day-header">
+        <div class="day-label">Gun 2</div>
+        <h2>YOLO &mdash; "Insani Bulmak"</h2>
+        <p>YOLO nesne tespitini anla ve kullan</p>
+    </div>
+
+    <!-- Sabah -->
+    <div class="time-block">
+        <div class="time-block-header">
+            <span class="time-badge morning">Sabah</span>
+            <span class="time-block-title">YOLO Teori + Ilk Kullanim &mdash; 3 saat</span>
+        </div>
+
+        <div class="task-card">
+            <div class="task-card-header">
+                <span class="task-id">2.1</span>
+                <span class="task-title">YOLO Nedir?</span>
+                <span class="task-duration">1 saat</span>
+            </div>
+            <div class="task-body">
+                <p>Arastir ve <strong>kendi cumlelerinle</strong> yaz:</p>
+                <ul>
+                    <li>YOLO ne anlama geliyor? (You Only Look Once)</li>
+                    <li>YOLO'nun girdisi (input) ne? Ciktisi (output) ne?</li>
+                    <li>Bounding box nedir? <code>xyxy</code> formatinda 4 sayi ne anlama geliyor?</li>
+                    <li>Confidence score nedir? 0.4 threshold ne demek?</li>
+                    <li>YOLO <code>classes=[0]</code> dedigimizde ne oluyor? 0 neden "person"?</li>
+                    <li><code>yolo11n</code> ile <code>yolo11s</code> arasindaki fark ne? (nano vs small)</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="task-card">
+            <div class="task-card-header">
+                <span class="task-id">2.2</span>
+                <span class="task-title">Ilk YOLO Script</span>
+                <span class="task-duration">2 saat</span>
+            </div>
+            <div class="task-body">
+                <p><code>gun2_yolo_tespit.py</code> dosyasi olustur:</p>
+                <ul>
+                    <li>YOLO modelini yukle (<code>from ultralytics import YOLO</code>)</li>
+                    <li>Webcam'den frame oku</li>
+                    <li>Her frame'de YOLO calistir: <code>model(frame, conf=0.4, classes=[0])</code></li>
+                    <li>Tespit edilen her kisinin etrafina yesil dikdortgen ciz</li>
+                    <li>Dikdortgenin ustune confidence score yaz (orn: "Kisi: %87")</li>
+                    <li>Tespit edilen kisi sayisini ekranin ustune yaz</li>
+                </ul>
+
+                <div class="info-callout">
+                    <strong>Onemli:</strong> Sana hazir bir <code>results</code> objesi donuyor. Bu objenin yapisini anla:
+                    <code>results[0].boxes</code> ne donduruyor?
+                    <code>box.xyxy[0]</code> ne donduruyor?
+                    <code>box.conf[0]</code> ne donduruyor?
+                    Hic kisi yoksa <code>results[0].boxes</code> ne oluyor?
+                </div>
+            </div>
+        </div>
+
+        <div class="checkpoint">
+            <div class="checkpoint-title">&#9898; Kontrol Noktasi 3</div>
+            <ul>
+                <li>YOLO'ya 640x480 bir frame verdin. Ciktida gelen koordinatlar hangi boyuta gore?</li>
+                <li><code>conf=0.4</code> degerini 0.1 yapsan ne olur? 0.9 yapsan ne olur? Dene ve farkini yaz.</li>
+                <li>YOLO her frame'de calisinca neden FPS dusuyor?</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Ogleden Sonra -->
+    <div class="time-block">
+        <div class="time-block-header">
+            <span class="time-badge afternoon">Ogleden Sonra</span>
+            <span class="time-block-title">Tespiti Derinlestir &mdash; 4 saat</span>
+        </div>
+
+        <div class="task-card">
+            <div class="task-card-header">
+                <span class="task-id">2.3</span>
+                <span class="task-title">Tespitin Sinirlarini Test Et</span>
+                <span class="task-duration">1.5 saat</span>
+            </div>
+            <div class="task-body">
+                <p>Ayni script uzerinde su deneyleri yap:</p>
+                <ul>
+                    <li>Kameradan uzaklasarak YOLO'nun seni ne mesafede tespit edebildigini gozlemle</li>
+                    <li>Kotu isik kosullarinda (isigi kapat) tespit degisir mi?</li>
+                    <li>Yanindan baskasi gecerse kac kisi tespit eder?</li>
+                    <li>Confidence threshold'u degistir (0.2, 0.4, 0.6, 0.8) &mdash; sonuclari karsilastir</li>
+                </ul>
+                <p>Her deney icin <strong>1 cumlelik gozlemini yaz.</strong></p>
+            </div>
+        </div>
+
+        <div class="task-card">
+            <div class="task-card-header">
+                <span class="task-id">2.4</span>
+                <span class="task-title">Tespiti ROI ile Sinirla</span>
+                <span class="task-duration">1.5 saat</span>
+            </div>
+            <div class="task-body">
+                <p><code>gun2_yolo_roi.py</code> dosyasi olustur:</p>
+                <ul>
+                    <li>Onceki gun ogrendigin <code>cv2.selectROI()</code> ile bir bolge sec</li>
+                    <li>YOLO tum frame'de calismaya devam etsin</li>
+                    <li>AMA sadece secili bolge icindeki tespitleri goster</li>
+                    <li>Filtreleme: kutunun merkez noktasi bolge icinde mi?</li>
+                </ul>
+                <p>Bu fonksiyonu <strong>KENDIN</strong> yaz:</p>
+<pre><span class="code-keyword">def</span> <span class="code-function">merkez_bolgede_mi</span>(kutu, bolge):
+    <span class="code-comment"># kutu: (x1, y1, x2, y2) — YOLO'dan gelen</span>
+    <span class="code-comment"># bolge: (bx, by, bx2, by2) — secilen ROI</span>
+    <span class="code-comment"># return: True veya False</span>
+    <span class="code-keyword">pass</span>  <span class="code-comment"># KENDIN YAZ</span></pre>
+            </div>
+        </div>
+
+        <div class="task-card">
+            <div class="task-card-header">
+                <span class="task-id">2.5</span>
+                <span class="task-title">Coklu Tespit ve Renk Kodlama</span>
+                <span class="task-duration">1 saat</span>
+            </div>
+            <div class="task-body">
+                <p><code>gun2_yolo_renkli.py</code> dosyasi olustur:</p>
+                <ul>
+                    <li>Her tespit edilen kisiye farkli renk ata (1. kisi yesil, 2. kisi mavi, 3. kisi kirmizi...)</li>
+                    <li>Renkleri bir listede tut: <code>renkler = [(0,255,0), (255,0,0), (0,0,255)]</code></li>
+                    <li>Kac kisi tespit edildiyse o kadar renk kullan</li>
+                </ul>
+                <div class="warning-callout">
+                    <strong>Burada bir PROBLEM fark edeceksin:</strong> YOLO her frame'de tespitleri SIFIRDAN yapiyor. Yani frame 1'de "1. kisi" olan, frame 2'de "2. kisi" olabiliyor. Renkler surekli degisiyor. Bu problemi YAZI ILE NOT ET. Cunku Gun 4'te bunu cozeceksin.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="deliverables">
+        <div class="deliverables-title">&#9745; Gun 2 Teslim Listesi</div>
+        <div class="deliverable-item"><span class="deliverable-file">gun2_yolo_tespit.py</span> &mdash; Temel YOLO tespiti</div>
+        <div class="deliverable-item"><span class="deliverable-file">gun2_yolo_roi.py</span> &mdash; ROI filtreli tespit</div>
+        <div class="deliverable-item"><span class="deliverable-file">gun2_yolo_renkli.py</span> &mdash; Renkli tespit + fark ettigin problem notu</div>
+        <div class="deliverable-item">Kontrol noktasi cevaplari + deney gozlemleri</div>
+        <div class="deliverable-item">Git commit: <code>"Gun 2: YOLO insan tespiti — temel, ROI, renkli"</code></div>
+    </div>
+</section>
+
+<!-- ============================================== -->
+<!-- GUN 3 -->
+<!-- ============================================== -->
+<section id="gun3" class="day-section day-3">
+    <div class="day-header">
+        <div class="day-label">Gun 3</div>
+        <h2>MediaPipe &mdash; "Goz Acik mi Kapali mi?"</h2>
+        <p>MediaPipe FaceMesh ve EAR (Eye Aspect Ratio) formulunu ogren</p>
+    </div>
+
+    <!-- Sabah -->
+    <div class="time-block">
+        <div class="time-block-header">
+            <span class="time-badge morning">Sabah</span>
+            <span class="time-block-title">FaceMesh ve Landmark'lar &mdash; 3.5 saat</span>
+        </div>
+
+        <div class="task-card">
+            <div class="task-card-header">
+                <span class="task-id">3.1</span>
+                <span class="task-title">MediaPipe FaceMesh Nedir?</span>
+                <span class="task-duration">1 saat</span>
+            </div>
+            <div class="task-body">
+                <p>Arastir ve <strong>kendi cumlelerinle</strong> yaz:</p>
+                <ul>
+                    <li>MediaPipe ne is yapar?</li>
+                    <li>FaceMesh kac tane landmark (nokta) tespit ediyor?</li>
+                    <li>Her landmark'in <code>x</code> ve <code>y</code> degerleri hangi aralikta? (0.0 - 1.0: normalize)</li>
+                    <li>Bu normalize degerleri piksel degerine nasil cevirirsin?</li>
+                    <li>FaceMesh ile YOLO arasindaki fark ne? Neden ikisine de ihtiyac var?</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="task-card">
+            <div class="task-card-header">
+                <span class="task-id">3.2</span>
+                <span class="task-title">Yuz Landmark'larini Gorsellestir</span>
+                <span class="task-duration">1.5 saat</span>
+            </div>
+            <div class="task-body">
+                <p><code>gun3_facemesh.py</code> dosyasi olustur:</p>
+                <ul>
+                    <li>MediaPipe FaceMesh'i baslat</li>
+                    <li>Webcam'den frame al</li>
+                    <li>Tespit edilen tum landmark'lari frame uzerine kucuk noktalar olarak ciz</li>
+                    <li>Sol goz (indexler: <code>33, 160, 158, 133, 153, 144</code>) ve sag goz (<code>362, 385, 387, 263, 373, 380</code>) noktalarini <strong>FARKLI RENKTE</strong> ve <strong>BUYUK</strong> ciz</li>
+                </ul>
+                <div class="info-callout">
+                    <strong>Burada anla:</strong> <code>face_landmarks.landmark[33]</code> sana ne veriyor? <code>.x</code> ve <code>.y</code> neden 0-1 arasi? Piksel degerine nasil cevirirsin?
+                </div>
+            </div>
+        </div>
+
+        <div class="task-card">
+            <div class="task-card-header">
+                <span class="task-id">3.3</span>
+                <span class="task-title">EAR Formulunu ELLE Yaz</span>
+                <span class="task-duration">1 saat</span>
+            </div>
+            <div class="task-body">
+                <p>Bu projenin <strong>KALBI</strong> bu formul. Onu anlamadan geri kalani anlamsiz.</p>
+                <p><strong>EAR</strong> = Eye Aspect Ratio = Goz Aciklik Orani</p>
+
+                <div class="ear-diagram">
+<pre>        p2    p3
+   p1 ----------- p4
+        p6    p5</pre>
+                </div>
+
+                <p>6 noktali bir goz modeli dusun:</p>
+                <ul>
+                    <li><strong>p1, p4:</strong> Gozun yatay uc noktalari (sol kose, sag kose)</li>
+                    <li><strong>p2, p6:</strong> Gozun dikey ust ve alt noktalari (sol taraf)</li>
+                    <li><strong>p3, p5:</strong> Gozun dikey ust ve alt noktalari (sag taraf)</li>
+                </ul>
+
+                <div class="ear-formula">EAR = ( |p2-p6| + |p3-p5| ) / ( 2 &times; |p1-p4| )</div>
+
+                <p><strong>ONCE:</strong> Bu formulu kagida ciz. Goz acikken EAR neden yuksek, kapanikken neden dusuk, mantigi yaz.</p>
+                <p><strong>SONRA:</strong> <code>oklid_mesafe</code> ve <code>ear_hesapla</code> fonksiyonlarini KENDIN yaz:</p>
+
+<pre><span class="code-keyword">import</span> math
+
+<span class="code-keyword">def</span> <span class="code-function">oklid_mesafe</span>(p1, p2):
+    <span class="code-comment"># iki nokta arasi mesafe</span>
+    <span class="code-comment"># p1 = (x1, y1), p2 = (x2, y2)</span>
+    <span class="code-comment"># Formul: sqrt((x2-x1)^2 + (y2-y1)^2)</span>
+    <span class="code-keyword">pass</span>  <span class="code-comment"># KENDIN YAZ</span>
+
+<span class="code-keyword">def</span> <span class="code-function">ear_hesapla</span>(goz_noktalari):
+    <span class="code-comment"># goz_noktalari: 6 elemanli liste [(x,y), (x,y), ...]</span>
+    <span class="code-comment"># EAR formulunu uygula</span>
+    <span class="code-keyword">pass</span>  <span class="code-comment"># KENDIN YAZ</span></pre>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ogleden Sonra -->
+    <div class="time-block">
+        <div class="time-block-header">
+            <span class="time-badge afternoon">Ogleden Sonra</span>
+            <span class="time-block-title">EAR Canli Test &mdash; 3.5 saat</span>
+        </div>
+
+        <div class="task-card">
+            <div class="task-card-header">
+                <span class="task-id">3.4</span>
+                <span class="task-title">Canli EAR Gosterimi</span>
+                <span class="task-duration">1.5 saat</span>
+            </div>
+            <div class="task-body">
+                <p><code>gun3_ear_canli.py</code> dosyasi olustur:</p>
+                <ul>
+                    <li>Webcam'den frame al</li>
+                    <li>FaceMesh ile yuz tespit et</li>
+                    <li>Sol goz ve sag goz icin ayri ayri EAR hesapla</li>
+                    <li>Ortalama EAR degerini ekrana yaz</li>
+                </ul>
+                <p>Ekranda su bilgiler gorunsun:</p>
+<pre>Sol EAR: 0.31
+Sag EAR: 0.28
+Ortalama: 0.295</pre>
+            </div>
+        </div>
+
+        <div class="task-card">
+            <div class="task-card-header">
+                <span class="task-id">3.5</span>
+                <span class="task-title">Threshold Deneyleri</span>
+                <span class="task-duration">1 saat</span>
+            </div>
+            <div class="task-body">
+                <p>Ayni script uzerinde su deneyleri yap ve sonuclari yaz:</p>
+                <ul>
+                    <li>Gozunu normal ac: EAR degeri kac?</li>
+                    <li>Gozunu yari kapa: EAR degeri kac?</li>
+                    <li>Gozunu tamamen kapa: EAR degeri kac?</li>
+                    <li>Gozluk takiyorsan gozlukle/gozluksuz fark var mi?</li>
+                    <li>Kafani yana egersen EAR degisiyor mu?</li>
+                </ul>
+                <p>Bu deneylerin sonucunda <strong>KENDIN</strong> bir threshold belirle:</p>
+                <p><em>"EAR su degerin altina dustugunde goz kapali sayacagim: ___"</em></p>
+            </div>
+        </div>
+
+        <div class="task-card">
+            <div class="task-card-header">
+                <span class="task-id">3.6</span>
+                <span class="task-title">Goz Durumu Gosterimi</span>
+                <span class="task-duration">1 saat</span>
+            </div>
+            <div class="task-body">
+                <p><code>gun3_goz_durumu.py</code> dosyasi olustur:</p>
+                <ul>
+                    <li>EAR degerini hesapla</li>
+                    <li>Belirledigin threshold'a gore ekrana durum yaz:
+                        <ul>
+                            <li>EAR &ge; threshold &rarr; Yesil yazi ile <strong>"GOZ ACIK"</strong></li>
+                            <li>EAR &lt; threshold &rarr; Kirmizi yazi ile <strong>"GOZ KAPALI"</strong></li>
+                        </ul>
+                    </li>
+                    <li>Goz kapandiginda kutunun rengini kirmiziya cevir</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="checkpoint">
+            <div class="checkpoint-title">&#9898; Kontrol Noktasi 4</div>
+            <ul>
+                <li>EAR degeri neden 0 ile 1 arasinda degisiyor?</li>
+                <li>Neden tek goz degil de iki gozun ortalamasini aliyoruz?</li>
+                <li>Threshold'u cok dusuk secersen ne olur? Cok yuksek secersen ne olur?</li>
+                <li>Isik azalinca EAR degeri degisiyor mu? Neden?</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="deliverables">
+        <div class="deliverables-title">&#9745; Gun 3 Teslim Listesi</div>
+        <div class="deliverable-item"><span class="deliverable-file">gun3_facemesh.py</span> &mdash; Landmark gorsellestirme</div>
+        <div class="deliverable-item"><span class="deliverable-file">gun3_ear_canli.py</span> &mdash; Canli EAR degeri</div>
+        <div class="deliverable-item"><span class="deliverable-file">gun3_goz_durumu.py</span> &mdash; Goz acik/kapali tespiti</div>
+        <div class="deliverable-item">Kagit uzerinde EAR formulu cizimi</div>
+        <div class="deliverable-item">Deney sonuclari ve sectigin threshold degeri</div>
+        <div class="deliverable-item">Git commit: <code>"Gun 3: MediaPipe FaceMesh — landmark, EAR hesabi, goz durumu"</code></div>
+    </div>
+</section>
+
+<!-- ============================================== -->
+<!-- GUN 4 -->
+<!-- ============================================== -->
+<section id="gun4" class="day-section day-4">
+    <div class="day-header">
+        <div class="day-label">Gun 4</div>
+        <h2>State Yonetimi &mdash; "Ne Kadar Suredir Kapali?"</h2>
+        <p>Zaman tabanli ihlal tespiti ve kisi takibi</p>
+    </div>
+
+    <!-- Sabah -->
+    <div class="time-block">
+        <div class="time-block-header">
+            <span class="time-badge morning">Sabah</span>
+            <span class="time-block-title">Sureli Ihlal &mdash; 3.5 saat</span>
+        </div>
+
+        <div class="task-card">
+            <div class="task-card-header">
+                <span class="task-id">4.1</span>
+                <span class="task-title">State (Durum) Kavrami</span>
+                <span class="task-duration">30 dk</span>
+            </div>
+            <div class="task-body">
+                <p>Dusun ve yaz:</p>
+                <ul>
+                    <li>"Goz kapali" ile "Goz 3 saniyedir kapali" arasindaki fark ne?</li>
+                    <li>Birini tespit etmek icin tek bir frame yeter. Digeri icin ne lazim?</li>
+                </ul>
+                <p><strong>State</strong> = bir seyin o andaki durumu + o duruma NE ZAMAN girildigi</p>
+                <ul>
+                    <li>Goz kapandiginda <code>baslangic_zamani = time.time()</code> kaydet</li>
+                    <li>Her frame'de <code>gecen_sure = time.time() - baslangic_zamani</code> hesapla</li>
+                    <li>Goz acildiginda <code>baslangic_zamani = None</code> yap (sifirlama)</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="task-card">
+            <div class="task-card-header">
+                <span class="task-id">4.2</span>
+                <span class="task-title">Sureli Goz Kapali Uyarisi</span>
+                <span class="task-duration">2 saat</span>
+            </div>
+            <div class="task-body">
+                <p><code>gun4_sureli_uyari.py</code> dosyasi olustur. Gun 3'teki goz durumu kodunun ustune ekle:</p>
+                <ul>
+                    <li><code>goz_kapali_baslangic = None</code> degiskeni tanimla</li>
+                    <li>EAR &lt; threshold oldugunda:
+                        <ul>
+                            <li>Eger <code>goz_kapali_baslangic</code> None ise: <code>baslangic = time.time()</code> (ilk kapanma ani)</li>
+                            <li>Eger None degilse: <code>gecen_sure = time.time() - baslangic</code> hesapla</li>
+                            <li>Gecen sure &ge; 2 saniye ise: ekrana KIRMIZI buyuk yazi ile <strong>"UYARI: GOZ 2+ SN KAPALI!"</strong></li>
+                        </ul>
+                    </li>
+                    <li>EAR &ge; threshold oldugunda (goz acildi): <code>goz_kapali_baslangic = None</code> yap</li>
+                </ul>
+                <p>Ekranda su bilgi gorunsun:</p>
+<pre>EAR: 0.18 | Durum: GOZ KAPALI | Sure: 1.3 sn</pre>
+                <p>veya</p>
+<pre>EAR: 0.32 | Durum: GOZ ACIK</pre>
+            </div>
+        </div>
+
+        <div class="task-card">
+            <div class="task-card-header">
+                <span class="task-id">4.3</span>
+                <span class="task-title">Hareketsizlik Tespiti</span>
+                <span class="task-duration">1 saat</span>
+            </div>
+            <div class="task-body">
+                <p><code>gun4_hareketsizlik.py</code> dosyasi olustur:</p>
+                <ul>
+                    <li>YOLO ile kisi tespit et</li>
+                    <li>Tespit kutusunun merkez noktasini hesapla: <code>cx = (x1+x2)/2</code>, <code>cy = (y1+y2)/2</code></li>
+                    <li>Bir onceki frame'deki merkez noktayi kaydet</li>
+                    <li>Iki frame arasindaki mesafeyi hesapla (Oklid mesafesi &mdash; Gun 0'da yazdin)</li>
+                    <li>Mesafe &lt; 20 piksel ise: "hareketsiz" say ve sure tut</li>
+                    <li>Mesafe &ge; 20 piksel ise: sifirla</li>
+                    <li>2 saniye hareketsizse: <strong>"HAREKETSIZ!"</strong> uyarisi</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ogleden Sonra -->
+    <div class="time-block">
+        <div class="time-block-header">
+            <span class="time-badge afternoon">Ogleden Sonra</span>
+            <span class="time-block-title">Kisi Takibi (Tracking) &mdash; 3.5 saat</span>
+        </div>
+
+        <div class="task-card">
+            <div class="task-card-header">
+                <span class="task-id">4.4</span>
+                <span class="task-title">Problemi Anla</span>
+                <span class="task-duration">30 dk</span>
+            </div>
+            <div class="task-body">
+                <p>Gun 2'de bir problem fark etmistin: YOLO her frame'de sifirdan tespit yapiyor.
+                   Frame 1'de <code>[kutu_A, kutu_B]</code>, Frame 2'de <code>[kutu_B, kutu_A]</code> olabilir.</p>
+                <p>Yani YOLO "bu kisi 1, bu kisi 2" <strong>demiyor</strong>. Her frame bagimsiz.</p>
+                <p>Peki biz "Kisi 1'in gozu 3 saniyedir kapali" diyebilmek icin ne yapmamiz lazim?</p>
+                <p><strong>CEVAP:</strong> Kendi takip (tracking) sistemimizi yazmamiz lazim.</p>
+            </div>
+        </div>
+
+        <div class="task-card">
+            <div class="task-card-header">
+                <span class="task-id">4.5</span>
+                <span class="task-title">Basit Centroid Tracker: Fonksiyonlar ve Dictionary ile Takip Sistemi</span>
+                <span class="task-duration">2.5 saat</span>
+            </div>
+            <div class="task-body">
+                <div class="warning-callout">
+                    <strong>Bu bolum ZOR ama cok onemli.</strong> Acele etme, mantigi anla.
+                </div>
+                <p><code>gun4_tracker.py</code> dosyasi olustur. Icinde fonksiyonlar ve bir dictionary kullanarak takip sistemi yaz:</p>
+                <p><strong>Mantik:</strong></p>
+                <ol>
+                    <li>Her tespitin merkez noktasini hesapla</li>
+                    <li>Onceki frame'deki takip edilen kisilerin merkez noktalariyla karsilastir</li>
+                    <li>En yakin eslestirmeyi bul (Oklid mesafesi)</li>
+                    <li>Mesafe belirli bir limitin altindaysa: ayni kisi, ID'sini koru</li>
+                    <li>Eslestirmeyen yeni tespitler icin: yeni ID ata</li>
+                    <li>Uzun suredir guncellenmemis takipler icin: sil (kayboldu)</li>
+                </ol>
+
+<pre><span class="code-comment"># TRACKER: Fonksiyon + Dictionary ile (class KULLANMIYORUZ)</span>
+
+sonraki_id = <span class="code-number">0</span>
+takip_listesi = {}  <span class="code-comment"># {id: {"merkez": (cx, cy), "kutu": (x1,y1,x2,y2)}}</span>
+
+<span class="code-keyword">def</span> <span class="code-function">tracker_guncelle</span>(tespitler, takip_listesi, sonraki_id, max_mesafe=<span class="code-number">100</span>):
+    <span class="code-comment"># tespitler: [(x1,y1,x2,y2), ...] listesi</span>
+    <span class="code-comment">#</span>
+    <span class="code-comment"># ADIMLAR:</span>
+    <span class="code-comment"># 1. Her tespitin merkezini hesapla</span>
+    <span class="code-comment"># 2. Mevcut takip listesindeki her kisiyle mesafeyi karsilastir</span>
+    <span class="code-comment"># 3. En yakin eslestirmeyi bul</span>
+    <span class="code-comment"># 4. Eslestirme varsa: o kisinin kutusunu guncelle</span>
+    <span class="code-comment"># 5. Eslestirme yoksa: yeni ID ata</span>
+    <span class="code-comment"># 6. Guncellenmemis kisileri sil</span>
+    <span class="code-comment">#</span>
+    <span class="code-comment"># return: guncel takip_listesi, sonraki_id</span>
+    <span class="code-keyword">pass</span>  <span class="code-comment"># KENDIN YAZ</span></pre>
+
+                <div class="info-callout">
+                    <strong>Hatirla:</strong> Gun 0'daki "en yakin noktayi bulma" alistirmasini hatirladin mi? Tracker'in cekirdegi TAM OLARAK o mantik. Fark sadece su: noktalar artik YOLO'dan geliyor ve her frame'de guncelleniyor.
+                </div>
+
+                <p><strong>Test etmek icin:</strong></p>
+                <ul>
+                    <li>Webcam'de YOLO calistir</li>
+                    <li>Tracker ile her kisiye sabit ID ata</li>
+                    <li>ID'yi kutunun ustune yaz</li>
+                    <li>Hareket ettiginde ID'nin degismedigini dogrula</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="task-card">
+            <div class="task-card-header">
+                <span class="task-id">4.6</span>
+                <span class="task-title">Her Sey Bir Arada: Kisi Bazli Ihlal</span>
+                <span class="task-duration">30 dk</span>
+            </div>
+            <div class="task-body">
+                <p><code>gun4_entegre.py</code> dosyasi olustur:</p>
+                <ul>
+                    <li>YOLO tespiti + Tracker + EAR + Sureli uyari</li>
+                    <li>Her kisi icin AYRI state tut:</li>
+                </ul>
+<pre>kisi_durumlari = {}  <span class="code-comment"># {kisi_id: {"goz_baslangic": None, "hareketsiz_baslangic": None}}</span></pre>
+                <ul>
+                    <li>Her frame'de her kisi icin ayri ihlal kontrolu yap</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="checkpoint">
+            <div class="checkpoint-title">&#9898; Kontrol Noktasi 5</div>
+            <ul>
+                <li>Neden YOLO tek basina takip icin yeterli degil?</li>
+                <li>Tracker'da "max_mesafe" parametresi ne ise yariyor? Cok kucuk olursa ne olur?</li>
+                <li>Bir kisi frame'den cikip tekrar girerse ne olur? Bu bir sorun mu?</li>
+                <li><code>kisi_durumlari</code> dictionary'sinde neden kisi ID'sini key olarak kullaniyoruz?</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="deliverables">
+        <div class="deliverables-title">&#9745; Gun 4 Teslim Listesi</div>
+        <div class="deliverable-item"><span class="deliverable-file">gun4_sureli_uyari.py</span> &mdash; Sureli goz kapali uyarisi</div>
+        <div class="deliverable-item"><span class="deliverable-file">gun4_hareketsizlik.py</span> &mdash; Hareketsizlik tespiti</div>
+        <div class="deliverable-item"><span class="deliverable-file">gun4_tracker.py</span> &mdash; Kendi yazdigin centroid tracker (fonksiyonlar ve dictionary ile)</div>
+        <div class="deliverable-item"><span class="deliverable-file">gun4_entegre.py</span> &mdash; Tum bilesenlerin birlesimi</div>
+        <div class="deliverable-item">Kontrol noktasi cevaplari</div>
+        <div class="deliverable-item">Git commit: <code>"Gun 4: State yonetimi — sureli ihlal, hareketsizlik, tracker"</code></div>
+    </div>
+</section>
+
+<!-- ============================================== -->
+<!-- GUN 5 -->
+<!-- ============================================== -->
+<section id="gun5" class="day-section day-5">
+    <div class="day-header">
+        <div class="day-label">Gun 5</div>
+        <h2>Entegrasyon &mdash; "Hepsini Birlestir"</h2>
+        <p>Temiz, calisan, anlasilir bir uyku takip sistemi</p>
+    </div>
+
+    <!-- Sabah -->
+    <div class="time-block">
+        <div class="time-block-header">
+            <span class="time-badge morning">Sabah</span>
+            <span class="time-block-title">Temiz Kod &mdash; 3.5 saat</span>
+        </div>
+
+        <div class="task-card">
+            <div class="task-card-header">
+                <span class="task-id">5.1</span>
+                <span class="task-title">Kod Organizasyonu</span>
+                <span class="task-duration">1 saat</span>
+            </div>
+            <div class="task-body">
+                <p>Simdi elinde 4 gunluk deney kodlari var. Bugun temiz bir versiyon yazacaksin.</p>
+                <p><code>guardwatch.py</code> adinda <strong>TEK</strong> bir dosya olustur. Yapisi:</p>
+<pre><span class="code-comment"># --- AYARLAR ---</span>
+<span class="code-comment"># config.json'dan okunan degerler</span>
+
+<span class="code-comment"># --- YARDIMCI FONKSIYONLAR ---</span>
+<span class="code-comment"># oklid_mesafe(), ear_hesapla(), merkez_hesapla()</span>
+
+<span class="code-comment"># --- TRACKER ---</span>
+<span class="code-comment"># tracker_guncelle() fonksiyonu ve takip_listesi dictionary</span>
+
+<span class="code-comment"># --- ANA DONGU ---</span>
+<span class="code-comment"># main() fonksiyonu</span></pre>
+                <p><strong>Kurallar:</strong></p>
+                <ul>
+                    <li>Hicbir "magic number" olmasin. Tum sabitler en ustte veya config'de</li>
+                    <li>Her fonksiyonun 1 satir aciklamasi olsun</li>
+                    <li>Bir fonksiyon 20 satirdan uzunsa parcalayabilir misin diye dusun</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="task-card">
+            <div class="task-card-header">
+                <span class="task-id">5.2</span>
+                <span class="task-title">Config Dosyasi</span>
+                <span class="task-duration">30 dk</span>
+            </div>
+            <div class="task-body">
+                <p><code>config.json</code> dosyasi olustur:</p>
+<pre>{
+  <span class="code-string">"ear_threshold"</span>: <span class="code-number">0.21</span>,
+  <span class="code-string">"goz_kapali_limit_sn"</span>: <span class="code-number">2.0</span>,
+  <span class="code-string">"hareketsizlik_limit_sn"</span>: <span class="code-number">2.0</span>,
+  <span class="code-string">"hareket_piksel_esigi"</span>: <span class="code-number">20.0</span>,
+  <span class="code-string">"yolo_confidence"</span>: <span class="code-number">0.4</span>,
+  <span class="code-string">"tracker_max_mesafe"</span>: <span class="code-number">100</span>
+}</pre>
+                <p>Kodda bu degerleri JSON'dan oku. <strong>Hardcode YAZMA.</strong></p>
+            </div>
+        </div>
+
+        <div class="task-card">
+            <div class="task-card-header">
+                <span class="task-id">5.3</span>
+                <span class="task-title">Alarm Sistemi</span>
+                <span class="task-duration">1 saat</span>
+            </div>
+            <div class="task-body">
+                <p><code>guardwatch.py</code> dosyasina ekle:</p>
+                <ul>
+                    <li><code>pygame.mixer</code> ile ses calma</li>
+                    <li>Ihlal basladiginda alarm cal</li>
+                    <li>Ihlal bittiginde dur</li>
+                    <li><strong>Cooldown ekle:</strong> Alarm caldiktan sonra 3 saniye tekrar calmasin (neden gerekli?)</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="task-card">
+            <div class="task-card-header">
+                <span class="task-id">5.4</span>
+                <span class="task-title">Durum Hiyerarsisi</span>
+                <span class="task-duration">1 saat</span>
+            </div>
+            <div class="task-body">
+                <p>Ekranda gosterilen durum icin oncelik sirasi belirle:</p>
+                <ol>
+                    <li><strong>Goz kapali + Hareketsiz</strong> = "UYKU IHLALI!" (Kirmizi)</li>
+                    <li><strong>Sadece goz kapali</strong> = "Goz Kapali" (Sari)</li>
+                    <li><strong>Sadece hareketsiz</strong> = "Hareketsiz" (Sari)</li>
+                    <li><strong>Her sey normal</strong> = "Normal" (Yesil)</li>
+                </ol>
+                <p>Her frame'de <strong>EN YUKSEK oncelikli</strong> durumu goster.</p>
+                <div class="info-callout">
+                    <strong>Neden onemli:</strong> Ekranda "Goz Kapali" ve "Hareketsiz" ayni anda yanip sonerse gozu yorar. Tek ve net bir durum mesaji gostermek daha profesyonel.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ogleden Sonra -->
+    <div class="time-block">
+        <div class="time-block-header">
+            <span class="time-badge afternoon">Ogleden Sonra</span>
+            <span class="time-block-title">Test ve Dokumantasyon &mdash; 3.5 saat</span>
+        </div>
+
+        <div class="task-card">
+            <div class="task-card-header">
+                <span class="task-id">5.5</span>
+                <span class="task-title">Canli Test Senaryolari</span>
+                <span class="task-duration">1.5 saat</span>
+            </div>
+            <div class="task-body">
+                <p>Kendi uygulamani su senaryolarla test et ve sonuclari yaz:</p>
+                <table class="test-table">
+                    <thead>
+                        <tr>
+                            <th>Senaryo</th>
+                            <th>Beklenen Sonuc</th>
+                            <th>Gercek Sonuc</th>
+                            <th>OK?</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Normal oturma, goz acik</td>
+                            <td>"Normal" yesil yazi</td>
+                            <td class="empty-cell">Doldur</td>
+                            <td class="empty-cell">?</td>
+                        </tr>
+                        <tr>
+                            <td>Gozleri 3 sn kapat</td>
+                            <td>2 sn sonra "Goz Kapali" uyarisi</td>
+                            <td class="empty-cell">Doldur</td>
+                            <td class="empty-cell">?</td>
+                        </tr>
+                        <tr>
+                            <td>Hareketsiz otur 3 sn</td>
+                            <td>2 sn sonra "Hareketsiz" uyarisi</td>
+                            <td class="empty-cell">Doldur</td>
+                            <td class="empty-cell">?</td>
+                        </tr>
+                        <tr>
+                            <td>Goz kapat + hareketsiz</td>
+                            <td>"UYKU IHLALI!" kirmizi</td>
+                            <td class="empty-cell">Doldur</td>
+                            <td class="empty-cell">?</td>
+                        </tr>
+                        <tr>
+                            <td>Goz kapat, sonra ac</td>
+                            <td>Uyari sifirlanmali</td>
+                            <td class="empty-cell">Doldur</td>
+                            <td class="empty-cell">?</td>
+                        </tr>
+                        <tr>
+                            <td>Frame'den cik, tekrar gir</td>
+                            <td>Yeni ID atanmali</td>
+                            <td class="empty-cell">Doldur</td>
+                            <td class="empty-cell">?</td>
+                        </tr>
+                        <tr>
+                            <td>2 kisi ayni anda</td>
+                            <td>Her biri ayri takip edilmeli</td>
+                            <td class="empty-cell">Doldur</td>
+                            <td class="empty-cell">?</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p>Basarisiz olan senaryolar icin: <strong>NEDEN</strong> basarisiz oldugunu yaz ve duzeltmeye calis.</p>
+            </div>
+        </div>
+
+        <div class="task-card">
+            <div class="task-card-header">
+                <span class="task-id">5.6</span>
+                <span class="task-title">Logging Ekle</span>
+                <span class="task-duration">30 dk</span>
+            </div>
+            <div class="task-body">
+                <ul>
+                    <li>Python <code>logging</code> modulu ile log dosyasina yaz</li>
+                    <li>Onemli olaylari logla:
+                        <ul>
+                            <li>Sistem basladi</li>
+                            <li>Kisi tespit edildi (ID=X)</li>
+                            <li>Ihlal basladi (ID=X, tur=goz_kapali)</li>
+                            <li>Ihlal bitti</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="task-card">
+            <div class="task-card-header">
+                <span class="task-id">5.7</span>
+                <span class="task-title">Son Kod Incelemesi</span>
+                <span class="task-duration">1 saat</span>
+            </div>
+            <div class="task-body">
+                <p>Kendi kodunu bastan sona oku ve su sorulari sor:</p>
+                <ul>
+                    <li>Her satirin ne yaptigini biliyor muyum?</li>
+                    <li>Gereksiz kod var mi? (kullanilmayan import, degisken)</li>
+                    <li>Degisken isimleri anlasilir mi?</li>
+                    <li>Baska biri bu kodu okusa anlayabilir mi?</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="task-card">
+            <div class="task-card-header">
+                <span class="task-id">5.8</span>
+                <span class="task-title">Odev Raporu</span>
+                <span class="task-duration">30 dk</span>
+            </div>
+            <div class="task-body">
+                <p>Asagidaki "6 Gunluk Notlar" bolumunu doldur.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="deliverables">
+        <div class="deliverables-title">&#9745; Gun 5 Teslim Listesi</div>
+        <div class="deliverable-item"><span class="deliverable-file">guardwatch.py</span> &mdash; Temiz, calisan ana dosya</div>
+        <div class="deliverable-item"><span class="deliverable-file">config.json</span> &mdash; Konfig&uuml;rasyon dosyasi</div>
+        <div class="deliverable-item">Test senaryosu sonuclari (yukaridaki tablo)</div>
+        <div class="deliverable-item">Tamamlanmis odev raporu</div>
+        <div class="deliverable-item">Git commit: <code>"Gun 5: GuardWatch v1.0 — temiz entegrasyon"</code></div>
+    </div>
+</section>
+</div>
+
+<!-- ============================================== -->
+<!-- NOTLAR -->
+<!-- ============================================== -->
+<section id="notlar" class="notes-section">
+    <h3 class="notes-title">6 Gunluk Notlar (Taha doldurur)</h3>
+
+    <div class="note-card">
+        <h4 style="color: var(--accent-red);">Gun 0 Notu</h4>
+        <div class="note-field">
+            <span class="note-field-label">Bugun ne ogrendim:</span>
+            <textarea class="note-field-input" rows="2"></textarea>
+        </div>
+        <div class="note-field">
+            <span class="note-field-label">Nerede takildim:</span>
+            <textarea class="note-field-input" rows="2"></textarea>
+        </div>
+        <div class="note-field">
+            <span class="note-field-label">Dictionary'yi kendi cumlelerimle acikliyorum:</span>
+            <textarea class="note-field-input" rows="2"></textarea>
+        </div>
+    </div>
+
+    <div class="note-card">
+        <h4 style="color: var(--accent-blue);">Gun 1 Notu</h4>
+        <div class="note-field">
+            <span class="note-field-label">Bugun ne ogrendim:</span>
+            <textarea class="note-field-input" rows="2"></textarea>
+        </div>
+        <div class="note-field">
+            <span class="note-field-label">Nerede takildim:</span>
+            <textarea class="note-field-input" rows="2"></textarea>
+        </div>
+        <div class="note-field">
+            <span class="note-field-label">En sasirdigim sey:</span>
+            <textarea class="note-field-input" rows="2"></textarea>
+        </div>
+    </div>
+
+    <div class="note-card">
+        <h4 style="color: var(--accent-purple);">Gun 2 Notu</h4>
+        <div class="note-field">
+            <span class="note-field-label">Bugun ne ogrendim:</span>
+            <textarea class="note-field-input" rows="2"></textarea>
+        </div>
+        <div class="note-field">
+            <span class="note-field-label">Nerede takildim:</span>
+            <textarea class="note-field-input" rows="2"></textarea>
+        </div>
+        <div class="note-field">
+            <span class="note-field-label">YOLO hakkinda anladigim en onemli sey:</span>
+            <textarea class="note-field-input" rows="2"></textarea>
+        </div>
+    </div>
+
+    <div class="note-card">
+        <h4 style="color: var(--accent-green);">Gun 3 Notu</h4>
+        <div class="note-field">
+            <span class="note-field-label">Bugun ne ogrendim:</span>
+            <textarea class="note-field-input" rows="2"></textarea>
+        </div>
+        <div class="note-field">
+            <span class="note-field-label">Nerede takildim:</span>
+            <textarea class="note-field-input" rows="2"></textarea>
+        </div>
+        <div class="note-field">
+            <span class="note-field-label">EAR formulunu kendi cumlelerimle:</span>
+            <textarea class="note-field-input" rows="2"></textarea>
+        </div>
+    </div>
+
+    <div class="note-card">
+        <h4 style="color: var(--accent-orange);">Gun 4 Notu</h4>
+        <div class="note-field">
+            <span class="note-field-label">Bugun ne ogrendim:</span>
+            <textarea class="note-field-input" rows="2"></textarea>
+        </div>
+        <div class="note-field">
+            <span class="note-field-label">Nerede takildim:</span>
+            <textarea class="note-field-input" rows="2"></textarea>
+        </div>
+        <div class="note-field">
+            <span class="note-field-label">Tracker yazmak neden zordu:</span>
+            <textarea class="note-field-input" rows="2"></textarea>
+        </div>
+    </div>
+
+    <div class="note-card">
+        <h4 style="color: var(--accent-cyan);">Gun 5 Notu</h4>
+        <div class="note-field">
+            <span class="note-field-label">Bugun ne ogrendim:</span>
+            <textarea class="note-field-input" rows="2"></textarea>
+        </div>
+        <div class="note-field">
+            <span class="note-field-label">6 gun boyunca en zor sey neydi:</span>
+            <textarea class="note-field-input" rows="2"></textarea>
+        </div>
+        <div class="note-field">
+            <span class="note-field-label">Simdi bu projeyi birine anlatabilir miyim:</span>
+            <textarea class="note-field-input" rows="2"></textarea>
+        </div>
+        <div class="note-field">
+            <span class="note-field-label">AI ile yazdirmak vs kendim yazmak:</span>
+            <textarea class="note-field-input" rows="2"></textarea>
+        </div>
+    </div>
+</section>
+
+<!-- BONUS -->
+<div class="bonus-section">
+    <div class="bonus-card">
+        <div class="bonus-title">Bonus Gorevler (6 gunden once bitirirsen)</div>
+        <div class="bonus-item"><div class="bonus-check"></div> Ihlal aninda frame'i <code>ihlal_kayitlari/</code> klasorune kaydet</div>
+        <div class="bonus-item"><div class="bonus-check"></div> Streamlit ile basit bir dashboard yap (video yukle + analiz et)</div>
+        <div class="bonus-item"><div class="bonus-check"></div> Kafa dusmesi tespiti ekle (MediaPipe Pose ile)</div>
+        <div class="bonus-item"><div class="bonus-check"></div> Ihlal istatistiklerini CSV'ye kaydet</div>
+    </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer-quote">
+    <p>Bu odevin amaci <strong>"proje bitirmek"</strong> degil, <strong>"her satiri anlayarak yazmak"</strong>tir.
+    6 gunun sonunda elinde daha az satirli ama her satirini aciklayabilecegin bir kod olacak.
+    Bu, AI'in yazdigi 400 satirlik koddan <strong>cok daha degerlidir.</strong></p>
+</div>
+
+<script>
+    // Sticky nav active state
+    const sections = document.querySelectorAll('.day-section, .notes-section');
+    const navBtns = document.querySelectorAll('.day-nav-btn');
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                navBtns.forEach(btn => btn.classList.remove('active'));
+                const id = entry.target.id;
+                const activeBtn = document.querySelector(`.day-nav-btn[href="#${id}"]`);
+                if (activeBtn) activeBtn.classList.add('active');
+            }
+        });
+    }, { rootMargin: '-100px 0px -60% 0px' });
+
+    sections.forEach(s => observer.observe(s));
+
+    // Smooth scroll
+    navBtns.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const target = document.querySelector(btn.getAttribute('href'));
+            if (target) target.scrollIntoView({ behavior: 'smooth' });
+        });
+    });
+</script>
+
+</body>
+</html>
