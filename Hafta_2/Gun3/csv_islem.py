@@ -50,20 +50,27 @@
 #         if int(satir["not"]) > ortalama:
 #             print(f"{satir['isim']} ortalamanın üzerinde not aldı: {satir['not']}")
       
-# import csv
-# from datetime import datetime
+import csv
+from datetime import datetime
 
-# def ihlal_kaydet(kisi_id, ihlal_turu, sure, ear):
-#     """Ihlali CSV dosyasina kaydet"""
-#     with open("ihlaller.csv", "a", newline="") as dosya:
-#         yazici = csv.writer(dosya)
-#         zaman = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-#         yazici.writerow([zaman, kisi_id, ihlal_turu, sure, f"{ear:.3f}"])
+def ihlal_kaydet(kisi_id, ihlal_turu, sure, ear):
+    """Ihlali CSV dosyasina kaydet"""
+    headerler = ["zaman", "kisi_id", "ihlal_turu", "sure", "ear"]
+    with open("ihlaller.csv", "a", newline="") as dosya:
+        yazici = csv.writer(dosya)
+        if dosya.tell() == 0:
+            yazici.writerow(headerler)
+        zaman = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        yazici.writerow([zaman, kisi_id, ihlal_turu, sure, f"{ear:.3f}"])
 
-# # Kullanim:
-# ihlal_kaydet("KID_1", "goz_kapali", 3.5, 0.18)
-# ihlal_kaydet("KID_2", "hareketsiz", 12.0, 0.25)
-
+# Kullanim:
+ihlal_kaydet("KID_1", "goz_kapali", 3.5, 0.18)
+ihlal_kaydet("KID_2", "hareketsiz", 12.0, 0.25)
+ihlal_kaydet("KID_3", "goz_kapali", 2.0, 0.15)
+ihlal_kaydet("KID_3", "goz_kapali", 2.0, 0.15)
+ihlal_kaydet("KID_3", "goz_kapali", 2.0, 0.15)
+ihlal_kaydet("KID_3", "goz_kapali", 2.0, 0.15)
+ihlal_kaydet("KID_4", "yorgun", 5.0, 0.20)
 
 # import time
 # from datetime import datetime
